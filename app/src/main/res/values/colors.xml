@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="primary">#2D6A4F</color>
+    <color name="primary_light">#D8F3DC</color>
+    <color name="primary_dark">#1B4332</color>
+    <color name="accent">#52B788</color>
+
+    <!-- Backgrounds -->
+    <color name="background">#F8F5F2</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#555555</color>
+    <color name="text_tertiary">#888888</color>
+
+    <!-- UI -->
+    <color name="divider">#EBEBEB</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Switch colors -->
+    <color name="switch_thumb_on">#FFFFFF</color>
+    <color name="switch_thumb_off">#AAAAAA</color>
+    <color name="switch_track_on">#2D6A4F</color>
+    <color name="switch_track_off">#CCCCCC</color>
+
+    <!-- Navigation -->
+    <color name="nav_active">#2D6A4F</color>
+    <color name="nav_inactive">#999999</color>
+</resources>
