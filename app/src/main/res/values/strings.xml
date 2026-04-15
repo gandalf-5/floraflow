@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FloraFlow</string>
+    <string name="todays_discovery">Today\'s Discovery</string>
+    <string name="botanical_insight">Botanical Insight</string>
+    <string name="loading_plant">Discovering today\'s plant…</string>
+    <string name="retry">Try Again</string>
+    <string name="photo_credit">Photo by %1$s on Unsplash</string>
+    <string name="settings">Settings</string>
+    <string name="wallpaper">Wallpaper</string>
+    <string name="auto_sync_wallpaper">Auto-Sync Wallpaper</string>
+    <string name="auto_sync_description">Automatically set the day\'s plant as your wallpaper every night at midnight.</string>
+    <string name="about">About</string>
+    <string name="about_description">A daily botanical discovery app. Every 24 hours, explore a new plant from around the world — its name, origin, and a fascinating botanical insight.</string>
+    <string name="powered_by_unsplash">Photos powered by Unsplash</string>
+    <string name="nav_discover">Discover</string>
+    <string name="nav_settings">Settings</string>
+    <string name="set_as_wallpaper">Set as Wallpaper</string>
+    <string name="wallpaper_setting">Setting wallpaper…</string>
+    <string name="wallpaper_success">Wallpaper set successfully!</string>
+    <string name="wallpaper_error">Could not set wallpaper. Please try again.</string>
+</resources>
