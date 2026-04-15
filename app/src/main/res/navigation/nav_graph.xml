@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/discoveryFragment">
+
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.floraflow.app.ui.discovery.DiscoveryFragment"
+        android:label="Discover" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.floraflow.app.ui.settings.SettingsFragment"
+        android:label="Settings" />
+
+</navigation>
