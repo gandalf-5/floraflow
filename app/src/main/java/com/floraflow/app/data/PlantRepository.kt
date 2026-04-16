@@ -7,6 +7,7 @@ import com.floraflow.app.api.ChatMessage
 import com.floraflow.app.api.OpenAiApi
 import com.floraflow.app.api.UnsplashApi
 import com.floraflow.app.api.UnsplashPhoto
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -44,12 +45,20 @@ class PlantRepository(
 
     suspend fun getTodayPlant(): DailyPlant? = dao.getByDate(getTodayKey())
 
+    suspend fun getPlantByKey(dateKey: String): DailyPlant? = dao.getByDate(dateKey)
+
     suspend fun getHistory(): List<DailyPlant> = dao.getHistory()
 
     suspend fun getFavorites(): List<DailyPlant> = dao.getFavorites()
 
+    suspend fun getAllForSeasonal(): List<DailyPlant> = dao.getAllForSeasonal()
+
     suspend fun toggleFavorite(plant: DailyPlant) {
         dao.setFavorite(plant.dateKey, !plant.isFavorite)
+    }
+
+    suspend fun updateNotes(dateKey: String, notes: String?) {
+        dao.updateNotes(dateKey, notes)
     }
 
     suspend fun fetchAndSaveTodayPlant(): DailyPlant {
@@ -65,7 +74,7 @@ class PlantRepository(
     }
 
     suspend fun fetchForCategory(categoryQuery: String): DailyPlant {
-        val dateKey = getTodayKey()
+        val dateKey = "${getTodayKey()}-$categoryQuery-${System.currentTimeMillis()}"
         return fetchAndSave(dateKey, categoryQuery, forceNew = true)
     }
 
@@ -73,7 +82,7 @@ class PlantRepository(
         val photo = try {
             unsplashApi.getRandomPhoto(query = query)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to fetch from Unsplash", e)
+            Log.e(TAG, "Unsplash fetch failed", e)
             throw e
         }
 
@@ -82,7 +91,7 @@ class PlantRepository(
         val (insight, scientificName) = fetchBotanicalData(plantName)
 
         val plant = DailyPlant(
-            dateKey = if (forceNew) "$dateKey-$query-${System.currentTimeMillis()}" else dateKey,
+            dateKey = dateKey,
             photoId = photo.id,
             imageUrlFull = photo.urls.full,
             imageUrlRegular = photo.urls.regular,
@@ -129,12 +138,12 @@ class PlantRepository(
 1. INSIGHT: One fascinating lesser-known botanical fact in exactly 2-3 sentences. Be specific and surprising. No markdown.
 2. SCIENTIFIC: The scientific (Latin) name only, e.g. "Rosa canina". If unknown, write "Unknown".
 
-Respond in this exact format:
+Format:
 INSIGHT: [your insight here]
 SCIENTIFIC: [scientific name here]"""
 
             val response = openAiApi.getChatCompletion(
-                authorization = "Bearer ${getOpenAiKey()}",
+                authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}",
                 request = ChatCompletionRequest(
                     messages = listOf(
                         ChatMessage(role = "system", content = "You are a botanist. Follow the format precisely."),
@@ -145,29 +154,61 @@ SCIENTIFIC: [scientific name here]"""
             )
 
             val text = response.choices.firstOrNull()?.message?.content?.trim() ?: ""
-            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }
-                ?.removePrefix("INSIGHT:")?.trim()
-            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }
-                ?.removePrefix("SCIENTIFIC:")?.trim()
+            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }?.removePrefix("INSIGHT:")?.trim()
+            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }?.removePrefix("SCIENTIFIC:")?.trim()
                 ?.takeIf { it != "Unknown" && it.isNotBlank() }
 
-            val insight = insightLine ?: getFallbackInsight(plantName)
-            Pair(insight, scientificLine)
+            Pair(insightLine ?: getFallbackInsight(plantName), scientificLine)
         } catch (e: Exception) {
             Log.w(TAG, "AI unavailable, using fallback", e)
             Pair(getFallbackInsight(plantName), null)
         }
     }
 
-    private fun getOpenAiKey(): String = BuildConfig.OPENAI_API_KEY
+    suspend fun generateQuiz(plant: DailyPlant): QuizData? {
+        return try {
+            val scientificPart = if (!plant.scientificName.isNullOrBlank()) " (${plant.scientificName})" else ""
+            val prompt = """Generate a multiple-choice quiz question about "${plant.plantName}"$scientificPart.
+Return ONLY a valid JSON object, no markdown, no explanation:
+{"question":"...","options":["...","...","...","..."],"correct":0,"explanation":"..."}
+Rules: question is interesting botanical trivia, options has exactly 4 choices, correct is 0-3 index of right answer, explanation is 1-2 sentences."""
+
+            val response = openAiApi.getChatCompletion(
+                authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}",
+                request = ChatCompletionRequest(
+                    messages = listOf(
+                        ChatMessage(role = "system", content = "You are a botanist quiz master. Return only JSON."),
+                        ChatMessage(role = "user", content = prompt)
+                    ),
+                    maxTokens = 300
+                )
+            )
+
+            val raw = response.choices.firstOrNull()?.message?.content?.trim() ?: return null
+            val jsonStr = raw.substringAfter("{").let { "{$it" }.substringBefore("}").let { "$it}" }
+            val obj = JSONObject(jsonStr)
+            val optionsArray = obj.getJSONArray("options")
+            val options = (0 until 4).map { optionsArray.getString(it) }
+            QuizData(
+                question = obj.getString("question"),
+                options = options,
+                correct = obj.getInt("correct").coerceIn(0, 3),
+                explanation = obj.getString("explanation"),
+                dateKey = plant.dateKey
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "Quiz generation failed", e)
+            null
+        }
+    }
 
     private fun getFallbackInsight(plantName: String): String {
         val insights = listOf(
-            "Plants communicate through an underground network of fungi called the 'Wood Wide Web', sharing nutrients and chemical signals with neighboring plants.",
-            "Many flowering plants time their blooms to coincide with the peak activity periods of their specific pollinators, a relationship refined over millions of years.",
-            "Some plants can detect the sounds of caterpillars chewing and release defensive chemicals before any damage occurs — a remarkable form of acoustic sensing.",
-            "The oldest living plant on Earth is a Posidonia australis seagrass meadow in Australia, estimated to be around 4,500 years old and stretching 180 km.",
-            "Flowers appear to have UV patterns invisible to humans that act as landing guides for bees, essentially functioning as natural runways for pollinators."
+            "Plants communicate through an underground fungal network called the 'Wood Wide Web', sharing nutrients and chemical stress signals with neighbouring plants.",
+            "Many flowering plants time their blooms to coincide with the peak activity of their specific pollinators — a relationship refined over millions of years of co-evolution.",
+            "Some plants can detect the sound vibrations of caterpillars chewing their leaves and release defensive chemicals before any visible damage occurs.",
+            "The oldest living plant on Earth is estimated to be a Posidonia australis seagrass clone in Australia, around 4,500 years old and stretching 180 km.",
+            "Flowers that appear plain to human eyes often display vivid UV patterns invisible to us, acting as landing runways that guide bees directly to the nectar."
         )
         return insights[(plantName.hashCode() and Int.MAX_VALUE) % insights.size]
     }
