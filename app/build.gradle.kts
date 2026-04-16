@@ -14,7 +14,13 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "OPENAI_API_KEY", "\"${System.getenv("OPENAI_API_KEY") ?: ""}\"")
+        // URL of the FloraFlow backend API server (set via FLORA_FLOW_API_URL env var / GitHub secret).
+        // Must end with /api/ — e.g. "https://your-api-server.replit.app/api/"
+        buildConfigField(
+            "String",
+            "FLORA_FLOW_API_URL",
+            "\"${System.getenv("FLORA_FLOW_API_URL") ?: "https://placeholder.example.com/api/"}\""
+        )
     }
 
     buildTypes {
