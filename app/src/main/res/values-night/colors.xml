@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand stays the same but slightly lighter for dark -->
+    <color name="primary">#52B788</color>
+    <color name="primary_light">#1B3A2A</color>
+    <color name="primary_dark">#74C69D</color>
+    <color name="accent">#74C69D</color>
+
+    <!-- Dark Backgrounds -->
+    <color name="background">#0F1A14</color>
+    <color name="surface">#1A2D22</color>
+
+    <!-- Dark Text -->
+    <color name="text_primary">#F0F0F0</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="text_tertiary">#666666</color>
+
+    <!-- Dark UI -->
+    <color name="divider">#2A3D30</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Switch colors -->
+    <color name="switch_thumb_on">#FFFFFF</color>
+    <color name="switch_thumb_off">#555555</color>
+    <color name="switch_track_on">#52B788</color>
+    <color name="switch_track_off">#333333</color>
+
+    <!-- Navigation -->
+    <color name="nav_active">#52B788</color>
+    <color name="nav_inactive">#555555</color>
+
+    <!-- Splash (same in dark) -->
+    <color name="splash_bg">#0F1A14</color>
+    <color name="splash_text">#F0F0F0</color>
+    <color name="splash_subtitle">#74C69D</color>
+    <color name="splash_hint">#52B788</color>
+    <color name="splash_icon">#52B788</color>
+</resources>
