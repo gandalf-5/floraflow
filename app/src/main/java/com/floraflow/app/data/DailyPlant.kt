@@ -1,5 +1,6 @@
 package com.floraflow.app.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -20,5 +21,6 @@ data class DailyPlant(
     val botanicalInsight: String,
     val isFavorite: Boolean = false,
     val fetchedAt: Long = System.currentTimeMillis(),
-    val notes: String? = null
+    val notes: String? = null,
+    @ColumnInfo(name = "nativeRegion") val nativeRegion: String? = null
 )
