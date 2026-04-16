@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.floraflow.app.R
 import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentSettingsBinding
 import com.floraflow.app.worker.WallpaperScheduler
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
@@ -72,6 +72,16 @@ class SettingsFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            prefs.darkMode.collect { mode ->
+                binding.darkModeValue.text = when (mode) {
+                    PreferencesManager.DARK_MODE_ON -> getString(R.string.dark_mode_dark)
+                    PreferencesManager.DARK_MODE_OFF -> getString(R.string.dark_mode_light)
+                    else -> getString(R.string.dark_mode_system)
+                }
+            }
+        }
+
         binding.autoSyncToggle.setOnCheckedChangeListener { _, isChecked ->
             viewLifecycleOwner.lifecycleScope.launch {
                 prefs.setAutoSyncWallpaper(isChecked)
@@ -89,6 +99,7 @@ class SettingsFragment : Fragment() {
         binding.wallpaperTimeRow.setOnClickListener { showTimePicker() }
         binding.wallpaperTargetRow.setOnClickListener { showTargetPicker() }
         binding.categoriesRow.setOnClickListener { showCategoriesPicker() }
+        binding.darkModeRow.setOnClickListener { showDarkModePicker() }
     }
 
     private fun showTimePicker() {
@@ -122,9 +133,7 @@ class SettingsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.wallpaper_target))
             .setItems(options) { _, which ->
-                viewLifecycleOwner.lifecycleScope.launch {
-                    prefs.setWallpaperTarget(which)
-                }
+                viewLifecycleOwner.lifecycleScope.launch { prefs.setWallpaperTarget(which) }
             }
             .show()
     }
@@ -142,17 +151,36 @@ class SettingsFragment : Fragment() {
 
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.preferred_categories))
-            .setMultiChoiceItems(displayNames, checked) { _, which, isChecked ->
-                checked[which] = isChecked
-            }
+            .setMultiChoiceItems(displayNames, checked) { _, which, isChecked -> checked[which] = isChecked }
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 val selected = all.filterIndexed { i, _ -> checked[i] }
                 val final = if (selected.isEmpty()) all else selected
-                viewLifecycleOwner.lifecycleScope.launch {
-                    prefs.setPreferredCategories(final)
-                }
+                viewLifecycleOwner.lifecycleScope.launch { prefs.setPreferredCategories(final) }
             }
             .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showDarkModePicker() {
+        val options = arrayOf(
+            getString(R.string.dark_mode_system),
+            getString(R.string.dark_mode_light),
+            getString(R.string.dark_mode_dark)
+        )
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.dark_mode))
+            .setItems(options) { _, which ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    prefs.setDarkMode(which)
+                    AppCompatDelegate.setDefaultNightMode(
+                        when (which) {
+                            PreferencesManager.DARK_MODE_OFF -> AppCompatDelegate.MODE_NIGHT_NO
+                            PreferencesManager.DARK_MODE_ON -> AppCompatDelegate.MODE_NIGHT_YES
+                            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        }
+                    )
+                }
+            }
             .show()
     }
 
