@@ -25,7 +25,11 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.discoveryFragment, R.id.settingsFragment -> {
+                R.id.discoveryFragment,
+                R.id.historyFragment,
+                R.id.favoritesFragment,
+                R.id.identifyFragment,
+                R.id.settingsFragment -> {
                     binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 else -> {
