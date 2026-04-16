@@ -13,7 +13,10 @@ data class SeasonalSection(
     val season: String,
     val emoji: String,
     val color: String,
-    val plants: List<DailyPlant>
+    val monthRange: String,
+    val isCurrentSeason: Boolean,
+    val plants: List<DailyPlant>,
+    val curatedNames: List<String>
 )
 
 class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
@@ -23,6 +26,21 @@ class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
 
     private val _loading = MutableLiveData(true)
     val loading: LiveData<Boolean> = _loading
+
+    companion object {
+        val SEASONAL_PLANTS = mapOf(
+            "Spring" to listOf("Cherry Blossom", "Tulip", "Daffodil", "Magnolia", "Wisteria", "Lilac", "Peony", "Iris"),
+            "Summer" to listOf("Sunflower", "Lavender", "Hibiscus", "Rose", "Lotus", "Bougainvillea", "Daisy", "Zinnia"),
+            "Autumn" to listOf("Chrysanthemum", "Maple", "Aster", "Hydrangea", "Dahlia", "Goldenrod", "Sedum", "Helenium"),
+            "Winter" to listOf("Poinsettia", "Holly", "Snowdrop", "Winter Jasmine", "Hellebore", "Camellia", "Cyclamen", "Witch Hazel")
+        )
+        val SEASON_MONTHS = mapOf(
+            "Spring" to "March – May",
+            "Summer" to "June – August",
+            "Autumn" to "September – November",
+            "Winter" to "December – February"
+        )
+    }
 
     init { loadSeasonal() }
 
@@ -36,6 +54,8 @@ class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
                 bySeasonMap.getOrPut(season) { mutableListOf() }.add(plant)
             }
 
+            val currentSeason = getSeason(System.currentTimeMillis())
+
             val orderedSeasons = listOf(
                 Triple("Spring", "🌸", "#D8F3DC"),
                 Triple("Summer", "☀️", "#FFF3B0"),
@@ -43,9 +63,18 @@ class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
                 Triple("Winter", "❄️", "#D0E8FF")
             )
 
-            val sections = orderedSeasons.mapNotNull { (name, emoji, color) ->
-                val plants = bySeasonMap[name] ?: return@mapNotNull null
-                SeasonalSection(name, emoji, color, plants)
+            val sorted = orderedSeasons.sortedByDescending { (name, _, _) -> name == currentSeason }
+
+            val sections = sorted.map { (name, emoji, color) ->
+                SeasonalSection(
+                    season = name,
+                    emoji = emoji,
+                    color = color,
+                    monthRange = SEASON_MONTHS[name] ?: "",
+                    isCurrentSeason = name == currentSeason,
+                    plants = bySeasonMap[name] ?: emptyList(),
+                    curatedNames = SEASONAL_PLANTS[name] ?: emptyList()
+                )
             }
 
             _sections.value = sections
