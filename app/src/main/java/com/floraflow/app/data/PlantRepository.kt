@@ -746,4 +746,13 @@ class PlantRepository(
             QuizRequest(plant.plantName, plant.scientificName)
         )
     }
+
+    /** Alias used by QuizViewModel. */
+    suspend fun generateQuiz(plant: DailyPlant): com.floraflow.app.api.QuizResponse =
+        fetchBotanicalQuiz(plant)
+
+    /** Triggers an Unsplash download event (required for attribution). */
+    suspend fun triggerDownload(url: String) {
+        try { unsplashApi.triggerDownload(url) } catch (_: Exception) {}
+    }
 }
