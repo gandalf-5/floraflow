@@ -18,7 +18,7 @@ interface PlantNetApi {
     ): PlantNetResponse
 
     companion object {
-        const val BASE_URL = "https://my.plantnet.org/v2/"
+        const val BASE_URL = "https://my-api.plantnet.org/v2/"
         const val API_KEY = "2b10oiLgd0yalCBVTL5Rrq1Ee"
     }
 }
