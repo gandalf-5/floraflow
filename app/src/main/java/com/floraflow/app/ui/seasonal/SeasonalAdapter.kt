@@ -12,6 +12,7 @@ import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.databinding.ItemSeasonPlantCardBinding
 import com.floraflow.app.databinding.ItemSeasonSectionBinding
+import com.google.android.material.chip.Chip
 
 class SeasonalAdapter(
     private val sections: List<SeasonalSection>,
@@ -33,13 +34,48 @@ class SeasonalAdapter(
         with(holder.binding) {
             seasonEmoji.text = section.emoji
             seasonName.text = section.season
-            plantCount.text = "${section.plants.size} plant${if (section.plants.size > 1) "s" else ""}"
+            monthRange.text = section.monthRange
+
             try { seasonCard.setCardBackgroundColor(Color.parseColor(section.color)) } catch (e: Exception) { }
-            val plantAdapter = SeasonPlantAdapter(section.plants, onPlantClick)
-            plantsRecycler.layoutManager = LinearLayoutManager(
-                root.context, LinearLayoutManager.HORIZONTAL, false
-            )
-            plantsRecycler.adapter = plantAdapter
+
+            if (section.isCurrentSeason) {
+                inSeasonBadge.visibility = View.VISIBLE
+            } else {
+                inSeasonBadge.visibility = View.GONE
+            }
+
+            if (section.plants.isNotEmpty()) {
+                plantCount.text = "${section.plants.size} plant${if (section.plants.size > 1) "s" else ""} discovered"
+                plantCount.visibility = View.VISIBLE
+                plantsRecycler.visibility = View.VISIBLE
+                curatedChipGroup.visibility = View.GONE
+
+                val plantAdapter = SeasonPlantAdapter(section.plants, onPlantClick)
+                plantsRecycler.layoutManager = LinearLayoutManager(
+                    root.context, LinearLayoutManager.HORIZONTAL, false
+                )
+                plantsRecycler.adapter = plantAdapter
+            } else {
+                plantCount.text = "Discover plants in bloom"
+                plantCount.visibility = View.VISIBLE
+                plantsRecycler.visibility = View.GONE
+
+                curatedChipGroup.removeAllViews()
+                section.curatedNames.forEach { name ->
+                    val chip = Chip(root.context).apply {
+                        text = name
+                        isClickable = false
+                        isCheckable = false
+                        setChipBackgroundColorResource(android.R.color.transparent)
+                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                        chipStrokeWidth = 1f
+                        setChipStrokeColorResource(R.color.primary)
+                        setTextColor(Color.parseColor("#2D6A4F"))
+                    }
+                    curatedChipGroup.addView(chip)
+                }
+                curatedChipGroup.visibility = View.VISIBLE
+            }
         }
     }
 
