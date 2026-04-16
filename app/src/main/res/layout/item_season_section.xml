@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingTop="24dp">
 
-    <!-- Season Header -->
+    <!-- Season Header Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/season_card"
         android:layout_width="match_parent"
@@ -20,52 +20,93 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <TextView
-                android:id="@+id/season_emoji"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="32sp" />
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="12dp"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/season_name"
+                    android:id="@+id/season_emoji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#1B2E1F"
-                    android:textSize="18sp"
-                    android:fontFamily="@font/playfair_display_bold" />
+                    android:textSize="32sp" />
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/season_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#1B2E1F"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/playfair_display_bold" />
+
+                    <TextView
+                        android:id="@+id/month_range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#557A60"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/inter_regular" />
+
+                    <TextView
+                        android:id="@+id/plant_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#557A60"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <!-- "In Season Now" badge -->
                 <TextView
-                    android:id="@+id/plant_count"
+                    android:id="@+id/in_season_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#557A60"
-                    android:textSize="13sp"
-                    android:fontFamily="@font/inter_regular" />
+                    android:text="✦ NOW"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:background="@drawable/badge_in_season"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
+
+            <!-- Curated plant name chips -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/curated_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:chipSpacingHorizontal="4dp"
+                app:chipSpacingVertical="4dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Horizontal scroll of plant cards -->
+    <!-- Horizontal scroll of discovered plant cards -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/plants_recycler"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:visibility="gone" />
 
 </LinearLayout>
