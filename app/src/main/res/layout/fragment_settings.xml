@@ -325,6 +325,64 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Section: Appearance -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="12dp"
+            android:text="@string/appearance"
+            android:textColor="@color/primary"
+            android:textSize="11sp"
+            android:fontFamily="@font/inter_medium"
+            android:letterSpacing="0.15"
+            android:textAllCaps="true" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/surface">
+
+            <LinearLayout
+                android:id="@+id/dark_mode_row"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/dark_mode"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_regular" />
+
+                <TextView
+                    android:id="@+id/dark_mode_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_medium" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Section: About -->
         <TextView
             android:layout_width="match_parent"
