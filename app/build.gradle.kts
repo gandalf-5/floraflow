@@ -14,12 +14,11 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        // URL of the FloraFlow backend API server (set via FLORA_FLOW_API_URL env var / GitHub secret).
-        // Must end with /api/ — e.g. "https://your-api-server.replit.app/api/"
+        // Production backend URL — not a secret (OpenAI key stays on the server).
         buildConfigField(
             "String",
             "FLORA_FLOW_API_URL",
-            "\"${System.getenv("FLORA_FLOW_API_URL") ?: "https://placeholder.example.com/api/"}\""
+            "\"https://flora-explorer.replit.app/api/\""
         )
     }
 
