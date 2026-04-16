@@ -33,7 +33,7 @@ class WallpaperWorker(
                 val repository = PlantRepository(
                     app.database.dailyPlantDao(),
                     app.unsplashApi,
-                    app.openAiApi,
+                    app.floraFlowApi,
                     categories
                 )
 
