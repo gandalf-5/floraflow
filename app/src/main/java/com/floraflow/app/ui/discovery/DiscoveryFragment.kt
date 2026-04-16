@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -17,8 +18,10 @@ import com.floraflow.app.FloraFlowApp
 import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
+import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentDiscoveryBinding
 import com.floraflow.app.ui.discovery.DiscoveryViewModelFactory
+import com.google.android.material.chip.Chip
 import java.io.File
 
 class DiscoveryFragment : Fragment() {
@@ -42,8 +45,32 @@ class DiscoveryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupCategoryChips()
         setupObservers()
-        binding.refreshFab.setOnClickListener { viewModel.refresh() }
+        binding.refreshFab.setOnClickListener {
+            binding.categoryChipGroup.clearCheck()
+            viewModel.refresh()
+        }
+    }
+
+    private fun setupCategoryChips() {
+        val queries = PreferencesManager.ALL_CATEGORIES
+        val labels = PreferencesManager.DISPLAY_CATEGORIES
+
+        queries.forEachIndexed { index, query ->
+            val chip = Chip(requireContext()).apply {
+                text = labels.getOrElse(index) { query }
+                isCheckable = true
+                chipBackgroundColor = resources.getColorStateList(
+                    com.google.android.material.R.color.m3_chip_background_color, requireContext().theme
+                )
+                setTextColor(resources.getColor(R.color.text_secondary, requireContext().theme))
+                setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) viewModel.refreshWithCategory(query)
+                }
+            }
+            binding.categoryChipGroup.addView(chip)
+        }
     }
 
     private fun setupObservers() {
@@ -98,7 +125,12 @@ class DiscoveryFragment : Fragment() {
     private fun showPlant(plant: DailyPlant) {
         binding.loadingGroup.visibility = View.GONE
         binding.errorGroup.visibility = View.GONE
-        binding.contentGroup.visibility = View.VISIBLE
+
+        if (binding.contentGroup.visibility != View.VISIBLE) {
+            binding.contentGroup.visibility = View.VISIBLE
+            val fadeIn = AnimationUtils.loadAnimation(requireContext(), R.anim.content_fade_in)
+            binding.contentGroup.startAnimation(fadeIn)
+        }
 
         binding.plantNameText.text = plant.plantName
 
@@ -122,15 +154,9 @@ class DiscoveryFragment : Fragment() {
 
         val favIcon = if (plant.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
         binding.favoriteButton.setImageResource(favIcon)
-        binding.favoriteButton.setOnClickListener {
-            viewModel.toggleFavorite(plant)
-        }
-
+        binding.favoriteButton.setOnClickListener { viewModel.toggleFavorite(plant) }
         binding.shareButton.setOnClickListener { sharePlant(plant) }
-
-        binding.setWallpaperButton.setOnClickListener {
-            viewModel.setAsWallpaper(requireContext(), plant)
-        }
+        binding.setWallpaperButton.setOnClickListener { viewModel.setAsWallpaper(requireContext(), plant) }
 
         Glide.with(this)
             .load(plant.imageUrlRegular)
@@ -155,14 +181,8 @@ class DiscoveryFragment : Fragment() {
 
         Thread {
             try {
-                val bitmap = Glide.with(ctx)
-                    .asBitmap()
-                    .load(plant.imageUrlRegular)
-                    .submit()
-                    .get()
-                imageFile.outputStream().use { out ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
-                }
+                val bitmap = Glide.with(ctx).asBitmap().load(plant.imageUrlRegular).submit().get()
+                imageFile.outputStream().use { out -> bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out) }
                 val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", imageFile)
                 activity?.runOnUiThread {
                     if (!isAdded) return@runOnUiThread
@@ -188,9 +208,7 @@ class DiscoveryFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-        } catch (e: Exception) { }
+        try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) } catch (e: Exception) { }
     }
 
     override fun onDestroyView() {
