@@ -19,5 +19,6 @@ data class DailyPlant(
     val downloadLocationUrl: String,
     val botanicalInsight: String,
     val isFavorite: Boolean = false,
-    val fetchedAt: Long = System.currentTimeMillis()
+    val fetchedAt: Long = System.currentTimeMillis(),
+    val notes: String? = null
 )
