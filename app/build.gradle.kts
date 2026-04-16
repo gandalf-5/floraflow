@@ -15,7 +15,6 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "OPENAI_API_KEY", "\"${System.getenv("OPENAI_API_KEY") ?: ""}\"")
-
     }
 
     buildTypes {
@@ -75,4 +74,6 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+    implementation("androidx.palette:palette-ktx:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
