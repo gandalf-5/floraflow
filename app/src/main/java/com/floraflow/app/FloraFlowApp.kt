@@ -15,7 +15,9 @@ class FloraFlowApp : Application() {
 
     val database by lazy { AppDatabase.getInstance(this) }
     val unsplashApi by lazy { RetrofitClient.unsplashApi }
-    val openAiApi by lazy { RetrofitClient.openAiApi }
+
+    /** Backend proxy API — OpenAI calls are made server-side; no key in the APK. */
+    val floraFlowApi by lazy { RetrofitClient.floraFlowApi }
 
     override fun onCreate() {
         super.onCreate()
