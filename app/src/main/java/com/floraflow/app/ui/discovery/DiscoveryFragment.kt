@@ -202,6 +202,13 @@ class DiscoveryFragment : Fragment() {
             binding.scientificNameText.visibility = View.GONE
         }
 
+        if (!plant.nativeRegion.isNullOrBlank()) {
+            binding.nativeRegionGroup.visibility = View.VISIBLE
+            binding.nativeRegionText.text = "Native to ${plant.nativeRegion}"
+        } else {
+            binding.nativeRegionGroup.visibility = View.GONE
+        }
+
         if (!plant.locationName.isNullOrBlank()) {
             binding.locationGroup.visibility = View.VISIBLE
             binding.locationText.text = plant.locationName
