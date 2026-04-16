@@ -39,19 +39,14 @@ class SeasonalFragment : Fragment() {
 
         viewModel.loading.observe(viewLifecycleOwner) { loading ->
             binding.loadingGroup.visibility = if (loading) View.VISIBLE else View.GONE
+            if (!loading) binding.sectionsRecycler.visibility = View.VISIBLE
         }
 
         viewModel.sections.observe(viewLifecycleOwner) { sections ->
-            if (sections.isEmpty()) {
-                binding.emptyGroup.visibility = View.VISIBLE
-                binding.sectionsRecycler.visibility = View.GONE
-            } else {
-                binding.emptyGroup.visibility = View.GONE
-                binding.sectionsRecycler.visibility = View.VISIBLE
-                binding.sectionsRecycler.adapter = SeasonalAdapter(sections) { plant ->
-                    // Navigate back to discovery context
-                    findNavController().popBackStack()
-                }
+            binding.emptyGroup.visibility = View.GONE
+            binding.sectionsRecycler.visibility = View.VISIBLE
+            binding.sectionsRecycler.adapter = SeasonalAdapter(sections) {
+                findNavController().popBackStack()
             }
         }
     }
