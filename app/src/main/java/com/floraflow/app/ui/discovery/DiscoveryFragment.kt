@@ -1,12 +1,14 @@
 package com.floraflow.app.ui.discovery
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -17,6 +19,7 @@ import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
 import com.floraflow.app.databinding.FragmentDiscoveryBinding
 import com.floraflow.app.ui.discovery.DiscoveryViewModelFactory
+import java.io.File
 
 class DiscoveryFragment : Fragment() {
 
@@ -137,7 +140,7 @@ class DiscoveryFragment : Fragment() {
     }
 
     private fun sharePlant(plant: DailyPlant) {
-        val text = buildString {
+        val shareText = buildString {
             append("🌿 ${plant.plantName}")
             if (!plant.scientificName.isNullOrBlank()) append(" (${plant.scientificName})")
             append("\n\n")
@@ -145,11 +148,43 @@ class DiscoveryFragment : Fragment() {
             append("\n\nPhoto by ${plant.photographerName} on Unsplash")
             append("\n\nDiscover more with FloraFlow 🌱")
         }
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, text)
-        }
-        startActivity(Intent.createChooser(intent, getString(R.string.share_plant)))
+
+        val ctx = requireContext()
+        val imageDir = File(ctx.cacheDir, "images").also { it.mkdirs() }
+        val imageFile = File(imageDir, "share_plant.jpg")
+
+        Thread {
+            try {
+                val bitmap = Glide.with(ctx)
+                    .asBitmap()
+                    .load(plant.imageUrlRegular)
+                    .submit()
+                    .get()
+                imageFile.outputStream().use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                }
+                val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", imageFile)
+                activity?.runOnUiThread {
+                    if (!isAdded) return@runOnUiThread
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "image/jpeg"
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(Intent.createChooser(intent, getString(R.string.share_plant)))
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    if (!isAdded) return@runOnUiThread
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                    }
+                    startActivity(Intent.createChooser(intent, getString(R.string.share_plant)))
+                }
+            }
+        }.start()
     }
 
     private fun openUrl(url: String) {
