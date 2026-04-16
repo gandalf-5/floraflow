@@ -1,13 +1,11 @@
 package com.floraflow.app.data
 
 import android.util.Log
-import com.floraflow.app.BuildConfig
-import com.floraflow.app.api.ChatCompletionRequest
-import com.floraflow.app.api.ChatMessage
-import com.floraflow.app.api.OpenAiApi
+import com.floraflow.app.api.FloraFlowApi
+import com.floraflow.app.api.InsightRequest
+import com.floraflow.app.api.QuizRequest
 import com.floraflow.app.api.UnsplashApi
 import com.floraflow.app.api.UnsplashPhoto
-import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -16,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class PlantRepository(
     private val dao: DailyPlantDao,
     private val unsplashApi: UnsplashApi,
-    private val openAiApi: OpenAiApi,
+    private val floraFlowApi: FloraFlowApi,
     private val preferredCategories: List<String> = PreferencesManager.ALL_CATEGORIES
 ) {
     companion object {
@@ -231,7 +229,7 @@ class PlantRepository(
         }
 
         val location = buildLocationString(photo)
-        val (insight, scientificName) = fetchBotanicalData(displayName)
+        val (insight, scientificName) = fetchBotanicalInsight(displayName)
 
         val plant = DailyPlant(
             dateKey = dateKey,
@@ -265,70 +263,37 @@ class PlantRepository(
             .firstOrNull()
     }
 
-    private suspend fun fetchBotanicalData(plantName: String): Pair<String, String?> {
+    /**
+     * Fetches botanical insight and scientific name from the FloraFlow backend,
+     * which proxies the call to OpenAI server-side. No API key on the device.
+     */
+    private suspend fun fetchBotanicalInsight(plantName: String): Pair<String, String?> {
         return try {
-            val prompt = """For the plant species "$plantName", provide:
-1. INSIGHT: One fascinating lesser-known botanical fact in exactly 2-3 sentences. Be specific and surprising. No markdown.
-2. SCIENTIFIC: The scientific (Latin) binomial name only, e.g. "Rosa canina". If unknown, write "Unknown".
-
-Format:
-INSIGHT: [your insight here]
-SCIENTIFIC: [scientific name here]"""
-
-            val response = openAiApi.getChatCompletion(
-                authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}",
-                request = ChatCompletionRequest(
-                    messages = listOf(
-                        ChatMessage(role = "system", content = "You are a botanist. Follow the format precisely."),
-                        ChatMessage(role = "user", content = prompt)
-                    ),
-                    maxTokens = 200
-                )
+            val response = floraFlowApi.getBotanicalInsight(InsightRequest(plantName))
+            Pair(
+                response.insight ?: getFallbackInsight(plantName),
+                response.scientificName
             )
-
-            val text = response.choices.firstOrNull()?.message?.content?.trim() ?: ""
-            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }
-                ?.removePrefix("INSIGHT:")?.trim()
-            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }
-                ?.removePrefix("SCIENTIFIC:")?.trim()
-                ?.takeIf { it != "Unknown" && it.isNotBlank() }
-
-            Pair(insightLine ?: getFallbackInsight(plantName), scientificLine)
         } catch (e: Exception) {
-            Log.w(TAG, "AI unavailable, using fallback", e)
+            Log.w(TAG, "Backend insight unavailable, using fallback", e)
             Pair(getFallbackInsight(plantName), null)
         }
     }
 
+    /**
+     * Generates a quiz question via the FloraFlow backend (server-side GPT call).
+     */
     suspend fun generateQuiz(plant: DailyPlant): QuizData? {
         return try {
-            val scientificPart = if (!plant.scientificName.isNullOrBlank()) " (${plant.scientificName})" else ""
-            val prompt = """Generate a multiple-choice quiz question about "${plant.plantName}"$scientificPart.
-Return ONLY a valid JSON object, no markdown, no explanation:
-{"question":"...","options":["...","...","...","..."],"correct":0,"explanation":"..."}
-Rules: question is interesting botanical trivia, options has exactly 4 choices, correct is 0-3 index of right answer, explanation is 1-2 sentences."""
-
-            val response = openAiApi.getChatCompletion(
-                authorization = "Bearer ${BuildConfig.OPENAI_API_KEY}",
-                request = ChatCompletionRequest(
-                    messages = listOf(
-                        ChatMessage(role = "system", content = "You are a botanist quiz master. Return only JSON."),
-                        ChatMessage(role = "user", content = prompt)
-                    ),
-                    maxTokens = 300
-                )
+            val response = floraFlowApi.getBotanicalQuiz(
+                QuizRequest(plant.plantName, plant.scientificName)
             )
-
-            val raw = response.choices.firstOrNull()?.message?.content?.trim() ?: return null
-            val jsonStr = raw.substringAfter("{").let { "{$it" }.substringBefore("}").let { "$it}" }
-            val obj = JSONObject(jsonStr)
-            val optionsArray = obj.getJSONArray("options")
-            val options = (0 until 4).map { optionsArray.getString(it) }
+            if (response.question.isNullOrBlank() || response.options.isNullOrEmpty()) return null
             QuizData(
-                question = obj.getString("question"),
-                options = options,
-                correct = obj.getInt("correct").coerceIn(0, 3),
-                explanation = obj.getString("explanation"),
+                question = response.question,
+                options = response.options.take(4),
+                correct = (response.correct ?: 0).coerceIn(0, 3),
+                explanation = response.explanation ?: "",
                 dateKey = plant.dateKey
             )
         } catch (e: Exception) {
