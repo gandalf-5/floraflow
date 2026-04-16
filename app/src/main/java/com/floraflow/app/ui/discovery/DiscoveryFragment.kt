@@ -43,7 +43,7 @@ class DiscoveryFragment : Fragment() {
     private val viewModel: DiscoveryViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         DiscoveryViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.openAiApi),
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi),
             PreferencesManager(requireContext())
         )
     }
