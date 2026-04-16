@@ -42,8 +42,7 @@ class NotificationWorker(
 
     override suspend fun doWork(): Result {
         val prefs = PreferencesManager(applicationContext)
-        val notificationsEnabled = prefs.notificationsEnabled.first()
-        if (!notificationsEnabled) return Result.success()
+        if (!prefs.notificationsEnabled.first()) return Result.success()
 
         return try {
             val app = applicationContext as FloraFlowApp
@@ -63,13 +62,25 @@ class NotificationWorker(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
 
+            // Build an engaging teaser from the first sentence of the insight
+            val firstSentence = plant.botanicalInsight.split(". ").firstOrNull()?.trim() ?: plant.botanicalInsight.take(80)
+            val teaser = "Did you know? $firstSentence"
+
+            val streak = prefs.streakCount.first()
+            val streakLine = if (streak > 1) "\n🔥 $streak day streak!" else ""
+
             val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_discover)
-                .setContentTitle("🌿 Today's Plant: ${plant.plantName}")
-                .setContentText(plant.botanicalInsight.take(100) + "…")
-                .setStyle(NotificationCompat.BigTextStyle().bigText(plant.botanicalInsight))
+                .setContentTitle("🌿 Today: ${plant.plantName}${if (!plant.scientificName.isNullOrBlank()) " · ${plant.scientificName}" else ""}")
+                .setContentText("$teaser$streakLine")
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .bigText("$teaser\n\n${plant.botanicalInsight}$streakLine")
+                        .setSummaryText("FloraFlow Daily Discovery")
+                )
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build()
 
             val manager = applicationContext.getSystemService(NotificationManager::class.java)
