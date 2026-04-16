@@ -14,6 +14,15 @@ interface DailyPlantDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(plant: DailyPlant)
 
-    @Query("SELECT * FROM daily_plants ORDER BY fetchedAt DESC LIMIT 30")
-    suspend fun getRecent(): List<DailyPlant>
+    @Query("SELECT * FROM daily_plants ORDER BY fetchedAt DESC LIMIT 90")
+    suspend fun getHistory(): List<DailyPlant>
+
+    @Query("SELECT * FROM daily_plants WHERE isFavorite = 1 ORDER BY fetchedAt DESC")
+    suspend fun getFavorites(): List<DailyPlant>
+
+    @Query("UPDATE daily_plants SET isFavorite = :isFavorite WHERE dateKey = :dateKey")
+    suspend fun setFavorite(dateKey: String, isFavorite: Boolean)
+
+    @Query("DELETE FROM daily_plants WHERE fetchedAt < :cutoff AND isFavorite = 0")
+    suspend fun pruneOlderThan(cutoff: Long)
 }
