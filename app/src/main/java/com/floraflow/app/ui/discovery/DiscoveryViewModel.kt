@@ -10,9 +10,14 @@ import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
+import com.floraflow.app.data.PreferencesManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 sealed class DiscoveryUiState {
     object Loading : DiscoveryUiState()
@@ -27,11 +32,10 @@ sealed class WallpaperState {
     data class Error(val message: String) : WallpaperState()
 }
 
-class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() {
-
-    companion object {
-        private const val TAG = "DiscoveryViewModel"
-    }
+class DiscoveryViewModel(
+    private val repository: PlantRepository,
+    private val prefs: PreferencesManager
+) : ViewModel() {
 
     private val _uiState = MutableLiveData<DiscoveryUiState>(DiscoveryUiState.Loading)
     val uiState: LiveData<DiscoveryUiState> = _uiState
@@ -39,7 +43,13 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
     private val _wallpaperState = MutableLiveData<WallpaperState>(WallpaperState.Idle)
     val wallpaperState: LiveData<WallpaperState> = _wallpaperState
 
-    init { loadTodayPlant() }
+    private val _streakCount = MutableLiveData(0)
+    val streakCount: LiveData<Int> = _streakCount
+
+    init {
+        loadTodayPlant()
+        updateStreak()
+    }
 
     fun loadTodayPlant() {
         _uiState.value = DiscoveryUiState.Loading
@@ -49,11 +59,8 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
                 _uiState.value = DiscoveryUiState.Success(plant)
             } catch (e: Exception) {
                 val cached = repository.getTodayPlant()
-                if (cached != null) {
-                    _uiState.value = DiscoveryUiState.Success(cached)
-                } else {
-                    _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load today's plant")
-                }
+                if (cached != null) _uiState.value = DiscoveryUiState.Success(cached)
+                else _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load today's plant")
             }
         }
     }
@@ -75,7 +82,15 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
     fun toggleFavorite(plant: DailyPlant) {
         viewModelScope.launch {
             repository.toggleFavorite(plant)
-            val updated = repository.getTodayPlant()
+            val updated = repository.getPlantByKey(plant.dateKey)
+            if (updated != null) _uiState.value = DiscoveryUiState.Success(updated)
+        }
+    }
+
+    fun saveNotes(plant: DailyPlant, notes: String?) {
+        viewModelScope.launch {
+            repository.updateNotes(plant.dateKey, notes?.takeIf { it.isNotBlank() })
+            val updated = repository.getPlantByKey(plant.dateKey)
             if (updated != null) _uiState.value = DiscoveryUiState.Success(updated)
         }
     }
@@ -86,26 +101,44 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
         viewModelScope.launch {
             try {
                 val bitmap = withContext(Dispatchers.IO) {
-                    Glide.with(context.applicationContext)
-                        .asBitmap()
-                        .load(plant.imageUrlFull)
-                        .submit()
-                        .get()
+                    Glide.with(context.applicationContext).asBitmap().load(plant.imageUrlFull).submit().get()
                 }
                 withContext(Dispatchers.IO) {
                     WallpaperManager.getInstance(context.applicationContext).setBitmap(bitmap)
                 }
                 repository.triggerDownload(plant.downloadLocationUrl)
-                Log.d(TAG, "Wallpaper set: ${plant.plantName}")
                 _wallpaperState.value = WallpaperState.Success
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to set wallpaper", e)
+                Log.e("DiscoveryVM", "Wallpaper failed", e)
                 _wallpaperState.value = WallpaperState.Error("Could not set wallpaper")
             }
         }
     }
 
-    fun resetWallpaperState() {
-        _wallpaperState.value = WallpaperState.Idle
+    fun resetWallpaperState() { _wallpaperState.value = WallpaperState.Idle }
+
+    private fun updateStreak() {
+        viewModelScope.launch {
+            val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            val lastDate = prefs.lastOpenDate.first()
+            val currentStreak = prefs.streakCount.first()
+
+            val yesterday = getYesterday()
+            val newStreak = when {
+                lastDate == today -> currentStreak.coerceAtLeast(1)
+                lastDate == yesterday -> currentStreak + 1
+                else -> 1
+            }
+
+            prefs.setStreakCount(newStreak)
+            prefs.setLastOpenDate(today)
+            _streakCount.value = newStreak
+        }
+    }
+
+    private fun getYesterday(): String {
+        val cal = java.util.Calendar.getInstance()
+        cal.add(java.util.Calendar.DAY_OF_YEAR, -1)
+        return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.time)
     }
 }
