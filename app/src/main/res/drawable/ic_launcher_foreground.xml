@@ -19,31 +19,31 @@
 
     <!-- Vein -->
     <path
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#2D6A4F"
         android:strokeWidth="2"
         android:pathData="M54,30 L54,75" />
 
     <!-- Left veins -->
     <path
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#2D6A4F"
         android:strokeWidth="1.5"
         android:pathData="M54,45 L40,55" />
     <path
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#2D6A4F"
         android:strokeWidth="1.5"
         android:pathData="M54,55 L38,62" />
 
     <!-- Right veins -->
     <path
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#2D6A4F"
         android:strokeWidth="1.5"
         android:pathData="M54,45 L68,55" />
     <path
-        android:fillColor="none"
+        android:fillColor="#00000000"
         android:strokeColor="#2D6A4F"
         android:strokeWidth="1.5"
         android:pathData="M54,55 L70,62" />
