@@ -22,23 +22,155 @@ class PlantRepository(
     companion object {
         private const val TAG = "PlantRepository"
 
-        private val PLANT_NAMES = mapOf(
-            "tropical" to "Tropical Foliage",
-            "wildflower" to "Wild Meadow Flowers",
-            "fern" to "Forest Fern",
-            "succulent" to "Desert Succulent",
-            "orchid" to "Exotic Orchid",
-            "bonsai" to "Ancient Bonsai",
-            "botanical" to "Botanical Specimen",
-            "moss" to "Old-Growth Moss",
-            "water lily" to "Aquatic Lily",
-            "cactus" to "Desert Cactus",
-            "cherry blossom" to "Cherry Blossom",
-            "lavender" to "Lavender",
-            "sunflower" to "Sunflower",
-            "magnolia" to "Magnolia",
-            "lotus" to "Sacred Lotus"
+        /**
+         * Each category maps to a list of (unsplash query, display name) pairs.
+         * The Unsplash query uses the real species name so the photo always matches.
+         */
+        private val CATEGORY_PLANTS: Map<String, List<Pair<String, String>>> = mapOf(
+            "wildflower" to listOf(
+                "Papaver rhoeas poppy flower" to "Common Poppy",
+                "Bellis perennis daisy" to "Common Daisy",
+                "Centaurea cyanus cornflower" to "Cornflower",
+                "Leucanthemum vulgare oxeye daisy" to "Oxeye Daisy",
+                "Lotus corniculatus trefoil" to "Bird's-foot Trefoil",
+                "Ranunculus acris buttercup flower" to "Meadow Buttercup",
+                "Campanula rotundifolia harebell" to "Harebell",
+                "Prunella vulgaris selfheal wildflower" to "Self-heal"
+            ),
+            "tropical" to listOf(
+                "Strelitzia reginae bird of paradise flower" to "Bird of Paradise",
+                "Heliconia rostrata lobster claw flower" to "Lobster Claw",
+                "Plumeria frangipani tropical flower" to "Frangipani",
+                "Anthurium andreanum flamingo flower" to "Flamingo Flower",
+                "Hibiscus rosa-sinensis tropical" to "Chinese Hibiscus",
+                "Alpinia purpurata red ginger flower" to "Red Ginger",
+                "Calathea orbifolia tropical leaf" to "Calathea",
+                "Monstera deliciosa tropical plant" to "Swiss Cheese Plant"
+            ),
+            "fern" to listOf(
+                "Dryopteris filix-mas male fern forest" to "Male Fern",
+                "Osmunda regalis royal fern" to "Royal Fern",
+                "Asplenium nidus bird's nest fern" to "Bird's Nest Fern",
+                "Polypodium vulgare common polypody" to "Common Polypody",
+                "Athyrium filix-femina lady fern" to "Lady Fern",
+                "Adiantum capillus-veneris maidenhair fern" to "Maidenhair Fern",
+                "Cyathea tree fern" to "Tree Fern",
+                "Matteuccia struthiopteris ostrich fern" to "Ostrich Fern"
+            ),
+            "succulent" to listOf(
+                "Echeveria elegans Mexican snowball succulent" to "Mexican Snowball",
+                "Aloe vera plant" to "Aloe Vera",
+                "Sedum acre stonecrop succulent" to "Biting Stonecrop",
+                "Sempervivum tectorum houseleek succulent" to "Common Houseleek",
+                "Agave americana succulent" to "Century Plant",
+                "Haworthia attenuata zebra plant succulent" to "Zebra Plant",
+                "Crassula ovata jade plant" to "Jade Plant",
+                "Dudleya brittonii chalk liveforever" to "Chalk Liveforever"
+            ),
+            "orchid" to listOf(
+                "Phalaenopsis amabilis moth orchid" to "Moth Orchid",
+                "Cattleya labiata corsage orchid" to "Corsage Orchid",
+                "Dendrobium nobile orchid" to "Noble Dendrobium",
+                "Vanda coerulea blue orchid" to "Blue Vanda",
+                "Ophrys apifera bee orchid wild" to "Bee Orchid",
+                "Dactylorhiza fuchsii spotted orchid" to "Common Spotted Orchid",
+                "Paphiopedilum slipper orchid" to "Lady's Slipper",
+                "Coelogyne cristata orchid" to "Necklace Orchid"
+            ),
+            "bonsai" to listOf(
+                "Juniperus procumbens bonsai tree" to "Juniper Bonsai",
+                "Ficus retusa bonsai tree" to "Ficus Bonsai",
+                "Acer palmatum maple bonsai" to "Japanese Maple Bonsai",
+                "Pinus thunbergii black pine bonsai" to "Japanese Black Pine Bonsai",
+                "Prunus mume ume bonsai" to "Japanese Apricot Bonsai",
+                "Zelkova serrata bonsai tree" to "Japanese Zelkova Bonsai",
+                "Carmona retusa fukien tea bonsai" to "Fukien Tea Bonsai",
+                "Ulmus parvifolia chinese elm bonsai" to "Chinese Elm Bonsai"
+            ),
+            "moss" to listOf(
+                "Bryum argenteum silver moss close up" to "Silver-green Bryum",
+                "Sphagnum moss bog peat" to "Peat Moss",
+                "Hypnum cupressiforme cypress-leaved plait-moss" to "Cypress-leaved Moss",
+                "Polytrichum commune common haircap moss" to "Common Haircap Moss",
+                "Plagiomnium undulatum wavy-leaved thread-moss" to "Wavy Feather Moss",
+                "Dicranum scoparium broom fork-moss" to "Broom Fork Moss",
+                "Thuidium tamariscinum common tamarisk-moss" to "Tamarisk Moss",
+                "Leucobryum glaucum white cushion moss" to "White Cushion Moss"
+            ),
+            "water lily" to listOf(
+                "Nymphaea alba white water lily" to "White Water Lily",
+                "Nuphar lutea yellow water lily" to "Yellow Water Lily",
+                "Victoria amazonica giant water lily" to "Giant Amazon Water Lily",
+                "Nelumbo nucifera sacred lotus water" to "Sacred Lotus",
+                "Nymphaea 'Black Princess' water lily" to "Black Princess Lily",
+                "Nymphaea caerulea blue lotus" to "Blue Egyptian Lotus",
+                "Euryale ferox foxnut water plant" to "Foxnut",
+                "Nymphaea 'Attraction' pink water lily" to "Attraction Water Lily"
+            ),
+            "cactus" to listOf(
+                "Cereus jamacaru column cactus" to "Jamacaru Cactus",
+                "Opuntia ficus-indica prickly pear cactus" to "Prickly Pear",
+                "Echinocactus grusonii golden barrel cactus" to "Golden Barrel Cactus",
+                "Ferocactus wislizeni fishhook barrel cactus" to "Fishhook Barrel",
+                "Carnegiea gigantea saguaro cactus" to "Saguaro Cactus",
+                "Mammillaria hahniana old lady cactus" to "Old Lady Cactus",
+                "Astrophytum myriostigma bishop hat cactus" to "Bishop's Hat",
+                "Notocactus ottonis ball cactus flowering" to "Otto's Cactus"
+            ),
+            "cherry blossom" to listOf(
+                "Prunus serrulata Yoshino cherry blossom" to "Yoshino Cherry",
+                "Prunus x yedoensis cherry blossom" to "Tokyo Cherry",
+                "Prunus avium wild cherry blossom" to "Wild Cherry",
+                "Prunus 'Kanzan' double cherry blossom" to "Kanzan Cherry",
+                "Prunus subhirtella spring cherry" to "Spring Cherry",
+                "Prunus 'Ukon' pale yellow cherry blossom" to "Ukon Cherry",
+                "Prunus cerasifera myrobalan plum blossom" to "Cherry Plum",
+                "Prunus padus bird cherry blossom" to "Bird Cherry"
+            ),
+            "lavender" to listOf(
+                "Lavandula angustifolia true lavender field" to "True Lavender",
+                "Lavandula stoechas French lavender" to "French Lavender",
+                "Lavandula dentata fringed lavender" to "Fringed Lavender",
+                "Lavandula x intermedia lavandin" to "Lavandin",
+                "Lavandula multifida fernleaf lavender" to "Fernleaf Lavender",
+                "Lavandula lanata woolly lavender" to "Woolly Lavender",
+                "Lavandula latifolia spike lavender" to "Spike Lavender",
+                "Lavandula canariensis canary island lavender" to "Canary Lavender"
+            ),
+            "sunflower" to listOf(
+                "Helianthus annuus common sunflower field" to "Common Sunflower",
+                "Helianthus debilis beach sunflower" to "Beach Sunflower",
+                "Helianthus tuberosus Jerusalem artichoke flower" to "Jerusalem Artichoke",
+                "Helianthus 'Teddy Bear' double sunflower" to "Teddy Bear Sunflower",
+                "Heliopsis helianthoides false sunflower" to "Smooth Oxeye",
+                "Helianthus 'Moulin Rouge' red sunflower" to "Moulin Rouge Sunflower",
+                "Helianthus maximiliani Maximilian sunflower" to "Maximilian Sunflower",
+                "Helianthus multiflorus perennial sunflower" to "Many-flowered Sunflower"
+            ),
+            "magnolia" to listOf(
+                "Magnolia grandiflora southern magnolia" to "Southern Magnolia",
+                "Magnolia stellata star magnolia" to "Star Magnolia",
+                "Magnolia liliiflora purple magnolia" to "Mulan Magnolia",
+                "Magnolia x soulangeana saucer magnolia" to "Saucer Magnolia",
+                "Magnolia sieboldii oyama magnolia" to "Oyama Magnolia",
+                "Magnolia campbellii pink himalayan magnolia" to "Campbell's Magnolia",
+                "Magnolia obovata Japanese big leaf magnolia" to "Japanese Magnolia",
+                "Magnolia denudata yulan magnolia" to "Yulan Magnolia"
+            ),
+            "lotus" to listOf(
+                "Nelumbo nucifera pink sacred lotus" to "Sacred Lotus",
+                "Nelumbo lutea American lotus yellow" to "American Lotus",
+                "Nelumbo 'Mrs. Perry D. Slocum' lotus" to "Perry's Lotus",
+                "Nelumbo 'Momo Botan' double lotus" to "Momo Botan Lotus",
+                "Nelumbo 'Carolina Queen' lotus" to "Carolina Queen Lotus",
+                "Nelumbo 'Baby Doll' miniature lotus" to "Baby Doll Lotus",
+                "Nelumbo nucifera alba white lotus" to "White Sacred Lotus",
+                "Nelumbo 'Chawan Basu' lotus" to "Chawan Basu Lotus"
+            )
         )
+
+        private val ALL_PLANTS: List<Pair<String, String>> =
+            CATEGORY_PLANTS.values.flatten()
     }
 
     fun getTodayKey(): String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
@@ -66,36 +198,47 @@ class PlantRepository(
         val existing = dao.getByDate(dateKey)
         if (existing != null) return existing
 
-        val categories = preferredCategories.ifEmpty { PreferencesManager.ALL_CATEGORIES }
-        val dayOfYear = SimpleDateFormat("D", Locale.US).format(Date()).toInt()
-        val query = categories[dayOfYear % categories.size]
-
-        return fetchAndSave(dateKey, query)
+        val (query, displayName) = pickPlantForToday()
+        return fetchAndSave(dateKey, query, displayName)
     }
 
     suspend fun fetchForCategory(categoryQuery: String): DailyPlant {
         val dateKey = "${getTodayKey()}-$categoryQuery-${System.currentTimeMillis()}"
-        return fetchAndSave(dateKey, categoryQuery, forceNew = true)
+        val plants = CATEGORY_PLANTS[categoryQuery] ?: ALL_PLANTS
+        val pick = plants[(System.currentTimeMillis() / 1000).toInt() % plants.size]
+        return fetchAndSave(dateKey, pick.first, pick.second, forceNew = true)
     }
 
-    private suspend fun fetchAndSave(dateKey: String, query: String, forceNew: Boolean = false): DailyPlant {
+    private fun pickPlantForToday(): Pair<String, String> {
+        val dayOfYear = SimpleDateFormat("D", Locale.US).format(Date()).toInt()
+        val categories = preferredCategories.ifEmpty { PreferencesManager.ALL_CATEGORIES }
+        val category = categories[dayOfYear % categories.size]
+        val plants = CATEGORY_PLANTS[category] ?: ALL_PLANTS
+        return plants[dayOfYear % plants.size]
+    }
+
+    private suspend fun fetchAndSave(
+        dateKey: String,
+        query: String,
+        displayName: String,
+        forceNew: Boolean = false
+    ): DailyPlant {
         val photo = try {
             unsplashApi.getRandomPhoto(query = query)
         } catch (e: Exception) {
-            Log.e(TAG, "Unsplash fetch failed", e)
+            Log.e(TAG, "Unsplash fetch failed for query '$query'", e)
             throw e
         }
 
-        val plantName = inferPlantName(photo, query)
         val location = buildLocationString(photo)
-        val (insight, scientificName) = fetchBotanicalData(plantName)
+        val (insight, scientificName) = fetchBotanicalData(displayName)
 
         val plant = DailyPlant(
             dateKey = dateKey,
             photoId = photo.id,
             imageUrlFull = photo.urls.full,
             imageUrlRegular = photo.urls.regular,
-            plantName = plantName,
+            plantName = displayName,
             scientificName = scientificName,
             locationName = location,
             photographerName = photo.user.name,
@@ -115,16 +258,6 @@ class PlantRepository(
         dao.pruneOlderThan(sevenDaysAgo)
     }
 
-    private fun inferPlantName(photo: UnsplashPhoto, query: String): String {
-        val description = (photo.description ?: photo.altDescription ?: "").lowercase()
-        for ((keyword, name) in PLANT_NAMES) {
-            if (description.contains(keyword) || query.contains(keyword)) return name
-        }
-        val desc = photo.description ?: photo.altDescription
-        if (!desc.isNullOrBlank()) return desc.replaceFirstChar { it.titlecase() }.take(40)
-        return query.replaceFirstChar { it.titlecase() }
-    }
-
     private fun buildLocationString(photo: UnsplashPhoto): String? {
         val loc = photo.location ?: return null
         return listOfNotNull(loc.name, loc.city, loc.country)
@@ -134,9 +267,9 @@ class PlantRepository(
 
     private suspend fun fetchBotanicalData(plantName: String): Pair<String, String?> {
         return try {
-            val prompt = """For the plant "$plantName", provide:
+            val prompt = """For the plant species "$plantName", provide:
 1. INSIGHT: One fascinating lesser-known botanical fact in exactly 2-3 sentences. Be specific and surprising. No markdown.
-2. SCIENTIFIC: The scientific (Latin) name only, e.g. "Rosa canina". If unknown, write "Unknown".
+2. SCIENTIFIC: The scientific (Latin) binomial name only, e.g. "Rosa canina". If unknown, write "Unknown".
 
 Format:
 INSIGHT: [your insight here]
@@ -154,8 +287,10 @@ SCIENTIFIC: [scientific name here]"""
             )
 
             val text = response.choices.firstOrNull()?.message?.content?.trim() ?: ""
-            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }?.removePrefix("INSIGHT:")?.trim()
-            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }?.removePrefix("SCIENTIFIC:")?.trim()
+            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }
+                ?.removePrefix("INSIGHT:")?.trim()
+            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }
+                ?.removePrefix("SCIENTIFIC:")?.trim()
                 ?.takeIf { it != "Unknown" && it.isNotBlank() }
 
             Pair(insightLine ?: getFallbackInsight(plantName), scientificLine)
