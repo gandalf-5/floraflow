@@ -3,6 +3,7 @@ package com.floraflow.app
 import android.app.Application
 import com.floraflow.app.data.AppDatabase
 import com.floraflow.app.api.RetrofitClient
+import com.floraflow.app.worker.NotificationWorker
 
 class FloraFlowApp : Application() {
 
@@ -13,6 +14,7 @@ class FloraFlowApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        NotificationWorker.createChannel(this)
     }
 
     companion object {
