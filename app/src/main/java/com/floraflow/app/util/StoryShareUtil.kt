@@ -113,7 +113,10 @@ object StoryShareUtil {
                 putExtra(Intent.EXTRA_TEXT, "#FloraFlow #Botany #${plant.plantName.replace(" ", "")}")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(Intent.createChooser(intent, "Share as Story"))
+            val chooser = Intent.createChooser(intent, "Share as Story").apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(chooser)
         } catch (e: Exception) {
             e.printStackTrace()
         }
