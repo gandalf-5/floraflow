@@ -747,9 +747,19 @@ class PlantRepository(
         )
     }
 
-    /** Alias used by QuizViewModel. */
-    suspend fun generateQuiz(plant: DailyPlant): com.floraflow.app.api.QuizResponse =
-        fetchBotanicalQuiz(plant)
+    /** Returns QuizData (domain model) or null on failure — used by QuizViewModel. */
+    suspend fun generateQuiz(plant: DailyPlant): QuizData? = try {
+        val resp = fetchBotanicalQuiz(plant)
+        if (resp.question != null && resp.options != null && resp.correct != null && resp.explanation != null) {
+            QuizData(
+                question    = resp.question,
+                options     = resp.options,
+                correct     = resp.correct,
+                explanation = resp.explanation,
+                dateKey     = getTodayKey()
+            )
+        } else null
+    } catch (_: Exception) { null }
 
     /** Triggers an Unsplash download event (required for attribution). */
     suspend fun triggerDownload(url: String) {
