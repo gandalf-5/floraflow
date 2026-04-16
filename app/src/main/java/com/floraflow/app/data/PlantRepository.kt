@@ -669,6 +669,14 @@ class PlantRepository(
         return DAILY_PLANTS[(dayOfYear - 1) % DAILY_PLANTS.size]
     }
 
+    /** Try Unsplash, returning null on any failure so callers can cascade fallbacks. */
+    private suspend fun tryUnsplashPhoto(query: String): UnsplashPhoto? = try {
+        unsplashApi.getRandomPhoto(query = query)
+    } catch (e: Exception) {
+        Log.w(TAG, "Unsplash miss for '$query': ${e.message}")
+        null
+    }
+
     private suspend fun fetchAndSave(
         dateKey: String,
         query: String,
@@ -676,12 +684,14 @@ class PlantRepository(
         nativeRegion: String,
         forceNew: Boolean = false
     ): DailyPlant {
-        val photo = try {
-            unsplashApi.getRandomPhoto(query = query)
-        } catch (e: Exception) {
-            Log.e(TAG, "Unsplash fetch failed for query '$query'", e)
-            throw e
-        }
+        // Cascade: specific query → common name → generic botanical
+        val photo = tryUnsplashPhoto(query)
+            ?: tryUnsplashPhoto(displayName)
+            ?: tryUnsplashPhoto("botanical flower garden")
+            ?: run {
+                Log.e(TAG, "All Unsplash queries failed for '$displayName'")
+                throw Exception("No photo found for $displayName")
+            }
 
         val location = buildLocationString(photo)
         val (insight, scientificName) = fetchBotanicalInsight(displayName, nativeRegion)
