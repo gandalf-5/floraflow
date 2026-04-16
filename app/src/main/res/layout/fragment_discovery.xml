@@ -89,15 +89,35 @@
             android:orientation="vertical"
             android:paddingBottom="100dp">
 
+            <!-- Category Filter Chips -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+                android:background="@color/background">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/category_chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:singleSelection="true"
+                    app:chipSpacingHorizontal="8dp" />
+
+            </HorizontalScrollView>
+
             <!-- Full-Bleed Image with Action Buttons overlay -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="480dp">
+                android:layout_height="460dp">
 
                 <ImageView
                     android:id="@+id/plant_image"
                     android:layout_width="match_parent"
-                    android:layout_height="480dp"
+                    android:layout_height="460dp"
                     android:scaleType="centerCrop"
                     android:transitionName="plant_image"
                     tools:src="@drawable/placeholder_plant" />
