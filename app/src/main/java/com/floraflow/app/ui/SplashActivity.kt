@@ -9,7 +9,11 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.floraflow.app.R
+import com.floraflow.app.data.PreferencesManager
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
@@ -30,9 +34,18 @@ class SplashActivity : AppCompatActivity() {
         subtitle.startAnimation(fadeInDelay)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            finish()
+            lifecycleScope.launch {
+                val onboardingDone = PreferencesManager(this@SplashActivity)
+                    .onboardingComplete.first()
+                val target = if (onboardingDone) {
+                    Intent(this@SplashActivity, MainActivity::class.java)
+                } else {
+                    Intent(this@SplashActivity, OnboardingActivity::class.java)
+                }
+                startActivity(target)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                finish()
+            }
         }, 2200)
     }
 }
