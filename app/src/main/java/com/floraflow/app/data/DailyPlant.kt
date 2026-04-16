@@ -11,11 +11,13 @@ data class DailyPlant(
     val imageUrlFull: String,
     val imageUrlRegular: String,
     val plantName: String,
+    val scientificName: String? = null,
     val locationName: String?,
     val photographerName: String,
     val photographerUsername: String,
     val photographerProfileUrl: String,
     val downloadLocationUrl: String,
     val botanicalInsight: String,
+    val isFavorite: Boolean = false,
     val fetchedAt: Long = System.currentTimeMillis()
 )
