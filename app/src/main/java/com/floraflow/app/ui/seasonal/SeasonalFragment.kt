@@ -20,7 +20,7 @@ class SeasonalFragment : Fragment() {
     private val viewModel: SeasonalViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         SeasonalViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.openAiApi)
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi)
         )
     }
 
