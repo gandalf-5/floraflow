@@ -21,16 +21,28 @@ class PreferencesManager(private val context: Context) {
         val WALLPAPER_TARGET = intPreferencesKey("wallpaper_target")
         val PREFERRED_CATEGORIES = stringPreferencesKey("preferred_categories")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        val DARK_MODE = intPreferencesKey("dark_mode")
 
         const val TARGET_ALL = 0
         const val TARGET_HOME = 1
         const val TARGET_LOCK = 2
+
+        const val DARK_MODE_SYSTEM = 0
+        const val DARK_MODE_OFF = 1
+        const val DARK_MODE_ON = 2
 
         val ALL_CATEGORIES = listOf(
             "tropical plant", "wildflower meadow", "fern forest",
             "succulent garden", "orchid", "bonsai tree", "botanical garden",
             "moss forest", "water lily", "cactus desert", "cherry blossom",
             "lavender field", "sunflower", "magnolia tree", "lotus flower"
+        )
+
+        val DISPLAY_CATEGORIES = listOf(
+            "Tropical", "Wildflower", "Fern", "Succulent",
+            "Orchid", "Bonsai", "Botanical", "Moss",
+            "Water Lily", "Cactus", "Cherry Blossom",
+            "Lavender", "Sunflower", "Magnolia", "Lotus"
         )
     }
 
@@ -55,6 +67,10 @@ class PreferencesManager(private val context: Context) {
         prefs[NOTIFICATIONS_ENABLED] ?: true
     }
 
+    val darkMode: Flow<Int> = context.dataStore.data.map { prefs ->
+        prefs[DARK_MODE] ?: DARK_MODE_SYSTEM
+    }
+
     suspend fun setAutoSyncWallpaper(enabled: Boolean) {
         context.dataStore.edit { prefs -> prefs[AUTO_SYNC_WALLPAPER] = enabled }
     }
@@ -73,5 +89,9 @@ class PreferencesManager(private val context: Context) {
 
     suspend fun setNotificationsEnabled(enabled: Boolean) {
         context.dataStore.edit { prefs -> prefs[NOTIFICATIONS_ENABLED] = enabled }
+    }
+
+    suspend fun setDarkMode(mode: Int) {
+        context.dataStore.edit { prefs -> prefs[DARK_MODE] = mode }
     }
 }
