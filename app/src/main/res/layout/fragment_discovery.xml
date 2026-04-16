@@ -89,12 +89,10 @@
             android:orientation="vertical"
             android:paddingBottom="100dp">
 
-            <!-- Full-Bleed Image -->
-            <androidx.cardview.widget.CardView
+            <!-- Full-Bleed Image with Action Buttons overlay -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="0dp"
-                app:cardElevation="0dp">
+                android:layout_height="480dp">
 
                 <ImageView
                     android:id="@+id/plant_image"
@@ -104,9 +102,38 @@
                     android:transitionName="plant_image"
                     tools:src="@drawable/placeholder_plant" />
 
-            </androidx.cardview.widget.CardView>
+                <!-- Action buttons top-right -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="12dp"
+                    android:orientation="horizontal">
 
-            <!-- Content Card -->
+                    <ImageButton
+                        android:id="@+id/favorite_button"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/circle_bg"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_favorite"
+                        android:contentDescription="@string/favorite" />
+
+                    <ImageButton
+                        android:id="@+id/share_button"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/circle_bg"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_share"
+                        android:contentDescription="@string/share" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <!-- Content -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -136,6 +163,19 @@
                     android:fontFamily="@font/playfair_display_bold"
                     android:lineSpacingMultiplier="1.1"
                     tools:text="Sacred Lotus" />
+
+                <!-- Scientific Name -->
+                <TextView
+                    android:id="@+id/scientific_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/text_tertiary"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:textStyle="italic"
+                    android:visibility="gone"
+                    tools:text="Nelumbo nucifera" />
 
                 <!-- Location -->
                 <LinearLayout
@@ -192,7 +232,7 @@
                     android:textSize="16sp"
                     android:fontFamily="@font/inter_regular"
                     android:lineSpacingMultiplier="1.6"
-                    tools:text="The sacred lotus can regulate its own temperature to within 1°C, keeping its flowers warm to attract cold-blooded pollinators during cool nights." />
+                    tools:text="The sacred lotus can regulate its own temperature to within 1°C." />
 
                 <!-- Divider -->
                 <View
@@ -210,7 +250,6 @@
                     android:textColor="@color/text_tertiary"
                     android:textSize="13sp"
                     android:fontFamily="@font/inter_regular"
-                    android:drawablePadding="6dp"
                     tools:text="Photo by John Smith on Unsplash" />
 
                 <!-- Set as Wallpaper Button -->
