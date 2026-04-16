@@ -39,9 +39,7 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
     private val _wallpaperState = MutableLiveData<WallpaperState>(WallpaperState.Idle)
     val wallpaperState: LiveData<WallpaperState> = _wallpaperState
 
-    init {
-        loadTodayPlant()
-    }
+    init { loadTodayPlant() }
 
     fun loadTodayPlant() {
         _uiState.value = DiscoveryUiState.Loading
@@ -54,21 +52,24 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
                 if (cached != null) {
                     _uiState.value = DiscoveryUiState.Success(cached)
                 } else {
-                    _uiState.value = DiscoveryUiState.Error(
-                        e.message ?: "Unable to load today's plant"
-                    )
+                    _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load today's plant")
                 }
             }
         }
     }
 
-    fun refresh() {
-        loadTodayPlant()
+    fun refresh() = loadTodayPlant()
+
+    fun toggleFavorite(plant: DailyPlant) {
+        viewModelScope.launch {
+            repository.toggleFavorite(plant)
+            val updated = repository.getTodayPlant()
+            if (updated != null) _uiState.value = DiscoveryUiState.Success(updated)
+        }
     }
 
     fun setAsWallpaper(context: Context, plant: DailyPlant) {
         if (_wallpaperState.value is WallpaperState.Setting) return
-
         _wallpaperState.value = WallpaperState.Setting
         viewModelScope.launch {
             try {
@@ -79,14 +80,10 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
                         .submit()
                         .get()
                 }
-
                 withContext(Dispatchers.IO) {
-                    val wallpaperManager = WallpaperManager.getInstance(context.applicationContext)
-                    wallpaperManager.setBitmap(bitmap)
+                    WallpaperManager.getInstance(context.applicationContext).setBitmap(bitmap)
                 }
-
                 repository.triggerDownload(plant.downloadLocationUrl)
-
                 Log.d(TAG, "Wallpaper set: ${plant.plantName}")
                 _wallpaperState.value = WallpaperState.Success
             } catch (e: Exception) {
