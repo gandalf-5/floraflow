@@ -100,13 +100,15 @@
 
         </LinearLayout>
 
-        <!-- Preview Image -->
-        <ImageView
+        <!-- Preview Image (rounded corners via ShapeableImageView) -->
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/preview_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.FloraFlow.RoundedImage"
+            app:strokeWidth="0dp"
             android:visibility="gone" />
 
         <!-- Identify Button -->
