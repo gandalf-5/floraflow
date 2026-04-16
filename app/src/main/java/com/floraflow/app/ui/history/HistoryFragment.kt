@@ -20,7 +20,7 @@ class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         HistoryViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.openAiApi)
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi)
         )
     }
 
