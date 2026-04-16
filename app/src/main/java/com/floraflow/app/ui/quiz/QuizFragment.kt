@@ -25,7 +25,7 @@ class QuizFragment : Fragment() {
     private val viewModel: QuizViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         QuizViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.openAiApi),
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi),
             PreferencesManager(requireContext())
         )
     }
