@@ -26,6 +26,11 @@ class PreferencesManager(private val context: Context) {
         val STREAK_COUNT = intPreferencesKey("streak_count")
         val LAST_OPEN_DATE = stringPreferencesKey("last_open_date")
         val DAILY_QUIZ_JSON = stringPreferencesKey("daily_quiz_json")
+        val ONBOARDING_COMPLETE = booleanPreferencesKey("onboarding_complete")
+        val IS_PREMIUM = booleanPreferencesKey("is_premium")
+        val FAVORITES_COUNT = intPreferencesKey("favorites_count")
+        val DAILY_ID_COUNT = intPreferencesKey("daily_id_count")
+        val DAILY_ID_DATE = stringPreferencesKey("daily_id_date")
 
         const val TARGET_ALL = 0
         const val TARGET_HOME = 1
@@ -34,6 +39,11 @@ class PreferencesManager(private val context: Context) {
         const val DARK_MODE_SYSTEM = 0
         const val DARK_MODE_OFF = 1
         const val DARK_MODE_ON = 2
+
+        // Freemium limits for free users
+        const val FREE_FAVORITES_LIMIT = 10
+        const val FREE_DAILY_ID_LIMIT = 3
+        const val FREE_HISTORY_DAYS = 7
 
         val ALL_CATEGORIES = listOf(
             "tropical plant", "wildflower meadow", "fern forest",
@@ -62,6 +72,11 @@ class PreferencesManager(private val context: Context) {
     val streakCount: Flow<Int> = context.dataStore.data.map { it[STREAK_COUNT] ?: 0 }
     val lastOpenDate: Flow<String> = context.dataStore.data.map { it[LAST_OPEN_DATE] ?: "" }
     val dailyQuizJson: Flow<String> = context.dataStore.data.map { it[DAILY_QUIZ_JSON] ?: "" }
+    val onboardingComplete: Flow<Boolean> = context.dataStore.data.map { it[ONBOARDING_COMPLETE] ?: false }
+    val isPremium: Flow<Boolean> = context.dataStore.data.map { it[IS_PREMIUM] ?: false }
+    val favoritesCount: Flow<Int> = context.dataStore.data.map { it[FAVORITES_COUNT] ?: 0 }
+    val dailyIdCount: Flow<Int> = context.dataStore.data.map { it[DAILY_ID_COUNT] ?: 0 }
+    val dailyIdDate: Flow<String> = context.dataStore.data.map { it[DAILY_ID_DATE] ?: "" }
 
     suspend fun setAutoSyncWallpaper(enabled: Boolean) { context.dataStore.edit { it[AUTO_SYNC_WALLPAPER] = enabled } }
     suspend fun setWallpaperHour(hour: Int) { context.dataStore.edit { it[WALLPAPER_HOUR] = hour } }
@@ -74,4 +89,9 @@ class PreferencesManager(private val context: Context) {
     suspend fun setStreakCount(count: Int) { context.dataStore.edit { it[STREAK_COUNT] = count } }
     suspend fun setLastOpenDate(date: String) { context.dataStore.edit { it[LAST_OPEN_DATE] = date } }
     suspend fun setDailyQuizJson(json: String) { context.dataStore.edit { it[DAILY_QUIZ_JSON] = json } }
+    suspend fun setOnboardingComplete(complete: Boolean) { context.dataStore.edit { it[ONBOARDING_COMPLETE] = complete } }
+    suspend fun setIsPremium(premium: Boolean) { context.dataStore.edit { it[IS_PREMIUM] = premium } }
+    suspend fun setFavoritesCount(count: Int) { context.dataStore.edit { it[FAVORITES_COUNT] = count } }
+    suspend fun setDailyIdCount(count: Int) { context.dataStore.edit { it[DAILY_ID_COUNT] = count } }
+    suspend fun setDailyIdDate(date: String) { context.dataStore.edit { it[DAILY_ID_DATE] = date } }
 }
