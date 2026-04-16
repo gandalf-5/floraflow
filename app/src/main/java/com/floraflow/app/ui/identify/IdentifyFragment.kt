@@ -1,14 +1,18 @@
 package com.floraflow.app.ui.identify
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -44,6 +48,16 @@ class IdentifyFragment : Fragment() {
         }
     }
 
+    private val cameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            doLaunchCamera()
+        } else {
+            Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -59,7 +73,7 @@ class IdentifyFragment : Fragment() {
             pickImageLauncher.launch(intent)
         }
 
-        binding.cameraButton.setOnClickListener { launchCamera() }
+        binding.cameraButton.setOnClickListener { requestCameraAndLaunch() }
 
         binding.identifyButton.setOnClickListener {
             val file = pendingImageFile ?: return@setOnClickListener
@@ -119,7 +133,15 @@ class IdentifyFragment : Fragment() {
         }
     }
 
-    private fun launchCamera() {
+    private fun requestCameraAndLaunch() {
+        when {
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED -> doLaunchCamera()
+            else -> cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun doLaunchCamera() {
         val file = File(requireContext().cacheDir, "identify_${System.currentTimeMillis()}.jpg")
         pendingImageFile = file
         val uri = FileProvider.getUriForFile(
