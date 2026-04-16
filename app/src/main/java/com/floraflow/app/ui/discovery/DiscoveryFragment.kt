@@ -16,6 +16,7 @@ import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
 import com.floraflow.app.databinding.FragmentDiscoveryBinding
+import com.floraflow.app.ui.discovery.DiscoveryViewModelFactory
 
 class DiscoveryFragment : Fragment() {
 
@@ -30,9 +31,7 @@ class DiscoveryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiscoveryBinding.inflate(inflater, container, false)
         return binding.root
@@ -66,21 +65,13 @@ class DiscoveryFragment : Fragment() {
                 is WallpaperState.Success -> {
                     binding.setWallpaperButton.isEnabled = true
                     binding.setWallpaperButton.text = getString(R.string.set_as_wallpaper)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.wallpaper_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), getString(R.string.wallpaper_success), Toast.LENGTH_SHORT).show()
                     viewModel.resetWallpaperState()
                 }
                 is WallpaperState.Error -> {
                     binding.setWallpaperButton.isEnabled = true
                     binding.setWallpaperButton.text = getString(R.string.set_as_wallpaper)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.wallpaper_error),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), getString(R.string.wallpaper_error), Toast.LENGTH_SHORT).show()
                     viewModel.resetWallpaperState()
                 }
             }
@@ -108,6 +99,13 @@ class DiscoveryFragment : Fragment() {
 
         binding.plantNameText.text = plant.plantName
 
+        if (!plant.scientificName.isNullOrBlank()) {
+            binding.scientificNameText.visibility = View.VISIBLE
+            binding.scientificNameText.text = plant.scientificName
+        } else {
+            binding.scientificNameText.visibility = View.GONE
+        }
+
         if (!plant.locationName.isNullOrBlank()) {
             binding.locationGroup.visibility = View.VISIBLE
             binding.locationText.text = plant.locationName
@@ -116,14 +114,16 @@ class DiscoveryFragment : Fragment() {
         }
 
         binding.botanicalInsightText.text = plant.botanicalInsight
+        binding.photographerText.text = getString(R.string.photo_credit, plant.photographerName)
+        binding.photographerText.setOnClickListener { openUrl(plant.photographerProfileUrl) }
 
-        binding.photographerText.text = getString(
-            R.string.photo_credit,
-            plant.photographerName
-        )
-        binding.photographerText.setOnClickListener {
-            openUrl(plant.photographerProfileUrl)
+        val favIcon = if (plant.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
+        binding.favoriteButton.setImageResource(favIcon)
+        binding.favoriteButton.setOnClickListener {
+            viewModel.toggleFavorite(plant)
         }
+
+        binding.shareButton.setOnClickListener { sharePlant(plant) }
 
         binding.setWallpaperButton.setOnClickListener {
             viewModel.setAsWallpaper(requireContext(), plant)
@@ -136,13 +136,26 @@ class DiscoveryFragment : Fragment() {
             .into(binding.plantImage)
     }
 
+    private fun sharePlant(plant: DailyPlant) {
+        val text = buildString {
+            append("🌿 ${plant.plantName}")
+            if (!plant.scientificName.isNullOrBlank()) append(" (${plant.scientificName})")
+            append("\n\n")
+            append(plant.botanicalInsight)
+            append("\n\nPhoto by ${plant.photographerName} on Unsplash")
+            append("\n\nDiscover more with FloraFlow 🌱")
+        }
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+        }
+        startActivity(Intent.createChooser(intent, getString(R.string.share_plant)))
+    }
+
     private fun openUrl(url: String) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        } catch (e: Exception) {
-            // ignore
-        }
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (e: Exception) { }
     }
 
     override fun onDestroyView() {
