@@ -1,6 +1,7 @@
 package com.floraflow.app.data
 
 import android.util.Log
+import com.floraflow.app.BuildConfig
 import com.floraflow.app.api.ChatCompletionRequest
 import com.floraflow.app.api.ChatMessage
 import com.floraflow.app.api.OpenAiApi
@@ -149,12 +150,7 @@ SCIENTIFIC: [scientific name here]"""
         }
     }
 
-    private fun getOpenAiKey(): String {
-        return try {
-            val clazz = Class.forName("com.floraflow.app.BuildConfig")
-            clazz.getField("OPENAI_API_KEY").get(null) as? String ?: ""
-        } catch (e: Exception) { "" }
-    }
+    private fun getOpenAiKey(): String = BuildConfig.OPENAI_API_KEY
 
     private fun getFallbackInsight(plantName: String): String {
         val insights = listOf(
