@@ -25,6 +25,7 @@
     <string name="favorite">Favorite</string>
     <string name="share">Share</string>
     <string name="share_plant">Share plant</string>
+    <string name="share_as_story">Share as Story</string>
     <string name="history">History</string>
     <string name="history_empty">No plants discovered yet.\nOpen the Discover tab to start!</string>
     <string name="favorites">Favorites</string>
@@ -56,4 +57,19 @@
     <string name="dark_mode_dark">Always Dark</string>
     <string name="filter_all">All</string>
     <string name="explore_category">Explore %1$s</string>
+    <string name="swipe_hint">← Swipe image to explore →</string>
+    <string name="explore_more">Explore More</string>
+    <string name="quiz_title">Daily Quiz</string>
+    <string name="quiz_generating">Generating today\'s question…</string>
+    <string name="quiz_unavailable">Quiz not available yet.\nDiscover today\'s plant first!</string>
+    <string name="quiz_question_label">Question of the Day</string>
+    <string name="quiz_explanation">Explanation</string>
+    <string name="seasonal_title">Browse by Season</string>
+    <string name="seasonal_empty">Discover more plants to populate your seasonal collections!</string>
+    <string name="notes_title">Personal Notes</string>
+    <string name="notes_hint">Write your observations about this plant…</string>
+    <string name="notes_clear">Clear</string>
+    <string name="streak_days">%1$d day streak</string>
+    <string name="notification_title">🌿 Today\'s Plant: %1$s</string>
+    <string name="notification_teaser">Did you know? %1$s Tap to discover more.</string>
 </resources>
