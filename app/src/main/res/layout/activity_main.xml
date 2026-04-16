@@ -23,7 +23,6 @@
         android:background="@color/surface"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
-        app:itemActiveIndicatorColor="@color/primary_light"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled" />
 
