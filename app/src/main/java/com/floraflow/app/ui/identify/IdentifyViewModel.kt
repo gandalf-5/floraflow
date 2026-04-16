@@ -6,16 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.floraflow.app.api.PlantNetApi
+import android.util.Base64
+import com.floraflow.app.api.IdentifyRequest
 import com.floraflow.app.api.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import java.io.FileOutputStream
 
 sealed class IdentifyState {
     object Idle : IdentifyState()
@@ -48,13 +45,13 @@ class IdentifyViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val requestBody = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-                val part = MultipartBody.Part.createFormData("images", imageFile.name, requestBody)
+                val imageBase64 = withContext(Dispatchers.IO) {
+                    Base64.encodeToString(imageFile.readBytes(), Base64.NO_WRAP)
+                }
 
                 val response = withContext(Dispatchers.IO) {
-                    RetrofitClient.plantNetApi.identify(
-                        apiKey = PlantNetApi.API_KEY,
-                        image = part
+                    RetrofitClient.floraFlowApi.identify(
+                        IdentifyRequest(imageBase64 = imageBase64)
                     )
                 }
 
