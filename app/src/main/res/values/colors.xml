@@ -29,4 +29,11 @@
     <!-- Navigation -->
     <color name="nav_active">#2D6A4F</color>
     <color name="nav_inactive">#999999</color>
+
+    <!-- Splash -->
+    <color name="splash_bg">#1B4332</color>
+    <color name="splash_text">#FFFFFF</color>
+    <color name="splash_subtitle">#D8F3DC</color>
+    <color name="splash_hint">#74C69D</color>
+    <color name="splash_icon">#FFFFFF</color>
 </resources>
