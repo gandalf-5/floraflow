@@ -276,6 +276,34 @@
                         android:visibility="gone"
                         tools:text="Nelumbo nucifera" />
 
+                    <!-- Native Region -->
+                    <LinearLayout
+                        android:id="@+id/native_region_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🌍"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/native_region_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:textColor="@color/primary"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/inter_medium"
+                            tools:text="Native to India &amp; East Asia" />
+
+                    </LinearLayout>
+
                     <!-- Color Palette Row -->
                     <LinearLayout
                         android:id="@+id/palette_row"
