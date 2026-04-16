@@ -10,9 +10,11 @@ import android.widget.RemoteViews
 import com.bumptech.glide.Glide
 import com.floraflow.app.FloraFlowApp
 import com.floraflow.app.R
+import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -49,9 +51,11 @@ class PlantWidgetProvider : AppWidgetProvider() {
             try {
                 val app = context.applicationContext as FloraFlowApp
                 val plant = app.database.dailyPlantDao().getByDate(
-                    java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
-                        .format(java.util.Date())
+                    java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
                 ) ?: return@launch
+
+                val prefs = PreferencesManager(context.applicationContext)
+                val streak = prefs.streakCount.first()
 
                 val bitmap: Bitmap = Glide.with(context.applicationContext)
                     .asBitmap()
@@ -62,9 +66,20 @@ class PlantWidgetProvider : AppWidgetProvider() {
                 withContext(Dispatchers.Main) {
                     views.setImageViewBitmap(R.id.widget_image, bitmap)
                     views.setTextViewText(R.id.widget_plant_name, plant.plantName)
-                    if (!plant.scientificName.isNullOrBlank()) {
-                        views.setTextViewText(R.id.widget_subtitle, plant.scientificName)
+
+                    val subtitle = when {
+                        !plant.scientificName.isNullOrBlank() -> plant.scientificName!!
+                        else -> context.getString(R.string.todays_discovery)
                     }
+                    views.setTextViewText(R.id.widget_subtitle, subtitle)
+
+                    if (streak > 1) {
+                        views.setViewVisibility(R.id.widget_streak, android.view.View.VISIBLE)
+                        views.setTextViewText(R.id.widget_streak, "🔥 $streak days")
+                    } else {
+                        views.setViewVisibility(R.id.widget_streak, android.view.View.GONE)
+                    }
+
                     appWidgetManager.updateAppWidget(widgetId, views)
                 }
             } catch (e: Exception) {
