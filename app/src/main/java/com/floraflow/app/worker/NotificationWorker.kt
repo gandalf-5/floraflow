@@ -48,7 +48,7 @@ class NotificationWorker(
             val app = applicationContext as FloraFlowApp
             val categories = prefs.preferredCategories.first()
             val repository = PlantRepository(
-                app.database.dailyPlantDao(), app.unsplashApi, app.openAiApi, categories
+                app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi, categories
             )
             val plant = repository.getTodayPlant() ?: return Result.success()
 
