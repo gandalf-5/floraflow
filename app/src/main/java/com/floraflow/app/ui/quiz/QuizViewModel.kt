@@ -46,7 +46,11 @@ class QuizViewModel(
                     } catch (e: Exception) { /* parse error, regenerate */ }
                 }
 
-                val plant = repository.getTodayPlant()
+                val plant = try {
+                    repository.fetchAndSaveTodayPlant()
+                } catch (e: Exception) {
+                    repository.getTodayPlant()
+                }
                 if (plant == null) {
                     _state.value = QuizUiState.Unavailable
                     return@launch
@@ -75,7 +79,11 @@ class QuizViewModel(
     fun retry() {
         _state.value = QuizUiState.Loading
         viewModelScope.launch {
-            val plant = repository.getTodayPlant()
+            val plant = try {
+                repository.fetchAndSaveTodayPlant()
+            } catch (e: Exception) {
+                repository.getTodayPlant()
+            }
             if (plant == null) { _state.value = QuizUiState.Unavailable; return@launch }
             val quiz = repository.generateQuiz(plant)
             if (quiz != null) {
