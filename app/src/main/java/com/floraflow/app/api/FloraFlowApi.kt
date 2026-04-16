@@ -22,6 +22,11 @@ interface FloraFlowApi {
         @Body request: QuizRequest
     ): QuizResponse
 
+    @POST("identify")
+    suspend fun identify(
+        @Body request: IdentifyRequest
+    ): IdentifyApiResponse
+
     companion object {
         /** Resolved at build time from FLORA_FLOW_API_URL env / GitHub Actions secret. */
         val BASE_URL: String get() = BuildConfig.FLORA_FLOW_API_URL
@@ -48,4 +53,28 @@ data class QuizResponse(
     @SerializedName("options") val options: List<String>?,
     @SerializedName("correct") val correct: Int?,
     @SerializedName("explanation") val explanation: String?
+)
+
+data class IdentifyRequest(
+    @SerializedName("imageBase64") val imageBase64: String,
+    @SerializedName("lang") val lang: String = "en"
+)
+
+data class IdentifyApiResponse(
+    @SerializedName("results") val results: List<IdentifyResult> = emptyList()
+)
+
+data class IdentifyResult(
+    @SerializedName("score") val score: Double,
+    @SerializedName("species") val species: IdentifySpecies
+)
+
+data class IdentifySpecies(
+    @SerializedName("scientificNameWithoutAuthor") val scientificName: String,
+    @SerializedName("commonNames") val commonNames: List<String> = emptyList(),
+    @SerializedName("family") val family: IdentifyFamily? = null
+)
+
+data class IdentifyFamily(
+    @SerializedName("scientificNameWithoutAuthor") val name: String
 )
