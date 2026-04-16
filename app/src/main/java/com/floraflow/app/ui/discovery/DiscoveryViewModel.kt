@@ -60,6 +60,18 @@ class DiscoveryViewModel(private val repository: PlantRepository) : ViewModel() 
 
     fun refresh() = loadTodayPlant()
 
+    fun refreshWithCategory(query: String) {
+        _uiState.value = DiscoveryUiState.Loading
+        viewModelScope.launch {
+            try {
+                val plant = repository.fetchForCategory(query)
+                _uiState.value = DiscoveryUiState.Success(plant)
+            } catch (e: Exception) {
+                _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load plant")
+            }
+        }
+    }
+
     fun toggleFavorite(plant: DailyPlant) {
         viewModelScope.launch {
             repository.toggleFavorite(plant)
