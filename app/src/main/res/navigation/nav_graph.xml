@@ -10,6 +10,21 @@
         android:label="Discover" />
 
     <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.floraflow.app.ui.history.HistoryFragment"
+        android:label="History" />
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.floraflow.app.ui.favorites.FavoritesFragment"
+        android:label="Favorites" />
+
+    <fragment
+        android:id="@+id/identifyFragment"
+        android:name="com.floraflow.app.ui.identify.IdentifyFragment"
+        android:label="Identify" />
+
+    <fragment
         android:id="@+id/settingsFragment"
         android:name="com.floraflow.app.ui.settings.SettingsFragment"
         android:label="Settings" />
