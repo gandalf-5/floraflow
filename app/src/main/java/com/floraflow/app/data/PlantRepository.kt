@@ -61,6 +61,15 @@ class PlantRepository(
         val dayOfYear = SimpleDateFormat("D", Locale.US).format(Date()).toInt()
         val query = categories[dayOfYear % categories.size]
 
+        return fetchAndSave(dateKey, query)
+    }
+
+    suspend fun fetchForCategory(categoryQuery: String): DailyPlant {
+        val dateKey = getTodayKey()
+        return fetchAndSave(dateKey, categoryQuery, forceNew = true)
+    }
+
+    private suspend fun fetchAndSave(dateKey: String, query: String, forceNew: Boolean = false): DailyPlant {
         val photo = try {
             unsplashApi.getRandomPhoto(query = query)
         } catch (e: Exception) {
@@ -73,7 +82,7 @@ class PlantRepository(
         val (insight, scientificName) = fetchBotanicalData(plantName)
 
         val plant = DailyPlant(
-            dateKey = dateKey,
+            dateKey = if (forceNew) "$dateKey-$query-${System.currentTimeMillis()}" else dateKey,
             photoId = photo.id,
             imageUrlFull = photo.urls.full,
             imageUrlRegular = photo.urls.regular,
@@ -88,7 +97,7 @@ class PlantRepository(
         )
 
         dao.insert(plant)
-        pruneOldEntries()
+        if (!forceNew) pruneOldEntries()
         return plant
     }
 
