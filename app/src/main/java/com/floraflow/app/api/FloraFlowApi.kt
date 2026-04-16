@@ -29,7 +29,8 @@ interface FloraFlowApi {
 }
 
 data class InsightRequest(
-    @SerializedName("plantName") val plantName: String
+    @SerializedName("plantName") val plantName: String,
+    @SerializedName("nativeRegion") val nativeRegion: String? = null
 )
 
 data class InsightResponse(
