@@ -9,21 +9,16 @@ import com.floraflow.app.api.UnsplashPhoto
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class PlantRepository(
     private val dao: DailyPlantDao,
     private val unsplashApi: UnsplashApi,
-    private val openAiApi: OpenAiApi
+    private val openAiApi: OpenAiApi,
+    private val preferredCategories: List<String> = PreferencesManager.ALL_CATEGORIES
 ) {
     companion object {
         private const val TAG = "PlantRepository"
-
-        private val PLANT_QUERIES = listOf(
-            "tropical plant", "wildflower meadow", "fern forest",
-            "succulent garden", "orchid", "bonsai tree", "botanical garden",
-            "moss forest", "water lily", "cactus desert", "cherry blossom",
-            "lavender field", "sunflower", "magnolia tree", "lotus flower"
-        )
 
         private val PLANT_NAMES = mapOf(
             "tropical" to "Tropical Foliage",
@@ -44,12 +39,16 @@ class PlantRepository(
         )
     }
 
-    fun getTodayKey(): String {
-        return SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-    }
+    fun getTodayKey(): String = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
 
-    suspend fun getTodayPlant(): DailyPlant? {
-        return dao.getByDate(getTodayKey())
+    suspend fun getTodayPlant(): DailyPlant? = dao.getByDate(getTodayKey())
+
+    suspend fun getHistory(): List<DailyPlant> = dao.getHistory()
+
+    suspend fun getFavorites(): List<DailyPlant> = dao.getFavorites()
+
+    suspend fun toggleFavorite(plant: DailyPlant) {
+        dao.setFavorite(plant.dateKey, !plant.isFavorite)
     }
 
     suspend fun fetchAndSaveTodayPlant(): DailyPlant {
@@ -57,8 +56,9 @@ class PlantRepository(
         val existing = dao.getByDate(dateKey)
         if (existing != null) return existing
 
+        val categories = preferredCategories.ifEmpty { PreferencesManager.ALL_CATEGORIES }
         val dayOfYear = SimpleDateFormat("D", Locale.US).format(Date()).toInt()
-        val query = PLANT_QUERIES[dayOfYear % PLANT_QUERIES.size]
+        val query = categories[dayOfYear % categories.size]
 
         val photo = try {
             unsplashApi.getRandomPhoto(query = query)
@@ -69,7 +69,7 @@ class PlantRepository(
 
         val plantName = inferPlantName(photo, query)
         val location = buildLocationString(photo)
-        val insight = fetchBotanicalInsight(plantName)
+        val (insight, scientificName) = fetchBotanicalData(plantName)
 
         val plant = DailyPlant(
             dateKey = dateKey,
@@ -77,6 +77,7 @@ class PlantRepository(
             imageUrlFull = photo.urls.full,
             imageUrlRegular = photo.urls.regular,
             plantName = plantName,
+            scientificName = scientificName,
             locationName = location,
             photographerName = photo.user.name,
             photographerUsername = photo.user.username,
@@ -86,20 +87,22 @@ class PlantRepository(
         )
 
         dao.insert(plant)
+        pruneOldEntries()
         return plant
+    }
+
+    private suspend fun pruneOldEntries() {
+        val sevenDaysAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7)
+        dao.pruneOlderThan(sevenDaysAgo)
     }
 
     private fun inferPlantName(photo: UnsplashPhoto, query: String): String {
         val description = (photo.description ?: photo.altDescription ?: "").lowercase()
         for ((keyword, name) in PLANT_NAMES) {
-            if (description.contains(keyword) || query.contains(keyword)) {
-                return name
-            }
+            if (description.contains(keyword) || query.contains(keyword)) return name
         }
         val desc = photo.description ?: photo.altDescription
-        if (!desc.isNullOrBlank()) {
-            return desc.replaceFirstChar { it.titlecase() }.take(40)
-        }
+        if (!desc.isNullOrBlank()) return desc.replaceFirstChar { it.titlecase() }.take(40)
         return query.replaceFirstChar { it.titlecase() }
     }
 
@@ -110,23 +113,39 @@ class PlantRepository(
             .firstOrNull()
     }
 
-    private suspend fun fetchBotanicalInsight(plantName: String): String {
+    private suspend fun fetchBotanicalData(plantName: String): Pair<String, String?> {
         return try {
-            val prompt = "Give one fascinating, lesser-known botanical fact about $plantName in exactly 2-3 sentences. Be specific and surprising, not generic. No markdown."
+            val prompt = """For the plant "$plantName", provide:
+1. INSIGHT: One fascinating lesser-known botanical fact in exactly 2-3 sentences. Be specific and surprising. No markdown.
+2. SCIENTIFIC: The scientific (Latin) name only, e.g. "Rosa canina". If unknown, write "Unknown".
+
+Respond in this exact format:
+INSIGHT: [your insight here]
+SCIENTIFIC: [scientific name here]"""
+
             val response = openAiApi.getChatCompletion(
                 authorization = "Bearer ${getOpenAiKey()}",
                 request = ChatCompletionRequest(
                     messages = listOf(
-                        ChatMessage(role = "system", content = "You are a knowledgeable botanist who loves sharing surprising plant facts."),
+                        ChatMessage(role = "system", content = "You are a botanist. Follow the format precisely."),
                         ChatMessage(role = "user", content = prompt)
-                    )
+                    ),
+                    maxTokens = 200
                 )
             )
-            response.choices.firstOrNull()?.message?.content?.trim()
-                ?: getFallbackInsight(plantName)
+
+            val text = response.choices.firstOrNull()?.message?.content?.trim() ?: ""
+            val insightLine = text.lines().find { it.startsWith("INSIGHT:") }
+                ?.removePrefix("INSIGHT:")?.trim()
+            val scientificLine = text.lines().find { it.startsWith("SCIENTIFIC:") }
+                ?.removePrefix("SCIENTIFIC:")?.trim()
+                ?.takeIf { it != "Unknown" && it.isNotBlank() }
+
+            val insight = insightLine ?: getFallbackInsight(plantName)
+            Pair(insight, scientificLine)
         } catch (e: Exception) {
-            Log.w(TAG, "AI insight unavailable, using fallback", e)
-            getFallbackInsight(plantName)
+            Log.w(TAG, "AI unavailable, using fallback", e)
+            Pair(getFallbackInsight(plantName), null)
         }
     }
 
@@ -134,9 +153,7 @@ class PlantRepository(
         return try {
             val clazz = Class.forName("com.floraflow.app.BuildConfig")
             clazz.getField("OPENAI_API_KEY").get(null) as? String ?: ""
-        } catch (e: Exception) {
-            ""
-        }
+        } catch (e: Exception) { "" }
     }
 
     private fun getFallbackInsight(plantName: String): String {
@@ -151,9 +168,7 @@ class PlantRepository(
     }
 
     suspend fun triggerDownload(downloadUrl: String) {
-        try {
-            unsplashApi.triggerDownload(downloadUrl)
-        } catch (e: Exception) {
+        try { unsplashApi.triggerDownload(downloadUrl) } catch (e: Exception) {
             Log.w(TAG, "Download trigger failed", e)
         }
     }
