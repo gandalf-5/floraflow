@@ -32,4 +32,11 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(OpenAiApi::class.java)
+
+    val plantNetApi: PlantNetApi = Retrofit.Builder()
+        .baseUrl(PlantNetApi.BASE_URL)
+        .client(httpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(PlantNetApi::class.java)
 }
