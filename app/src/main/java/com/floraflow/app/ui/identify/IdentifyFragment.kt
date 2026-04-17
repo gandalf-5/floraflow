@@ -141,6 +141,28 @@ class IdentifyFragment : Fragment() {
             }
         }
 
+        viewModel.careTipsLoading.observe(viewLifecycleOwner) { loading ->
+            binding.careTipsProgress.visibility = if (loading) View.VISIBLE else View.GONE
+            if (loading) binding.careTipsCard.visibility = View.VISIBLE
+        }
+
+        viewModel.careTips.observe(viewLifecycleOwner) { tips ->
+            if (tips == null) {
+                if (viewModel.careTipsLoading.value != true) {
+                    binding.careTipsCard.visibility = View.GONE
+                }
+                return@observe
+            }
+            binding.careTipsCard.visibility = View.VISIBLE
+            binding.careTipsProgress.visibility = View.GONE
+            binding.careWatering.text    = tips.watering
+            binding.careLight.text       = tips.light
+            binding.careSoil.text        = tips.soil
+            binding.careTemperature.text = tips.temperature
+            binding.careToxicity.text    = tips.toxicity
+            binding.careSeasonalTip.text = tips.seasonalTip
+        }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.identifyProgress.visibility = View.GONE
             when (state) {
@@ -150,6 +172,7 @@ class IdentifyFragment : Fragment() {
                     binding.identifyButton.isEnabled = true
                     binding.storyButton.visibility = View.GONE
                     binding.shareResultButton.visibility = View.GONE
+                    binding.careTipsCard.visibility = View.GONE
                 }
                 is IdentifyState.Loading -> {
                     binding.identifyProgress.visibility = View.VISIBLE
