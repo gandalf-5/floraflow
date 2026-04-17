@@ -242,12 +242,8 @@ class IdentifyFragment : Fragment() {
     }
 
     private fun showLimitReachedDialog(limit: Int) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.identify_limit_title))
-            .setMessage(getString(R.string.identify_limit_message, limit))
-            .setPositiveButton(getString(R.string.story_unlock_button), null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        com.floraflow.app.ui.premium.PremiumBottomSheetFragment.newInstance()
+            .show(parentFragmentManager, com.floraflow.app.ui.premium.PremiumBottomSheetFragment.TAG)
     }
 
     private fun requestLocationPermissionIfNeeded() {
