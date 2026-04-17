@@ -117,9 +117,12 @@ class QuizFragment : Fragment() {
             val icon = if (state.selected == state.quiz.correct) "✅ Correct!" else "❌ Incorrect"
             binding.resultLabel.text = icon
             binding.resultLabel.visibility = View.VISIBLE
+            binding.nextQuestionButton.visibility = View.VISIBLE
+            binding.nextQuestionButton.setOnClickListener { viewModel.nextQuestion() }
         } else {
             binding.explanationCard.visibility = View.GONE
             binding.resultLabel.visibility = View.GONE
+            binding.nextQuestionButton.visibility = View.GONE
         }
     }
 
