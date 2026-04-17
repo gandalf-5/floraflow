@@ -14,23 +14,37 @@ object WallpaperScheduler {
     private const val NOTIFY_TAG = "floraflow_notification"
 
     fun schedule(context: Context) {
-        val hour = runBlocking { PreferencesManager(context).wallpaperHour.first() }
+        val prefs = PreferencesManager(context)
+        val hour = runBlocking { prefs.wallpaperHour.first() }
+        val intervalMinutes = runBlocking { prefs.wallpaperIntervalMinutes.first() }
 
         val now = Calendar.getInstance()
-        val target = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hour)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-            if (before(now)) add(Calendar.DAY_OF_YEAR, 1)
+
+        // For intervals < 24h (premium): fire at next multiple of the interval from midnight
+        // For 24h (free): fire at the user-chosen hour
+        val delay: Long = if (intervalMinutes < PreferencesManager.INTERVAL_24H) {
+            val msPerInterval = intervalMinutes.toLong() * 60 * 1000L
+            val msNow = now.timeInMillis
+            val nextSlot = ((msNow / msPerInterval) + 1) * msPerInterval
+            nextSlot - msNow
+        } else {
+            val target = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+                if (before(now)) add(Calendar.DAY_OF_YEAR, 1)
+            }
+            target.timeInMillis - now.timeInMillis
         }
 
-        val delay = target.timeInMillis - now.timeInMillis
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val wallpaperWork = PeriodicWorkRequestBuilder<WallpaperWorker>(24, TimeUnit.HOURS)
+        val wallpaperWork = PeriodicWorkRequestBuilder<WallpaperWorker>(
+            intervalMinutes.toLong(), TimeUnit.MINUTES
+        )
             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .setConstraints(constraints)
             .addTag(WORK_TAG)
@@ -41,8 +55,17 @@ object WallpaperScheduler {
             WORK_TAG, ExistingPeriodicWorkPolicy.UPDATE, wallpaperWork
         )
 
+        // Notification stays daily
+        val dailyDelay = run {
+            val target = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+                if (before(now)) add(Calendar.DAY_OF_YEAR, 1)
+            }
+            target.timeInMillis - now.timeInMillis
+        }
         val notifyWork = PeriodicWorkRequestBuilder<NotificationWorker>(24, TimeUnit.HOURS)
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setInitialDelay(dailyDelay, TimeUnit.MILLISECONDS)
             .addTag(NOTIFY_TAG)
             .build()
 
