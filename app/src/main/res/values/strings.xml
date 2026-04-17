@@ -40,6 +40,12 @@
     <string name="identification_result">Identification Result</string>
     <string name="wallpaper_time">Sync Time</string>
     <string name="wallpaper_target">Apply to</string>
+    <string name="wallpaper_interval">Auto-Refresh Interval</string>
+    <string name="interval_3h">Every 3 hours</string>
+    <string name="interval_6h">Every 6 hours</string>
+    <string name="interval_12h">Every 12 hours</string>
+    <string name="interval_24h">Once a day</string>
+    <string name="wallpaper_interval_premium_msg">Auto-refresh is a Premium feature.\n\nChange your wallpaper automatically every 3, 6, or 12 hours — a different botanical discovery each time, without lifting a finger.\n\nPremium coming soon to Google Play!</string>
     <string name="target_all">Home &amp; Lock Screen</string>
     <string name="target_home">Home Screen Only</string>
     <string name="target_lock">Lock Screen Only</string>
