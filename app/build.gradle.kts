@@ -81,4 +81,5 @@ dependencies {
     kapt(libs.room.compiler)
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.play.review)
 }
