@@ -34,8 +34,13 @@ class SettingsFragment : Fragment() {
         prefs = PreferencesManager(requireContext())
 
         viewLifecycleOwner.lifecycleScope.launch {
-            prefs.isPremium.collect { premium -> isPremium = premium }
+            prefs.isPremium.collect { premium ->
+                isPremium = premium
+                updatePremiumCard(premium)
+            }
         }
+
+        binding.upgradeButton.setOnClickListener { showUpgradeDialog() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             prefs.autoSyncWallpaper.collect { enabled ->
@@ -205,6 +210,40 @@ class SettingsFragment : Fragment() {
                     )
                 }
             }
+            .show()
+    }
+
+    private fun updatePremiumCard(premium: Boolean) {
+        if (premium) {
+            binding.premiumStatusBadge.text = getString(R.string.premium_badge_active)
+            binding.premiumFeaturesGroup.visibility = View.GONE
+            binding.premiumPriceNote.visibility = View.GONE
+            binding.upgradeButton.visibility = View.GONE
+            binding.premiumActiveGroup.visibility = View.VISIBLE
+        } else {
+            binding.premiumStatusBadge.text = getString(R.string.premium_badge_free)
+            binding.premiumFeaturesGroup.visibility = View.VISIBLE
+            binding.premiumPriceNote.visibility = View.VISIBLE
+            binding.upgradeButton.visibility = View.VISIBLE
+            binding.premiumActiveGroup.visibility = View.GONE
+        }
+    }
+
+    private fun showUpgradeDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.premium_upgrade_title))
+            .setMessage(
+                "🔬 Unlimited plant identifications\n" +
+                "📖 Full botanical stories\n" +
+                "🖼️ Auto-refresh wallpapers (3 h / 6 h / 12 h)\n" +
+                "📄 PDF field journal export\n" +
+                "❤️ Unlimited favorites & gallery\n" +
+                "🌿 Set identified plants as wallpaper\n\n" +
+                "Launching soon on Google Play at \$3.99 / month.\n" +
+                "Cancel anytime."
+            )
+            .setPositiveButton("Notify Me When Available") { _, _ -> }
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
