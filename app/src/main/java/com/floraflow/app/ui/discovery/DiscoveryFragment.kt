@@ -22,15 +22,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import androidx.lifecycle.lifecycleScope
 import com.floraflow.app.FloraFlowApp
 import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
 import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentDiscoveryBinding
+import com.floraflow.app.ui.story.StoryBottomSheetFragment
 import com.floraflow.app.util.StoryShareUtil
 import com.google.android.material.chip.Chip
 import java.io.File
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class DiscoveryFragment : Fragment() {
 
@@ -245,6 +249,19 @@ class DiscoveryFragment : Fragment() {
         }
 
         binding.setWallpaperButton.setOnClickListener { viewModel.setAsWallpaper(requireContext(), plant) }
+
+        binding.storyButton.setOnClickListener {
+            val prefs = PreferencesManager(requireContext())
+            lifecycleScope.launch {
+                val isPremium = prefs.isPremium.first()
+                val sheet = StoryBottomSheetFragment.newInstance(
+                    plantName = plant.plantName,
+                    scientificName = plant.scientificName,
+                    isPremium = isPremium
+                )
+                sheet.show(parentFragmentManager, StoryBottomSheetFragment.TAG)
+            }
+        }
 
         loadImageWithPalette(plant)
     }
