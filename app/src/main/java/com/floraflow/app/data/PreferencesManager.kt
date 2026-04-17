@@ -42,8 +42,9 @@ class PreferencesManager(private val context: Context) {
 
         // Freemium limits for free users
         const val FREE_FAVORITES_LIMIT = 10
-        const val FREE_DAILY_ID_LIMIT = 3
+        const val FREE_DAILY_ID_LIMIT = 2
         const val FREE_HISTORY_DAYS = 7
+        const val FREE_GALLERY_RECORD_LIMIT = 30
 
         val ALL_CATEGORIES = listOf(
             "tropical plant", "wildflower meadow", "fern forest",
