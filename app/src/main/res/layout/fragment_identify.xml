@@ -254,6 +254,24 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Share Discovery Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/share_result_button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/share_discovery"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:fontFamily="@font/inter_medium"
+            app:backgroundTint="@color/primary"
+            app:cornerRadius="26dp"
+            app:icon="@drawable/ic_share"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF"
+            app:iconPadding="8dp"
+            android:visibility="gone" />
+
         <!-- Reset Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reset_button"
