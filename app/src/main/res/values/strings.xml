@@ -97,4 +97,9 @@
     <string name="identify_daily_counter">🔬 %1$d/%2$d identifications today</string>
     <string name="identify_limit_title">Daily limit reached</string>
     <string name="identify_limit_message">Free users can identify %1$d plants per day. Upgrade to Premium for unlimited identifications.</string>
+    <!-- Quiz -->
+    <string name="quiz_next_question">Next Question</string>
+    <!-- Premium upgrade info -->
+    <string name="premium_upgrade_title">FloraFlow Premium</string>
+    <string name="premium_upgrade_message">FloraFlow Premium unlocks:\n\n🔬 Unlimited plant identifications\n📖 Full botanical stories (History, Folklore &amp; Ecology)\n📄 PDF field journal export\n🖼️ Set identifications as wallpaper\n📚 Unlimited identification gallery\n\nPremium is coming to Google Play very soon. Stay tuned!</string>
 </resources>
