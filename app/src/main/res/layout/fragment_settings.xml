@@ -23,6 +23,202 @@
             android:textSize="32sp"
             android:fontFamily="@font/playfair_display_bold" />
 
+        <!-- ══════════════════ PREMIUM CARD ══════════════════ -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/premium_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Top row: branding + status badge -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🌿 FloraFlow"
+                            android:textColor="#AAFFDDAA"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/inter_medium"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Premium"
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="28sp"
+                            android:fontFamily="@font/playfair_display_bold" />
+
+                    </LinearLayout>
+
+                    <!-- Badge: FREE PLAN or ACTIVE -->
+                    <TextView
+                        android:id="@+id/premium_status_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_surface"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="6dp"
+                        android:text="@string/premium_badge_free"
+                        android:textColor="@color/primary"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/inter_medium" />
+
+                </LinearLayout>
+
+                <!-- Feature list (free users only) -->
+                <LinearLayout
+                    android:id="@+id/premium_features_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_unlock_intro"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:layout_marginBottom="10dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_1"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_2"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_3"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_4"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_5"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_feature_6"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular" />
+
+                </LinearLayout>
+
+                <!-- Price note -->
+                <TextView
+                    android:id="@+id/premium_price_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/premium_price_note"
+                    android:textColor="#99FFFFFF"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- Upgrade CTA button (free users) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/upgrade_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="@string/premium_upgrade_cta"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_medium"
+                    app:backgroundTint="#FFFFFFFF"
+                    app:cornerRadius="14dp"
+                    app:rippleColor="@color/primary" />
+
+                <!-- Premium active message (premium users) -->
+                <LinearLayout
+                    android:id="@+id/premium_active_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/premium_active_thanks"
+                        android:textColor="#EEFFFFFF"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/premium_active_all_unlocked"
+                        android:textColor="#AAFFFFFF"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Section: Wallpaper -->
         <TextView
             android:layout_width="match_parent"
