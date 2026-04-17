@@ -28,7 +28,39 @@
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.floraflow.app.ui.favorites.FavoritesFragment"
-        android:label="Favorites" />
+        android:label="Favorites">
+        <action
+            android:id="@+id/action_favorites_to_collections"
+            app:destination="@id/collectionsFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+        <action
+            android:id="@+id/action_favorites_to_badges"
+            app:destination="@id/badgesFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectionsFragment"
+        android:name="com.floraflow.app.ui.collections.CollectionsFragment"
+        android:label="My Herbarium">
+        <action
+            android:id="@+id/action_collectionsFragment_to_collectionDetailFragment"
+            app:destination="@id/collectionDetailFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectionDetailFragment"
+        android:name="com.floraflow.app.ui.collections.CollectionDetailFragment"
+        android:label="Collection" />
+
+    <fragment
+        android:id="@+id/badgesFragment"
+        android:name="com.floraflow.app.ui.badges.BadgesFragment"
+        android:label="Trophies" />
 
     <fragment
         android:id="@+id/identifyFragment"
