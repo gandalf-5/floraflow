@@ -18,7 +18,8 @@ import java.util.Locale
 
 class IdentGalleryAdapter(
     private val onDelete: (IdentificationRecord) -> Unit,
-    private val onSetWallpaper: (IdentificationRecord) -> Unit
+    private val onSetWallpaper: (IdentificationRecord) -> Unit,
+    private val onShare: (IdentificationRecord) -> Unit
 ) : ListAdapter<IdentificationRecord, IdentGalleryAdapter.ViewHolder>(DIFF) {
 
     companion object {
@@ -36,6 +37,7 @@ class IdentGalleryAdapter(
         val confidence: TextView = view.findViewById(R.id.record_confidence)
         val dateTime: TextView = view.findViewById(R.id.record_datetime)
         val location: TextView = view.findViewById(R.id.record_location)
+        val shareBtn: ImageView = view.findViewById(R.id.record_share_btn)
         val wallpaperBtn: ImageView = view.findViewById(R.id.record_wallpaper_btn)
         val deleteBtn: ImageView = view.findViewById(R.id.record_delete_btn)
     }
@@ -67,6 +69,7 @@ class IdentGalleryAdapter(
             holder.location.visibility = View.GONE
         }
 
+        holder.shareBtn.setOnClickListener { onShare(record) }
         holder.wallpaperBtn.setOnClickListener { onSetWallpaper(record) }
         holder.deleteBtn.setOnClickListener { onDelete(record) }
     }
