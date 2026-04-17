@@ -59,6 +59,9 @@ class FavoritesFragment : Fragment() {
             binding.emptyText.visibility = if (plants.isEmpty()) View.VISIBLE else View.GONE
         }
 
+        // Keep collections LiveData active so .value is populated for dialogs
+        collectionsViewModel.collections.observe(viewLifecycleOwner) { /* kept active */ }
+
         binding.collectionsButton.setOnClickListener {
             findNavController().navigate(R.id.action_favorites_to_collections)
         }
