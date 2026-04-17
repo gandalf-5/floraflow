@@ -259,12 +259,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showIntervalUpgradeDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.story_premium_title))
-            .setMessage(getString(R.string.wallpaper_interval_premium_msg))
-            .setPositiveButton(getString(R.string.story_unlock_button), null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        com.floraflow.app.ui.premium.PremiumBottomSheetFragment.newInstance()
+            .show(parentFragmentManager, com.floraflow.app.ui.premium.PremiumBottomSheetFragment.TAG)
     }
 
     private fun intervalLabel(minutes: Int): String = when (minutes) {
