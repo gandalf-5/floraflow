@@ -140,7 +140,7 @@ class SettingsFragment : Fragment() {
 
     private fun showCategoriesPicker() {
         val all = PreferencesManager.ALL_CATEGORIES
-        val displayNames = all.map { it.replaceFirstChar { c -> c.titlecase() } }.toTypedArray()
+        val displayNames = PreferencesManager.DISPLAY_CATEGORIES.toTypedArray()
         val checked = BooleanArray(all.size) { true }
 
         viewLifecycleOwner.lifecycleScope.launch {
