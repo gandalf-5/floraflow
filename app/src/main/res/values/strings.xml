@@ -148,6 +148,27 @@
     <string name="seasons_title">Seasons</string>
     <string name="splash_tagline">A new plant, every day</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_start">Get Started</string>
+    <string name="onboarding_page1_emoji">🌿</string>
+    <string name="onboarding_page1_title">A New Plant, Every Day</string>
+    <string name="onboarding_page1_subtitle">Over 400 species from every corner of the world — curated with stunning photography. A full year of unique daily discoveries awaits you.</string>
+    <string name="onboarding_page2_emoji">🧬</string>
+    <string name="onboarding_page2_title">AI Botanical Insights</string>
+    <string name="onboarding_page2_subtitle">GPT-4o reveals the hidden science behind each plant — its origin, evolutionary history, cultural significance, and surprising uses.</string>
+    <string name="onboarding_page3_emoji">📷</string>
+    <string name="onboarding_page3_title">Identify Any Plant</string>
+    <string name="onboarding_page3_subtitle">Point your camera at any plant for instant identification powered by PlantNet AI. Works in your garden, on a hike, anywhere in the world.</string>
+    <string name="onboarding_page4_emoji">📚</string>
+    <string name="onboarding_page4_title">Your Personal Herbarium</string>
+    <string name="onboarding_page4_subtitle">Create collections, earn botanical trophies, track your streak, and share your discoveries. Your botanical journey, all in one place.</string>
+
+    <!-- Discovery -->
+    <string name="streak_days_label">%1$d days</string>
+    <string name="native_to_label">Native to %1$s</string>
+
     <!-- Collections -->
     <string name="collections_title">My Herbarium</string>
     <string name="collections_empty">No collections yet.\nCreate one to organise your plants.</string>
