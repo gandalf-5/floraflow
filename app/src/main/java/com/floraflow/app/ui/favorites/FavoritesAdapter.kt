@@ -16,7 +16,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class FavoritesAdapter(
-    private val onRemoveClick: (DailyPlant) -> Unit
+    private val onRemoveClick: (DailyPlant) -> Unit,
+    private val onLongClick: (DailyPlant) -> Unit = {}
 ) : ListAdapter<DailyPlant, FavoritesAdapter.ViewHolder>(DIFF) {
 
     companion object {
@@ -58,6 +59,7 @@ class FavoritesAdapter(
         }
         holder.favoriteBtn.setImageResource(R.drawable.ic_favorite_filled)
         holder.favoriteBtn.setOnClickListener { onRemoveClick(plant) }
+        holder.itemView.setOnLongClickListener { onLongClick(plant); true }
         Glide.with(holder.image.context)
             .load(plant.imageUrlRegular)
             .centerCrop()
