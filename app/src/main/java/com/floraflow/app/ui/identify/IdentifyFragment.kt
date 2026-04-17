@@ -26,6 +26,8 @@ import com.floraflow.app.R
 import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentIdentifyBinding
 import com.floraflow.app.ui.story.StoryBottomSheetFragment
+import com.floraflow.app.util.IdentifyShareUtil
+import com.floraflow.app.util.RatingManager
 import java.io.File
 import java.io.FileOutputStream
 import kotlinx.coroutines.flow.first
@@ -147,15 +149,18 @@ class IdentifyFragment : Fragment() {
                     binding.errorText.visibility = View.GONE
                     binding.identifyButton.isEnabled = true
                     binding.storyButton.visibility = View.GONE
+                    binding.shareResultButton.visibility = View.GONE
                 }
                 is IdentifyState.Loading -> {
                     binding.identifyProgress.visibility = View.VISIBLE
                     binding.identifyButton.isEnabled = false
                     binding.resultCard.visibility = View.GONE
                     binding.errorText.visibility = View.GONE
+                    binding.shareResultButton.visibility = View.GONE
                 }
                 is IdentifyState.LimitReached -> {
                     binding.identifyButton.isEnabled = false
+                    binding.shareResultButton.visibility = View.GONE
                     showLimitReachedDialog(state.limit)
                 }
                 is IdentifyState.Result -> {
@@ -170,6 +175,16 @@ class IdentifyFragment : Fragment() {
                         if (state.family != null) View.VISIBLE else View.GONE
                     binding.resetButton.visibility = View.VISIBLE
                     binding.storyButton.visibility = View.VISIBLE
+                    binding.shareResultButton.visibility = View.VISIBLE
+                    binding.shareResultButton.setOnClickListener {
+                        IdentifyShareUtil.share(
+                            requireContext(),
+                            state.commonName,
+                            state.scientificName,
+                            state.confidence,
+                            pendingImageFile
+                        )
+                    }
                     binding.storyButton.setOnClickListener {
                         val prefs = PreferencesManager(requireContext())
                         lifecycleScope.launch {
@@ -181,12 +196,16 @@ class IdentifyFragment : Fragment() {
                             ).show(parentFragmentManager, StoryBottomSheetFragment.TAG)
                         }
                     }
+                    // Rating: record positive event, ask after 3rd identification
+                    RatingManager.recordPositiveEvent(requireContext())
+                    activity?.let { RatingManager.requestReviewIfAppropriate(it) }
                 }
                 is IdentifyState.Error -> {
                     binding.identifyButton.isEnabled = true
                     binding.resultCard.visibility = View.GONE
                     binding.errorText.visibility = View.VISIBLE
                     binding.errorText.text = state.message
+                    binding.shareResultButton.visibility = View.GONE
                 }
             }
         }
