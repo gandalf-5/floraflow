@@ -17,6 +17,7 @@ datastore = "1.1.1"
 coroutines = "1.8.1"
 viewmodel = "2.8.3"
 room = "2.6.1"
+play-review = "2.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,7 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+play-review = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
