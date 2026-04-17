@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.Toast
+import com.floraflow.app.util.RatingManager
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -233,7 +234,14 @@ class DiscoveryFragment : Fragment() {
 
         val favIcon = if (plant.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
         binding.favoriteButton.setImageResource(favIcon)
-        binding.favoriteButton.setOnClickListener { viewModel.toggleFavorite(plant) }
+        binding.favoriteButton.setOnClickListener {
+            viewModel.toggleFavorite(plant)
+            // Record positive event when user adds a favorite; ask for rating after 3rd time
+            if (!plant.isFavorite) {
+                RatingManager.recordPositiveEvent(requireContext())
+                activity?.let { act -> RatingManager.requestReviewIfAppropriate(act) }
+            }
+        }
 
         binding.notesButton.setOnClickListener { showNotesDialog(plant) }
 
