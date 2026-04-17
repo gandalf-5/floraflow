@@ -124,4 +124,5 @@
     <string name="premium_active_all_unlocked">Toutes les fonctionnalités sont débloquées. Profitez-en !</string>
     <!-- Partage d\'identification -->
     <string name="share_discovery">Partager ma découverte</string>
+    <string name="location_unknown">Lieu non enregistré</string>
 </resources>
