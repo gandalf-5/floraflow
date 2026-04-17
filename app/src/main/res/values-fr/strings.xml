@@ -148,6 +148,27 @@
     <string name="seasons_title">Saisons</string>
     <string name="splash_tagline">Une nouvelle plante, chaque jour</string>
 
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continuer</string>
+    <string name="onboarding_skip">Passer</string>
+    <string name="onboarding_start">Commencer</string>
+    <string name="onboarding_page1_emoji">🌿</string>
+    <string name="onboarding_page1_title">Une Plante Nouvelle Chaque Jour</string>
+    <string name="onboarding_page1_subtitle">Plus de 400 espèces des quatre coins du monde, photographiées avec passion. Une année entière de découvertes botaniques uniques vous attend.</string>
+    <string name="onboarding_page2_emoji">🧬</string>
+    <string name="onboarding_page2_title">Insights Botaniques IA</string>
+    <string name="onboarding_page2_subtitle">GPT-4o dévoile la science cachée derrière chaque plante — son origine, son histoire évolutive, sa signification culturelle et ses usages surprenants.</string>
+    <string name="onboarding_page3_emoji">📷</string>
+    <string name="onboarding_page3_title">Identifiez N\'importe Quelle Plante</string>
+    <string name="onboarding_page3_subtitle">Pointez votre appareil photo vers n\'importe quelle plante pour une identification instantanée par IA. Dans votre jardin, en randonnée, partout.</string>
+    <string name="onboarding_page4_emoji">📚</string>
+    <string name="onboarding_page4_title">Votre Herbier Personnel</string>
+    <string name="onboarding_page4_subtitle">Créez des collections, gagnez des trophées botaniques, suivez votre série et partagez vos découvertes. Votre voyage botanique, au même endroit.</string>
+
+    <!-- Discovery -->
+    <string name="streak_days_label">%1$d jours</string>
+    <string name="native_to_label">Originaire de %1$s</string>
+
     <!-- Collections -->
     <string name="collections_title">Mon Herbier</string>
     <string name="collections_empty">Aucune collection pour l\'instant.\nCréez-en une pour organiser vos plantes.</string>
