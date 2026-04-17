@@ -199,7 +199,9 @@ class IdentifyFragment : Fragment() {
                     binding.resetButton.visibility = View.VISIBLE
                     binding.storyButton.visibility = View.VISIBLE
                     binding.shareResultButton.visibility = View.VISIBLE
-                    binding.shareResultButton.setOnClickListener {
+
+                    // Inline share & gallery buttons inside the result card
+                    val shareAction = {
                         IdentifyShareUtil.share(
                             requireContext(),
                             state.commonName,
@@ -207,6 +209,11 @@ class IdentifyFragment : Fragment() {
                             state.confidence,
                             pendingImageFile
                         )
+                    }
+                    binding.resultInlineShareBtn.setOnClickListener { shareAction() }
+                    binding.shareResultButton.setOnClickListener { shareAction() }
+                    binding.resultInlineGalleryBtn.setOnClickListener {
+                        binding.myIdentificationsButton.performClick()
                     }
                     binding.storyButton.setOnClickListener {
                         val prefs = PreferencesManager(requireContext())
