@@ -37,7 +37,13 @@ class WallpaperWorker(
                     categories
                 )
 
-                val plant = repository.fetchAndSaveTodayPlant()
+                val intervalMinutes = prefs.wallpaperIntervalMinutes.first()
+                val plant = if (intervalMinutes < PreferencesManager.INTERVAL_24H) {
+                    val slotSeed = System.currentTimeMillis() / (intervalMinutes.toLong() * 60 * 1000L)
+                    repository.fetchWallpaperPlantForSlot(slotSeed)
+                } else {
+                    repository.fetchAndSaveTodayPlant()
+                }
 
                 val bitmap = Glide.with(applicationContext)
                     .asBitmap()
