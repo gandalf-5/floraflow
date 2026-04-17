@@ -100,18 +100,24 @@ class IdentifyFragment : Fragment() {
         }
         viewModel.dailyUsed.observe(viewLifecycleOwner) { used ->
             val isPremium = viewModel.isPremiumUser.value ?: false
-            if (!isPremium) {
+            if (!isPremium && used > 0) {
                 val limit = PreferencesManager.FREE_DAILY_ID_LIMIT
                 binding.dailyCounterText.visibility = View.VISIBLE
                 binding.dailyCounterText.text = getString(R.string.identify_daily_counter, used, limit)
                 val atLimit = used >= limit
-                binding.dailyCounterText.alpha = if (atLimit) 1f else 0.7f
+                binding.dailyCounterText.alpha = if (atLimit) 1f else 0.75f
                 binding.identifyButton.isEnabled = !atLimit
                 if (atLimit) {
                     binding.dailyCounterText.setTextColor(
                         resources.getColor(android.R.color.holo_red_light, null)
                     )
+                } else {
+                    binding.dailyCounterText.setTextColor(
+                        resources.getColor(R.color.primary, null)
+                    )
                 }
+            } else if (!isPremium) {
+                binding.dailyCounterText.visibility = View.GONE
             }
         }
 
