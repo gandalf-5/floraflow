@@ -111,7 +111,7 @@
     <!-- Premium card (Settings) -->
     <string name="premium_badge_free">FREE PLAN</string>
     <string name="premium_badge_active">✨ ACTIVE</string>
-    <string name="premium_unlock_intro">What you\'ll unlock:</string>
+    <string name="premium_unlock_intro">Join the botanical community:</string>
     <string name="premium_feature_1">🔬 Unlimited plant identifications daily</string>
     <string name="premium_feature_2">📖 Full botanical stories (History, Folklore, Ecology)</string>
     <string name="premium_feature_3">🖼️ Auto-refresh wallpapers every 3 h, 6 h or 12 h</string>
@@ -122,4 +122,6 @@
     <string name="premium_upgrade_cta">Upgrade · $1.99 / month</string>
     <string name="premium_active_thanks">✨ Thank you for supporting FloraFlow!</string>
     <string name="premium_active_all_unlocked">All features are fully unlocked. Enjoy!</string>
+    <!-- Identify sharing -->
+    <string name="share_discovery">Share My Discovery</string>
 </resources>
