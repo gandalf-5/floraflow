@@ -9,6 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.floraflow.app.api.CareTipsRequest
+import com.floraflow.app.api.CareTipsResponse
 import com.floraflow.app.api.IdentifyRequest
 import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.data.AppDatabase
@@ -51,6 +53,12 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
 
     private val _isPremiumUser = MutableLiveData<Boolean>(false)
     val isPremiumUser: LiveData<Boolean> = _isPremiumUser
+
+    private val _careTips = MutableLiveData<CareTipsResponse?>(null)
+    val careTips: LiveData<CareTipsResponse?> = _careTips
+
+    private val _careTipsLoading = MutableLiveData<Boolean>(false)
+    val careTipsLoading: LiveData<Boolean> = _careTipsLoading
 
     init {
         viewModelScope.launch {
@@ -115,6 +123,7 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                     }
 
                     saveIdentification(imageFile, result, latitude, longitude)
+                    fetchCareTips(result.commonName, result.scientificName)
                 } else {
                     _state.value = IdentifyState.Error("Plant not recognized. Try a clearer photo.")
                 }
@@ -123,6 +132,32 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                 _state.value = IdentifyState.Error("Could not identify plant. Check your connection.")
             }
         }
+    }
+
+    fun fetchCareTips(plantName: String, scientificName: String) {
+        _careTips.value = null
+        _careTipsLoading.value = true
+        viewModelScope.launch {
+            try {
+                val tips = withContext(Dispatchers.IO) {
+                    RetrofitClient.floraFlowApi.getPlantCare(
+                        CareTipsRequest(plantName = plantName, scientificName = scientificName)
+                    )
+                }
+                _careTips.value = tips
+            } catch (e: Exception) {
+                Log.e("IdentifyVM", "Care tips fetch failed", e)
+            } finally {
+                _careTipsLoading.value = false
+            }
+        }
+    }
+
+    fun reset() {
+        _state.value = IdentifyState.Idle
+        _selectedImageUri.value = null
+        _careTips.value = null
+        _careTipsLoading.value = false
     }
 
     private suspend fun refreshDailyCount() {
@@ -203,8 +238,4 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
         return Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP)
     }
 
-    fun reset() {
-        _state.value = IdentifyState.Idle
-        _selectedImageUri.value = null
-    }
 }
