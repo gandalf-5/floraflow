@@ -13,6 +13,7 @@ import com.floraflow.app.api.CareTipsRequest
 import com.floraflow.app.api.CareTipsResponse
 import com.floraflow.app.api.IdentifyRequest
 import com.floraflow.app.api.RetrofitClient
+import com.floraflow.app.util.LocaleUtil
 import com.floraflow.app.data.AppDatabase
 import com.floraflow.app.data.IdentificationRecord
 import com.floraflow.app.data.PreferencesManager
@@ -141,7 +142,11 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val tips = withContext(Dispatchers.IO) {
                     RetrofitClient.floraFlowApi.getPlantCare(
-                        CareTipsRequest(plantName = plantName, scientificName = scientificName)
+                        CareTipsRequest(
+                            plantName = plantName,
+                            scientificName = scientificName,
+                            lang = LocaleUtil.getDeviceLang()
+                        )
                     )
                 }
                 _careTips.value = tips
