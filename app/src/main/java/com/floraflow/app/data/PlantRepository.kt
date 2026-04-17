@@ -4,6 +4,7 @@ import android.util.Log
 import com.floraflow.app.api.FloraFlowApi
 import com.floraflow.app.api.InsightRequest
 import com.floraflow.app.api.QuizRequest
+import com.floraflow.app.util.LocaleUtil
 import com.floraflow.app.api.UnsplashApi
 import com.floraflow.app.api.UnsplashPhoto
 import java.text.SimpleDateFormat
@@ -753,7 +754,7 @@ class PlantRepository(
     ): Pair<String, String?> {
         return try {
             val response = floraFlowApi.getBotanicalInsight(
-                InsightRequest(plantName, nativeRegion)
+                InsightRequest(plantName, nativeRegion, lang = LocaleUtil.getDeviceLang())
             )
             Pair(
                 response.insight ?: "A remarkable plant with a fascinating botanical story.",
@@ -767,7 +768,7 @@ class PlantRepository(
 
     suspend fun fetchBotanicalQuiz(plant: DailyPlant): com.floraflow.app.api.QuizResponse {
         return floraFlowApi.getBotanicalQuiz(
-            QuizRequest(plant.plantName, plant.scientificName)
+            QuizRequest(plant.plantName, plant.scientificName, lang = LocaleUtil.getDeviceLang())
         )
     }
 
