@@ -16,10 +16,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentIdentifyBinding
+import com.floraflow.app.ui.story.StoryBottomSheetFragment
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class IdentifyFragment : Fragment() {
 
@@ -104,6 +109,7 @@ class IdentifyFragment : Fragment() {
                     binding.resultCard.visibility = View.GONE
                     binding.errorText.visibility = View.GONE
                     binding.identifyButton.isEnabled = true
+                    binding.storyButton.visibility = View.GONE
                 }
                 is IdentifyState.Loading -> {
                     binding.identifyProgress.visibility = View.VISIBLE
@@ -122,6 +128,18 @@ class IdentifyFragment : Fragment() {
                     binding.resultFamily.visibility =
                         if (state.family != null) View.VISIBLE else View.GONE
                     binding.resetButton.visibility = View.VISIBLE
+                    binding.storyButton.visibility = View.VISIBLE
+                    binding.storyButton.setOnClickListener {
+                        val prefs = PreferencesManager(requireContext())
+                        lifecycleScope.launch {
+                            val isPremium = prefs.isPremium.first()
+                            StoryBottomSheetFragment.newInstance(
+                                plantName = state.commonName,
+                                scientificName = state.scientificName,
+                                isPremium = isPremium
+                            ).show(parentFragmentManager, StoryBottomSheetFragment.TAG)
+                        }
+                    }
                 }
                 is IdentifyState.Error -> {
                     binding.identifyButton.isEnabled = true
