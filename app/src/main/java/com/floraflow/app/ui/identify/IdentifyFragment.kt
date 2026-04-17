@@ -2,6 +2,7 @@ package com.floraflow.app.ui.identify
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -51,11 +52,7 @@ class IdentifyFragment : Fragment() {
     private val takePictureLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { success ->
-        if (success) {
-            pendingImageFile?.let { file ->
-                viewModel.setImageUri(Uri.fromFile(file))
-            }
-        }
+        if (success) pendingImageFile?.let { viewModel.setImageUri(Uri.fromFile(it)) }
     }
 
     private val cameraPermissionLauncher = registerForActivityResult(
@@ -67,9 +64,7 @@ class IdentifyFragment : Fragment() {
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) refreshLastLocation()
-    }
+    ) { granted -> if (granted) refreshLastLocation() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -84,29 +79,50 @@ class IdentifyFragment : Fragment() {
         requestLocationPermissionIfNeeded()
 
         binding.galleryButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickImageLauncher.launch(intent)
+            pickImageLauncher.launch(Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI))
         }
-
         binding.cameraButton.setOnClickListener { requestCameraAndLaunch() }
-
         binding.myIdentificationsButton.setOnClickListener {
             findNavController().navigate(R.id.action_identify_to_gallery)
         }
-
         binding.identifyButton.setOnClickListener {
             val file = pendingImageFile ?: return@setOnClickListener
             val loc = lastKnownLocation
             viewModel.identify(file, loc?.latitude, loc?.longitude)
         }
-
         binding.resetButton.setOnClickListener { viewModel.reset() }
+
+        // Counter: show "X/2 today" for free users
+        viewModel.isPremiumUser.observe(viewLifecycleOwner) { isPremium ->
+            if (isPremium) {
+                binding.dailyCounterText.visibility = View.GONE
+            }
+        }
+        viewModel.dailyUsed.observe(viewLifecycleOwner) { used ->
+            val isPremium = viewModel.isPremiumUser.value ?: false
+            if (!isPremium) {
+                val limit = PreferencesManager.FREE_DAILY_ID_LIMIT
+                binding.dailyCounterText.visibility = View.VISIBLE
+                binding.dailyCounterText.text = getString(R.string.identify_daily_counter, used, limit)
+                val atLimit = used >= limit
+                binding.dailyCounterText.alpha = if (atLimit) 1f else 0.7f
+                binding.identifyButton.isEnabled = !atLimit
+                if (atLimit) {
+                    binding.dailyCounterText.setTextColor(
+                        resources.getColor(android.R.color.holo_red_light, null)
+                    )
+                }
+            }
+        }
 
         viewModel.selectedImageUri.observe(viewLifecycleOwner) { uri ->
             if (uri != null) {
                 Glide.with(this).load(uri).centerCrop().into(binding.previewImage)
                 binding.previewImage.visibility = View.VISIBLE
+                val atLimit = (viewModel.dailyUsed.value ?: 0) >= PreferencesManager.FREE_DAILY_ID_LIMIT
+                        && viewModel.isPremiumUser.value != true
                 binding.identifyButton.visibility = View.VISIBLE
+                binding.identifyButton.isEnabled = !atLimit
                 binding.placeholderGroup.visibility = View.GONE
             } else {
                 binding.previewImage.visibility = View.GONE
@@ -131,6 +147,10 @@ class IdentifyFragment : Fragment() {
                     binding.identifyButton.isEnabled = false
                     binding.resultCard.visibility = View.GONE
                     binding.errorText.visibility = View.GONE
+                }
+                is IdentifyState.LimitReached -> {
+                    binding.identifyButton.isEnabled = false
+                    showLimitReachedDialog(state.limit)
                 }
                 is IdentifyState.Result -> {
                     binding.identifyButton.isEnabled = true
@@ -166,6 +186,15 @@ class IdentifyFragment : Fragment() {
         }
     }
 
+    private fun showLimitReachedDialog(limit: Int) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.identify_limit_title))
+            .setMessage(getString(R.string.identify_limit_message, limit))
+            .setPositiveButton(getString(R.string.story_unlock_button), null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
     private fun requestLocationPermissionIfNeeded() {
         when {
             ContextCompat.checkSelfPermission(
@@ -199,9 +228,7 @@ class IdentifyFragment : Fragment() {
         val file = File(requireContext().cacheDir, "identify_${System.currentTimeMillis()}.jpg")
         pendingImageFile = file
         val uri = FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            file
+            requireContext(), "${requireContext().packageName}.fileprovider", file
         )
         takePictureLauncher.launch(uri)
     }
