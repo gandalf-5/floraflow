@@ -18,36 +18,25 @@ import kotlinx.coroutines.launch
 class OnboardingActivity : AppCompatActivity() {
 
     data class OnboardingPage(
-        val emoji: String,
-        val title: String,
-        val subtitle: String
-    )
-
-    private val pages = listOf(
-        OnboardingPage(
-            "🌿",
-            "Daily Botanical Discovery",
-            "A new plant every single day — with over 400 species from every corner of the world. More than a full year of unique daily discoveries."
-        ),
-        OnboardingPage(
-            "🧬",
-            "AI Botanical Insights",
-            "GPT-4 powered insights reveal the hidden science behind each plant — its native habitat, evolutionary history, and surprising uses."
-        ),
-        OnboardingPage(
-            "📷",
-            "Identify Any Plant",
-            "Point your camera at any plant for instant AI identification. Discover what's growing in your garden, on a hike, or anywhere in the world."
-        )
+        val emojiRes: Int,
+        val titleRes: Int,
+        val subtitleRes: Int
     )
 
     private lateinit var pager: ViewPager2
     private lateinit var nextButton: MaterialButton
     private lateinit var skipButton: TextView
-    private lateinit var dot1: View
-    private lateinit var dot2: View
-    private lateinit var dot3: View
+    private lateinit var dots: List<View>
     private lateinit var prefs: PreferencesManager
+
+    private val pages by lazy {
+        listOf(
+            OnboardingPage(R.string.onboarding_page1_emoji, R.string.onboarding_page1_title, R.string.onboarding_page1_subtitle),
+            OnboardingPage(R.string.onboarding_page2_emoji, R.string.onboarding_page2_title, R.string.onboarding_page2_subtitle),
+            OnboardingPage(R.string.onboarding_page3_emoji, R.string.onboarding_page3_title, R.string.onboarding_page3_subtitle),
+            OnboardingPage(R.string.onboarding_page4_emoji, R.string.onboarding_page4_title, R.string.onboarding_page4_subtitle)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,15 +47,22 @@ class OnboardingActivity : AppCompatActivity() {
         pager = findViewById(R.id.onboarding_pager)
         nextButton = findViewById(R.id.next_button)
         skipButton = findViewById(R.id.skip_button)
-        dot1 = findViewById(R.id.dot1)
-        dot2 = findViewById(R.id.dot2)
-        dot3 = findViewById(R.id.dot3)
+        dots = listOf(
+            findViewById(R.id.dot1),
+            findViewById(R.id.dot2),
+            findViewById(R.id.dot3),
+            findViewById(R.id.dot4)
+        )
 
         pager.adapter = OnboardingAdapter(pages)
         pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 updateDots(position)
-                nextButton.text = if (position == pages.size - 1) "Get Started" else "Continue"
+                nextButton.text = when {
+                    position == pages.size - 1 -> getString(R.string.onboarding_start)
+                    else -> getString(R.string.onboarding_continue)
+                }
+                skipButton.visibility = if (position == pages.size - 1) View.INVISIBLE else View.VISIBLE
             }
         })
 
@@ -78,23 +74,21 @@ class OnboardingActivity : AppCompatActivity() {
             }
         }
 
-        skipButton.setOnClickListener {
-            finishOnboarding()
-        }
+        skipButton.setOnClickListener { finishOnboarding() }
+
+        updateDots(0)
     }
 
     private fun updateDots(position: Int) {
-        val dots = listOf(dot1, dot2, dot3)
+        val density = resources.displayMetrics.density
         dots.forEachIndexed { index, dot ->
-            val size = if (index == position) 10 else 8
-            val dpSize = (size * resources.displayMetrics.density).toInt()
+            val isActive = index == position
+            val sizeDp = if (isActive) 10 else 7
             val lp = dot.layoutParams
-            lp.width = dpSize
-            lp.height = dpSize
+            lp.width = (sizeDp * density).toInt()
+            lp.height = (sizeDp * density).toInt()
             dot.layoutParams = lp
-            dot.setBackgroundResource(
-                if (index == position) R.drawable.dot_active else R.drawable.dot_inactive
-            )
+            dot.setBackgroundResource(if (isActive) R.drawable.dot_active else R.drawable.dot_inactive)
         }
     }
 
@@ -124,9 +118,9 @@ class OnboardingActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: PageViewHolder, position: Int) {
             val item = items[position]
-            holder.emoji.text = item.emoji
-            holder.title.text = item.title
-            holder.subtitle.text = item.subtitle
+            holder.emoji.text = getString(item.emojiRes)
+            holder.title.text = getString(item.titleRes)
+            holder.subtitle.text = getString(item.subtitleRes)
         }
 
         override fun getItemCount() = items.size
