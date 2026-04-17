@@ -239,7 +239,7 @@ class SettingsFragment : Fragment() {
                 "📄 PDF field journal export\n" +
                 "❤️ Unlimited favorites & gallery\n" +
                 "🌿 Set identified plants as wallpaper\n\n" +
-                "Launching soon on Google Play at \$3.99 / month.\n" +
+                "Launching soon on Google Play at \$1.99 / month.\n" +
                 "Cancel anytime."
             )
             .setPositiveButton("Notify Me When Available") { _, _ -> }
