@@ -92,6 +92,15 @@
 
     </LinearLayout>
 
+    <!-- Wallpaper progress -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/wallpaper_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:indicatorColor="@color/primary"
+        android:visibility="gone" />
+
     <!-- Records list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gallery_recycler"
