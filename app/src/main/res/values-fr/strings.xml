@@ -125,4 +125,23 @@
     <!-- Partage d\'identification -->
     <string name="share_discovery">Partager ma découverte</string>
     <string name="location_unknown">Lieu non enregistré</string>
+    <!-- Écran Premium -->
+    <string name="premium_price_header">1,99 € / mois</string>
+    <string name="premium_coming_soon_note">Prochainement sur Google Play · Résiliable à tout moment</string>
+    <string name="table_feature">Fonctionnalité</string>
+    <string name="table_free">Gratuit</string>
+    <string name="table_premium">Premium</string>
+    <string name="check">✓</string>
+    <string name="cross">✗</string>
+    <string name="unlimited">∞</string>
+    <string name="free_id_limit">3 / jour</string>
+    <string name="free_gallery_limit">30 max</string>
+    <string name="feat_daily_discovery">Découverte botanique du jour</string>
+    <string name="feat_identifications">Identifications de plantes</string>
+    <string name="feat_story_etymology">Histoire botanique (Étymologie)</string>
+    <string name="feat_story_full">Histoire complète (Folklore, Écologie…)</string>
+    <string name="feat_auto_wallpaper">Fond d\'écran auto (toutes les 3–12 h)</string>
+    <string name="feat_ident_wallpaper">Plante identifiée en fond d\'écran</string>
+    <string name="feat_gallery">Galerie d\'identifications</string>
+    <string name="feat_pdf_export">Export PDF du journal de terrain</string>
 </resources>
