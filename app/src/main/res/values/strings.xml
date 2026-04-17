@@ -72,4 +72,13 @@
     <string name="streak_days">%1$d day streak</string>
     <string name="notification_title">🌿 Today\'s Plant: %1$s</string>
     <string name="notification_teaser">Did you know? %1$s Tap to discover more.</string>
-</resources>
+    <string name="read_the_story">Read the Story</string>
+      <string name="story_section_label">Botanical Story</string>
+      <string name="story_etymology_label">🌿 Etymology</string>
+      <string name="story_history_label">📜 History &amp; Culture</string>
+      <string name="story_folklore_label">🔮 Folklore</string>
+      <string name="story_ecology_label">🌍 In the Wild</string>
+      <string name="story_premium_title">Unlock the Full Story</string>
+      <string name="story_premium_subtitle">History, folklore &amp; ecology — 3 more chapters await in Premium</string>
+      <string name="story_unlock_button">Upgrade to Premium</string>
+  </resources>
