@@ -55,10 +55,14 @@ class StoryBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         if (!isPremium) {
+            // Show sections as a faded teaser — don't hide them completely
+            binding.historySection.alpha = 0.18f
+            binding.folkloreSection.alpha = 0.18f
+            binding.ecologySection.alpha = 0.18f
+            binding.historySection.isClickable = false
+            binding.folkloreSection.isClickable = false
+            binding.ecologySection.isClickable = false
             binding.premiumLockCard.visibility = View.VISIBLE
-            binding.historySection.visibility = View.GONE
-            binding.folkloreSection.visibility = View.GONE
-            binding.ecologySection.visibility = View.GONE
         }
 
         binding.unlockPremiumButton.setOnClickListener { dismiss() }
@@ -74,12 +78,11 @@ class StoryBottomSheetFragment : BottomSheetDialogFragment() {
                     binding.storyProgress.visibility = View.GONE
                     binding.storyContent.visibility = View.VISIBLE
                     binding.storyError.visibility = View.GONE
+                    // Always populate all sections — free users see them faded as preview
                     binding.etymologyText.text = state.story.etymology
-                    if (isPremium) {
-                        binding.historyText.text = state.story.history
-                        binding.folkloreText.text = state.story.folklore
-                        binding.ecologyText.text = state.story.ecology
-                    }
+                    binding.historyText.text = state.story.history
+                    binding.folkloreText.text = state.story.folklore
+                    binding.ecologyText.text = state.story.ecology
                 }
                 is StoryState.Error -> {
                     binding.storyProgress.visibility = View.GONE
