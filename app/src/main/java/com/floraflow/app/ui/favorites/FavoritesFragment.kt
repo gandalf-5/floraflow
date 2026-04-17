@@ -7,11 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.floraflow.app.FloraFlowApp
+import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
 import com.floraflow.app.databinding.FragmentFavoritesBinding
+import com.floraflow.app.ui.collections.CollectionsViewModel
+import com.floraflow.app.ui.collections.CollectionsViewModelFactory
+import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
 
@@ -23,6 +29,10 @@ class FavoritesFragment : Fragment() {
         FavoritesViewModelFactory(
             PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi)
         )
+    }
+
+    private val collectionsViewModel: CollectionsViewModel by viewModels {
+        CollectionsViewModelFactory((requireActivity().application as FloraFlowApp).database)
     }
 
     private lateinit var adapter: FavoritesAdapter
@@ -37,7 +47,10 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FavoritesAdapter { plant -> confirmRemoveFavorite(plant) }
+        adapter = FavoritesAdapter(
+            onRemoveClick = { plant -> confirmRemoveFavorite(plant) },
+            onLongClick = { plant -> showAddToCollectionDialog(plant) }
+        )
         binding.favoritesRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.favoritesRecycler.adapter = adapter
 
@@ -45,14 +58,48 @@ class FavoritesFragment : Fragment() {
             adapter.submitList(plants)
             binding.emptyText.visibility = if (plants.isEmpty()) View.VISIBLE else View.GONE
         }
+
+        binding.collectionsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_favorites_to_collections)
+        }
+
+        binding.badgesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_favorites_to_badges)
+        }
     }
 
     private fun confirmRemoveFavorite(plant: DailyPlant) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Remove from Favorites?")
-            .setMessage("\"${plant.plantName}\" will be removed from your favorites.")
-            .setPositiveButton("Remove") { _, _ -> viewModel.removeFavorite(plant) }
-            .setNegativeButton("Cancel", null)
+            .setTitle("Retirer des favoris ?")
+            .setMessage("« ${plant.plantName} » sera retiré de vos favoris.")
+            .setPositiveButton("Retirer") { _, _ -> viewModel.removeFavorite(plant) }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun showAddToCollectionDialog(plant: DailyPlant) {
+        val collections = collectionsViewModel.collections.value ?: emptyList()
+        if (collections.isEmpty()) {
+            AlertDialog.Builder(requireContext())
+                .setMessage(getString(R.string.collections_empty))
+                .setPositiveButton("Créer une collection") { _, _ ->
+                    findNavController().navigate(R.id.action_favorites_to_collections)
+                }
+                .setNegativeButton("Annuler", null)
+                .show()
+            return
+        }
+
+        val names = collections.map { "${it.emoji} ${it.name}" }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.add_to_collection))
+            .setItems(names) { _, index ->
+                val col = collections[index]
+                lifecycleScope.launch {
+                    collectionsViewModel.addPlantToCollection(plant.dateKey, col.id)
+                }
+            }
+            .setNegativeButton("Annuler", null)
             .show()
     }
 
