@@ -181,6 +181,63 @@
 
                 </LinearLayout>
 
+                <!-- Auto-Refresh Interval Row (Premium) -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp" />
+
+                <LinearLayout
+                    android:id="@+id/wallpaper_interval_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="20dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/wallpaper_interval"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/inter_regular" />
+
+                    <TextView
+                        android:id="@+id/wallpaper_interval_premium_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_surface"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="PREMIUM"
+                        android:textColor="@color/primary"
+                        android:textSize="10sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/wallpaper_interval_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primary"
+                        android:textSize="15sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="6dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_tertiary" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
