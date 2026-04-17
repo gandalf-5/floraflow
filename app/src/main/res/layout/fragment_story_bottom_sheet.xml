@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="48dp">
+
+        <!-- Drag Handle -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/text_tertiary"
+            android:alpha="0.3" />
+
+        <!-- Plant Name -->
+        <TextView
+            android:id="@+id/story_plant_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="26sp"
+            android:fontFamily="@font/playfair_display_bold"
+            android:lineSpacingMultiplier="1.2" />
+
+        <TextView
+            android:id="@+id/story_scientific_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/text_tertiary"
+            android:textSize="14sp"
+            android:fontFamily="@font/inter_regular"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
+        <!-- Section label — always shown -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/story_section_label"
+            android:textColor="@color/primary"
+            android:textSize="12sp"
+            android:fontFamily="@font/inter_medium"
+            android:letterSpacing="0.1"
+            android:alpha="0.7" />
+
+        <!-- Loading -->
+        <ProgressBar
+            android:id="@+id/story_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:indeterminateTint="@color/primary"
+            android:visibility="gone" />
+
+        <!-- Error -->
+        <TextView
+            android:id="@+id/story_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/text_tertiary"
+            android:textSize="14sp"
+            android:fontFamily="@font/inter_regular"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <!-- Story Content (revealed after API call) -->
+        <LinearLayout
+            android:id="@+id/story_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Etymology Section (always visible) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_surface"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/story_etymology_label"
+                    android:textColor="@color/primary"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.15"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/etymology_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:lineSpacingMultiplier="1.6" />
+
+            </LinearLayout>
+
+            <!-- History & Culture Section (premium only) -->
+            <LinearLayout
+                android:id="@+id/history_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_surface"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/story_history_label"
+                    android:textColor="@color/primary"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.15"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/history_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:lineSpacingMultiplier="1.6" />
+
+            </LinearLayout>
+
+            <!-- Folklore Section (premium only) -->
+            <LinearLayout
+                android:id="@+id/folklore_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_surface"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/story_folklore_label"
+                    android:textColor="@color/primary"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.15"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/folklore_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:lineSpacingMultiplier="1.6" />
+
+            </LinearLayout>
+
+            <!-- In the Wild Section (premium only) -->
+            <LinearLayout
+                android:id="@+id/ecology_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_surface"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/story_ecology_label"
+                    android:textColor="@color/primary"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_medium"
+                    android:letterSpacing="0.15"
+                    android:textAllCaps="true" />
+
+                <TextView
+                    android:id="@+id/ecology_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:lineSpacingMultiplier="1.6" />
+
+            </LinearLayout>
+
+            <!-- Premium Lock Card (visible for free users) -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/premium_lock_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/primary"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="28dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔒"
+                        android:textSize="32sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/story_premium_title"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/playfair_display_bold"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/story_premium_subtitle"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.5" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/unlock_premium_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="22dp"
+                        android:paddingHorizontal="36dp"
+                        android:text="@string/story_unlock_button"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/inter_medium"
+                        app:backgroundTint="@color/white"
+                        app:cornerRadius="24dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
