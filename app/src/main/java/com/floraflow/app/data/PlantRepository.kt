@@ -653,6 +653,20 @@ class PlantRepository(
         return fetchAndSave(dateKey, spec.query, spec.name, spec.region)
     }
 
+    /**
+     * Fetches a plant for a given time-slot seed (used by premium auto-refresh wallpaper).
+     * Each slot picks a different plant from DAILY_PLANTS, cycling through all 406.
+     * Caches per slot so repeated calls within the same interval window reuse the result.
+     */
+    suspend fun fetchWallpaperPlantForSlot(slotSeed: Long): DailyPlant {
+        val idx = ((slotSeed % DAILY_PLANTS.size) + DAILY_PLANTS.size).toInt() % DAILY_PLANTS.size
+        val spec = DAILY_PLANTS[idx]
+        val dateKey = "wallpaper-slot-$slotSeed"
+        val existing = dao.getByDate(dateKey)
+        if (existing != null) return existing
+        return fetchAndSave(dateKey, spec.query, spec.name, spec.region)
+    }
+
     suspend fun fetchForCategory(categoryQuery: String): DailyPlant {
         val dateKey = "${getTodayKey()}-$categoryQuery-${System.currentTimeMillis()}"
         val plants = CATEGORY_PLANTS[categoryQuery] ?: ALL_PLANTS
