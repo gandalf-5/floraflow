@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.api.StoryRequest
 import com.floraflow.app.api.StoryResponse
+import com.floraflow.app.util.LocaleUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,7 +31,11 @@ class StoryViewModel : ViewModel() {
             try {
                 val response = withContext(Dispatchers.IO) {
                     RetrofitClient.floraFlowApi.getBotanicalStory(
-                        StoryRequest(plantName = plantName, scientificName = scientificName)
+                        StoryRequest(
+                            plantName = plantName,
+                            scientificName = scientificName,
+                            lang = LocaleUtil.getDeviceLang()
+                        )
                     )
                 }
                 _state.value = StoryState.Success(response)
