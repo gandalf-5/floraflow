@@ -7,10 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [DailyPlant::class], version = 4, exportSchema = false)
+@Database(entities = [DailyPlant::class, IdentificationRecord::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun dailyPlantDao(): DailyPlantDao
+    abstract fun identificationRecordDao(): IdentificationRecordDao
 
     companion object {
         @Volatile
@@ -37,6 +38,25 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    """CREATE TABLE IF NOT EXISTS identification_records (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        photoPath TEXT NOT NULL,
+                        commonName TEXT NOT NULL,
+                        scientificName TEXT NOT NULL,
+                        confidence INTEGER NOT NULL,
+                        family TEXT,
+                        timestampMs INTEGER NOT NULL,
+                        latitude REAL,
+                        longitude REAL,
+                        locationName TEXT
+                    )"""
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -44,7 +64,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "floraflow_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
                 INSTANCE = instance
                 instance
