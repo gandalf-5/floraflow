@@ -27,6 +27,11 @@ interface FloraFlowApi {
         @Body request: IdentifyRequest
     ): IdentifyApiResponse
 
+    @POST("botanical-story")
+    suspend fun getBotanicalStory(
+        @Body request: StoryRequest
+    ): StoryResponse
+
     companion object {
         /** Resolved at build time from FLORA_FLOW_API_URL env / GitHub Actions secret. */
         val BASE_URL: String get() = BuildConfig.FLORA_FLOW_API_URL
@@ -77,4 +82,16 @@ data class IdentifySpecies(
 
 data class IdentifyFamily(
     @SerializedName("scientificNameWithoutAuthor") val name: String
+)
+
+data class StoryRequest(
+    @SerializedName("plantName") val plantName: String,
+    @SerializedName("scientificName") val scientificName: String? = null
+)
+
+data class StoryResponse(
+    @SerializedName("etymology") val etymology: String = "",
+    @SerializedName("history") val history: String = "",
+    @SerializedName("folklore") val folklore: String = "",
+    @SerializedName("ecology") val ecology: String = ""
 )
