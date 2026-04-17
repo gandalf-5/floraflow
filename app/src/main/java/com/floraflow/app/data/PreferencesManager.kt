@@ -20,6 +20,12 @@ class PreferencesManager(private val context: Context) {
         val AUTO_SYNC_WALLPAPER = booleanPreferencesKey("auto_sync_wallpaper")
         val WALLPAPER_HOUR = intPreferencesKey("wallpaper_hour")
         val WALLPAPER_TARGET = intPreferencesKey("wallpaper_target")
+        val WALLPAPER_INTERVAL_MINUTES = intPreferencesKey("wallpaper_interval_minutes")
+
+        const val INTERVAL_3H  = 180
+        const val INTERVAL_6H  = 360
+        const val INTERVAL_12H = 720
+        const val INTERVAL_24H = 1440
         val PREFERRED_CATEGORIES = stringPreferencesKey("preferred_categories")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         val DARK_MODE = intPreferencesKey("dark_mode")
@@ -64,6 +70,7 @@ class PreferencesManager(private val context: Context) {
     val autoSyncWallpaper: Flow<Boolean> = context.dataStore.data.map { it[AUTO_SYNC_WALLPAPER] ?: false }
     val wallpaperHour: Flow<Int> = context.dataStore.data.map { it[WALLPAPER_HOUR] ?: 0 }
     val wallpaperTarget: Flow<Int> = context.dataStore.data.map { it[WALLPAPER_TARGET] ?: TARGET_ALL }
+    val wallpaperIntervalMinutes: Flow<Int> = context.dataStore.data.map { it[WALLPAPER_INTERVAL_MINUTES] ?: INTERVAL_24H }
     val preferredCategories: Flow<List<String>> = context.dataStore.data.map { prefs ->
         val saved = prefs[PREFERRED_CATEGORIES] ?: ""
         if (saved.isBlank()) ALL_CATEGORIES else saved.split("|").filter { it.isNotBlank() }
@@ -82,6 +89,7 @@ class PreferencesManager(private val context: Context) {
     suspend fun setAutoSyncWallpaper(enabled: Boolean) { context.dataStore.edit { it[AUTO_SYNC_WALLPAPER] = enabled } }
     suspend fun setWallpaperHour(hour: Int) { context.dataStore.edit { it[WALLPAPER_HOUR] = hour } }
     suspend fun setWallpaperTarget(target: Int) { context.dataStore.edit { it[WALLPAPER_TARGET] = target } }
+    suspend fun setWallpaperIntervalMinutes(minutes: Int) { context.dataStore.edit { it[WALLPAPER_INTERVAL_MINUTES] = minutes } }
     suspend fun setPreferredCategories(categories: List<String>) {
         context.dataStore.edit { it[PREFERRED_CATEGORIES] = categories.joinToString("|") }
     }
