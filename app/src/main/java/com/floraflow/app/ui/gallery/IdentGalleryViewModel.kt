@@ -14,5 +14,5 @@ class IdentGalleryViewModel(
 
     val records: LiveData<List<IdentificationRecord>> =
         if (isPremium) dao.getAllRecords().asLiveData()
-        else dao.getRecentRecords(PreferencesManager.FREE_DAILY_ID_LIMIT * 10).asLiveData()
+        else dao.getRecentRecords(PreferencesManager.FREE_GALLERY_RECORD_LIMIT).asLiveData()
 }
