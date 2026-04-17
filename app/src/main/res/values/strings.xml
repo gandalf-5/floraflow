@@ -144,4 +144,7 @@
     <string name="feat_ident_wallpaper">Identified plant as wallpaper</string>
     <string name="feat_gallery">Identification gallery</string>
     <string name="feat_pdf_export">PDF field journal export</string>
+    <string name="premium_trial_note">✨ Bientôt disponible sur Google Play</string>
+    <string name="seasons_title">Seasons</string>
+    <string name="splash_tagline">A new plant, every day</string>
 </resources>
