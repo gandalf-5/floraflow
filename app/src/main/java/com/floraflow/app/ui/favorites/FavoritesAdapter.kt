@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class FavoritesAdapter(
     private val onRemoveClick: (DailyPlant) -> Unit
@@ -22,6 +24,12 @@ class FavoritesAdapter(
             override fun areItemsTheSame(a: DailyPlant, b: DailyPlant) = a.dateKey == b.dateKey
             override fun areContentsTheSame(a: DailyPlant, b: DailyPlant) = a == b
         }
+        private val INPUT_FMT = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        private val OUTPUT_FMT = SimpleDateFormat("EEE, MMM d yyyy", Locale.getDefault())
+        fun formatDate(dateKey: String): String = try {
+            val date = INPUT_FMT.parse(dateKey)
+            if (date != null) OUTPUT_FMT.format(date) else dateKey
+        } catch (_: Exception) { dateKey }
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -41,7 +49,7 @@ class FavoritesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val plant = getItem(position)
         holder.name.text = plant.plantName
-        holder.date.text = plant.dateKey
+        holder.date.text = formatDate(plant.dateKey)
         if (!plant.scientificName.isNullOrBlank()) {
             holder.scientific.visibility = View.VISIBLE
             holder.scientific.text = plant.scientificName
