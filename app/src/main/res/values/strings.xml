@@ -124,4 +124,5 @@
     <string name="premium_active_all_unlocked">All features are fully unlocked. Enjoy!</string>
     <!-- Identify sharing -->
     <string name="share_discovery">Share My Discovery</string>
+    <string name="location_unknown">Location not recorded</string>
 </resources>
