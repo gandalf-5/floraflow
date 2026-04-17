@@ -34,6 +34,9 @@
     <color name="quiz_correct">#2D6A4F</color>
     <color name="quiz_wrong">#C0392B</color>
 
+    <!-- Streak / Gamification -->
+    <color name="streak_amber">#D97706</color>
+
     <!-- Splash -->
     <color name="splash_bg">#1B4332</color>
     <color name="splash_text">#FFFFFF</color>
