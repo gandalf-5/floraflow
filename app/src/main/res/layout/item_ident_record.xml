@@ -84,7 +84,7 @@
 
         </LinearLayout>
 
-        <!-- Action buttons: wallpaper + delete -->
+        <!-- Action buttons: share + wallpaper + delete -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -93,9 +93,19 @@
             android:layout_marginStart="8dp">
 
             <ImageView
+                android:id="@+id/record_share_btn"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_share"
+                android:alpha="0.65"
+                android:contentDescription="Share" />
+
+            <ImageView
                 android:id="@+id/record_wallpaper_btn"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="8dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_wallpaper"
                 android:alpha="0.55"
