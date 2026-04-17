@@ -32,6 +32,11 @@ interface FloraFlowApi {
         @Body request: StoryRequest
     ): StoryResponse
 
+    @POST("plant-care")
+    suspend fun getPlantCare(
+        @Body request: CareTipsRequest
+    ): CareTipsResponse
+
     companion object {
         /** Resolved at build time from FLORA_FLOW_API_URL env / GitHub Actions secret. */
         val BASE_URL: String get() = BuildConfig.FLORA_FLOW_API_URL
@@ -94,4 +99,18 @@ data class StoryResponse(
     @SerializedName("history") val history: String = "",
     @SerializedName("folklore") val folklore: String = "",
     @SerializedName("ecology") val ecology: String = ""
+)
+
+data class CareTipsRequest(
+    @SerializedName("plantName") val plantName: String,
+    @SerializedName("scientificName") val scientificName: String? = null
+)
+
+data class CareTipsResponse(
+    @SerializedName("watering")    val watering: String = "",
+    @SerializedName("light")       val light: String = "",
+    @SerializedName("soil")        val soil: String = "",
+    @SerializedName("temperature") val temperature: String = "",
+    @SerializedName("toxicity")    val toxicity: String = "",
+    @SerializedName("seasonalTip") val seasonalTip: String = ""
 )
