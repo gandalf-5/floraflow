@@ -27,7 +27,7 @@ class IdentGalleryAdapter(
             override fun areItemsTheSame(a: IdentificationRecord, b: IdentificationRecord) = a.id == b.id
             override fun areContentsTheSame(a: IdentificationRecord, b: IdentificationRecord) = a == b
         }
-        private val DATE_FMT = SimpleDateFormat("MMM d, yyyy · HH:mm", Locale.getDefault())
+        private val DATE_FMT = SimpleDateFormat("d MMM yyyy, HH:mm", Locale.getDefault())
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -62,11 +62,10 @@ class IdentGalleryAdapter(
         holder.confidence.text = "${record.confidence}% match"
         holder.dateTime.text = DATE_FMT.format(Date(record.timestampMs))
 
-        if (!record.locationName.isNullOrBlank()) {
-            holder.location.visibility = View.VISIBLE
-            holder.location.text = "📍 ${record.locationName}"
+        holder.location.text = if (!record.locationName.isNullOrBlank()) {
+            record.locationName
         } else {
-            holder.location.visibility = View.GONE
+            holder.location.context.getString(R.string.location_unknown)
         }
 
         holder.shareBtn.setOnClickListener { onShare(record) }
