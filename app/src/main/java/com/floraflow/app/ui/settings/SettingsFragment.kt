@@ -230,21 +230,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showUpgradeDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.premium_upgrade_title))
-            .setMessage(
-                "🔬 Unlimited plant identifications\n" +
-                "📖 Full botanical stories\n" +
-                "🖼️ Auto-refresh wallpapers (3 h / 6 h / 12 h)\n" +
-                "📄 PDF field journal export\n" +
-                "❤️ Unlimited favorites & gallery\n" +
-                "🌿 Set identified plants as wallpaper\n\n" +
-                "Launching soon on Google Play at \$1.99 / month.\n" +
-                "Cancel anytime."
-            )
-            .setPositiveButton("Notify Me When Available") { _, _ -> }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        com.floraflow.app.ui.premium.PremiumBottomSheetFragment.newInstance()
+            .show(parentFragmentManager, com.floraflow.app.ui.premium.PremiumBottomSheetFragment.TAG)
     }
 
     private fun showIntervalPicker() {
