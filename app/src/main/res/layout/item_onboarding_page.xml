@@ -6,25 +6,24 @@
     android:orientation="vertical"
     android:gravity="center"
     android:paddingHorizontal="36dp"
-    android:paddingVertical="32dp">
+    android:paddingVertical="16dp">
 
-    <!-- Hero illustration area -->
+    <!-- Hero illustration area — réduit pour laisser place au texte -->
     <FrameLayout
-        android:layout_width="240dp"
-        android:layout_height="240dp"
+        android:layout_width="172dp"
+        android:layout_height="172dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="44dp">
+        android:layout_marginBottom="28dp">
 
-        <!-- Layered circles for depth -->
         <View
-            android:layout_width="240dp"
-            android:layout_height="240dp"
+            android:layout_width="172dp"
+            android:layout_height="172dp"
             android:background="@drawable/onboarding_circle_bg"
             android:alpha="0.45" />
 
         <View
-            android:layout_width="190dp"
-            android:layout_height="190dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:layout_gravity="center"
             android:background="@drawable/onboarding_circle_bg"
             android:alpha="0.75" />
@@ -34,17 +33,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="88sp"
+            android:textSize="72sp"
             android:text="🌿" />
 
     </FrameLayout>
 
-    <!-- Label above title (accent colored) -->
+    <!-- Label accent -->
     <TextView
         android:id="@+id/page_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/accent"
         android:textSize="11sp"
         android:fontFamily="@font/inter_medium"
@@ -58,35 +57,35 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/text_primary"
-        android:textSize="30sp"
+        android:textSize="28sp"
         android:fontFamily="@font/playfair_display_bold"
-        android:lineSpacingMultiplier="1.15"
+        android:lineSpacingMultiplier="1.12"
         android:text="Daily Discovery" />
 
-    <!-- Decorative botanical divider -->
+    <!-- Séparateur décoratif -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
 
         <View
-            android:layout_width="32dp"
+            android:layout_width="28dp"
             android:layout_height="1dp"
             android:background="@color/divider" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:layout_marginHorizontal="8dp"
             android:text="✦"
             android:textColor="@color/accent"
-            android:textSize="10sp" />
+            android:textSize="9sp" />
 
         <View
-            android:layout_width="32dp"
+            android:layout_width="28dp"
             android:layout_height="1dp"
             android:background="@color/divider" />
 
@@ -98,9 +97,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/text_primary"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:fontFamily="@font/inter_medium"
-        android:lineSpacingMultiplier="1.65"
+        android:lineSpacingMultiplier="1.6"
         android:text="A new botanical wonder every day." />
 
 </LinearLayout>
