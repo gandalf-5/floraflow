@@ -94,4 +94,28 @@ class QuizViewModel(
             }
         }
     }
+
+    /** Generate a fresh bonus question about today's plant (does not overwrite daily cache). */
+    fun nextQuestion() {
+        _state.value = QuizUiState.Loading
+        viewModelScope.launch {
+            try {
+                val plant = try {
+                    repository.fetchAndSaveTodayPlant()
+                } catch (e: Exception) {
+                    repository.getTodayPlant()
+                }
+                if (plant == null) { _state.value = QuizUiState.Unavailable; return@launch }
+                val quiz = repository.generateQuiz(plant)
+                if (quiz != null) {
+                    _state.value = QuizUiState.Ready(quiz)
+                } else {
+                    _state.value = QuizUiState.Unavailable
+                }
+            } catch (e: Exception) {
+                Log.e("QuizViewModel", "nextQuestion error", e)
+                _state.value = QuizUiState.Unavailable
+            }
+        }
+    }
 }
