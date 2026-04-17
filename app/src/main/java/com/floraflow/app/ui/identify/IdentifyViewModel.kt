@@ -13,16 +13,20 @@ import com.floraflow.app.api.IdentifyRequest
 import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.data.AppDatabase
 import com.floraflow.app.data.IdentificationRecord
+import com.floraflow.app.data.PreferencesManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.time.LocalDate
 import java.util.Locale
 
 sealed class IdentifyState {
     object Idle : IdentifyState()
     object Loading : IdentifyState()
+    data class LimitReached(val limit: Int) : IdentifyState()
     data class Result(
         val commonName: String,
         val scientificName: String,
@@ -34,11 +38,27 @@ sealed class IdentifyState {
 
 class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
 
+    private val prefs = PreferencesManager(app)
+
     private val _state = MutableLiveData<IdentifyState>(IdentifyState.Idle)
     val state: LiveData<IdentifyState> = _state
 
     private val _selectedImageUri = MutableLiveData<android.net.Uri?>()
     val selectedImageUri: LiveData<android.net.Uri?> = _selectedImageUri
+
+    private val _dailyUsed = MutableLiveData<Int>(0)
+    val dailyUsed: LiveData<Int> = _dailyUsed
+
+    private val _isPremiumUser = MutableLiveData<Boolean>(false)
+    val isPremiumUser: LiveData<Boolean> = _isPremiumUser
+
+    init {
+        viewModelScope.launch {
+            val premium = prefs.isPremium.first()
+            _isPremiumUser.value = premium
+            if (!premium) refreshDailyCount()
+        }
+    }
 
     fun setImageUri(uri: android.net.Uri) {
         _selectedImageUri.value = uri
@@ -50,15 +70,28 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
         _state.value = IdentifyState.Loading
 
         viewModelScope.launch {
-            try {
-                val imageBase64 = withContext(Dispatchers.IO) {
-                    compressAndEncode(imageFile)
+            val isPremium = prefs.isPremium.first()
+
+            if (!isPremium) {
+                val today = LocalDate.now().toString()
+                val savedDate = prefs.dailyIdDate.first()
+                if (savedDate != today) {
+                    prefs.setDailyIdCount(0)
+                    prefs.setDailyIdDate(today)
                 }
+                val count = prefs.dailyIdCount.first()
+                if (count >= PreferencesManager.FREE_DAILY_ID_LIMIT) {
+                    _dailyUsed.value = count
+                    _state.value = IdentifyState.LimitReached(PreferencesManager.FREE_DAILY_ID_LIMIT)
+                    return@launch
+                }
+            }
+
+            try {
+                val imageBase64 = withContext(Dispatchers.IO) { compressAndEncode(imageFile) }
 
                 val response = withContext(Dispatchers.IO) {
-                    RetrofitClient.floraFlowApi.identify(
-                        IdentifyRequest(imageBase64 = imageBase64)
-                    )
+                    RetrofitClient.floraFlowApi.identify(IdentifyRequest(imageBase64 = imageBase64))
                 }
 
                 val best = response.results.firstOrNull()
@@ -73,6 +106,14 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                         family = best.species.family?.name
                     )
                     _state.value = result
+
+                    if (!isPremium) {
+                        val newCount = (prefs.dailyIdCount.first()) + 1
+                        prefs.setDailyIdCount(newCount)
+                        prefs.setDailyIdDate(LocalDate.now().toString())
+                        _dailyUsed.value = newCount
+                    }
+
                     saveIdentification(imageFile, result, latitude, longitude)
                 } else {
                     _state.value = IdentifyState.Error("Plant not recognized. Try a clearer photo.")
@@ -82,6 +123,13 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                 _state.value = IdentifyState.Error("Could not identify plant. Check your connection.")
             }
         }
+    }
+
+    private suspend fun refreshDailyCount() {
+        val today = LocalDate.now().toString()
+        val savedDate = prefs.dailyIdDate.first()
+        val count = if (savedDate == today) prefs.dailyIdCount.first() else 0
+        _dailyUsed.value = count
     }
 
     private fun saveIdentification(
