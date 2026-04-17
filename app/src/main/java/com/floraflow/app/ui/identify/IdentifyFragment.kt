@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -17,7 +19,9 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.floraflow.app.R
 import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentIdentifyBinding
 import com.floraflow.app.ui.story.StoryBottomSheetFragment
@@ -32,6 +36,7 @@ class IdentifyFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: IdentifyViewModel by viewModels()
     private var pendingImageFile: File? = null
+    private var lastKnownLocation: Location? = null
 
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -56,11 +61,14 @@ class IdentifyFragment : Fragment() {
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            doLaunchCamera()
-        } else {
-            Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
-        }
+        if (granted) doLaunchCamera()
+        else Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+    }
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) refreshLastLocation()
     }
 
     override fun onCreateView(
@@ -73,6 +81,8 @@ class IdentifyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requestLocationPermissionIfNeeded()
+
         binding.galleryButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             pickImageLauncher.launch(intent)
@@ -80,9 +90,14 @@ class IdentifyFragment : Fragment() {
 
         binding.cameraButton.setOnClickListener { requestCameraAndLaunch() }
 
+        binding.myIdentificationsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_identify_to_gallery)
+        }
+
         binding.identifyButton.setOnClickListener {
             val file = pendingImageFile ?: return@setOnClickListener
-            viewModel.identify(file)
+            val loc = lastKnownLocation
+            viewModel.identify(file, loc?.latitude, loc?.longitude)
         }
 
         binding.resetButton.setOnClickListener { viewModel.reset() }
@@ -148,6 +163,27 @@ class IdentifyFragment : Fragment() {
                     binding.errorText.text = state.message
                 }
             }
+        }
+    }
+
+    private fun requestLocationPermissionIfNeeded() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> refreshLastLocation()
+            else -> locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+    @Suppress("MissingPermission")
+    private fun refreshLastLocation() {
+        try {
+            val lm = requireContext().getSystemService(LocationManager::class.java)
+            val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)
+            lastKnownLocation = providers.mapNotNull { lm.getLastKnownLocation(it) }
+                .maxByOrNull { it.time }
+        } catch (e: Exception) {
+            lastKnownLocation = null
         }
     }
 
