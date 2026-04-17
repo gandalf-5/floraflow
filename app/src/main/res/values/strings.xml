@@ -90,4 +90,11 @@
     <string name="gallery_delete_title">Delete identification</string>
     <string name="gallery_delete_message">Remove %1$s from your gallery?</string>
     <string name="gallery_wallpaper_premium_msg">Setting an identified plant as wallpaper is a Premium feature. Upgrade to unlock unlimited identifications, full botanical stories, and more.</string>
+    <string name="gallery_export_pdf">Export PDF</string>
+    <string name="gallery_export_premium_msg">PDF export of your field journal is a Premium feature. Upgrade to save and share your botanical discoveries.</string>
+    <string name="gallery_export_share_title">Share Field Journal</string>
+    <!-- Identify daily counter -->
+    <string name="identify_daily_counter">🔬 %1$d/%2$d identifications today</string>
+    <string name="identify_limit_title">Daily limit reached</string>
+    <string name="identify_limit_message">Free users can identify %1$d plants per day. Upgrade to Premium for unlimited identifications.</string>
 </resources>
