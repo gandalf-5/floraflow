@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/nav_graph"
-      app:startDestination="@id/discoveryFragment">
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/discoveryFragment">
 
-      <fragment
-          android:id="@+id/discoveryFragment"
-          android:name="com.floraflow.app.ui.discovery.DiscoveryFragment"
-          android:label="Discover">
-          <action
-              android:id="@+id/action_discovery_to_quiz"
-              app:destination="@id/quizFragment"
-              app:enterAnim="@anim/content_fade_in"
-              app:exitAnim="@anim/fade_in_up" />
-          <action
-              android:id="@+id/action_discovery_to_seasonal"
-              app:destination="@id/seasonalFragment"
-              app:enterAnim="@anim/content_fade_in"
-              app:exitAnim="@anim/fade_in_up" />
-      </fragment>
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.floraflow.app.ui.discovery.DiscoveryFragment"
+        android:label="Discover">
+        <action
+            android:id="@+id/action_discovery_to_quiz"
+            app:destination="@id/quizFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+        <action
+            android:id="@+id/action_discovery_to_seasonal"
+            app:destination="@id/seasonalFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+    </fragment>
 
-      <fragment
-          android:id="@+id/historyFragment"
-          android:name="com.floraflow.app.ui.history.HistoryFragment"
-          android:label="History" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.floraflow.app.ui.history.HistoryFragment"
+        android:label="History" />
 
-      <fragment
-          android:id="@+id/favoritesFragment"
-          android:name="com.floraflow.app.ui.favorites.FavoritesFragment"
-          android:label="Favorites" />
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.floraflow.app.ui.favorites.FavoritesFragment"
+        android:label="Favorites" />
 
-      <fragment
-          android:id="@+id/identifyFragment"
-          android:name="com.floraflow.app.ui.identify.IdentifyFragment"
-          android:label="Identify">
-          <action
-              android:id="@+id/action_identify_to_gallery"
-              app:destination="@id/identGalleryFragment"
-              app:enterAnim="@anim/content_fade_in"
-              app:exitAnim="@anim/fade_in_up" />
-      </fragment>
+    <fragment
+        android:id="@+id/identifyFragment"
+        android:name="com.floraflow.app.ui.identify.IdentifyFragment"
+        android:label="Identify">
+        <action
+            android:id="@+id/action_identify_to_gallery"
+            app:destination="@id/identGalleryFragment"
+            app:enterAnim="@anim/content_fade_in"
+            app:exitAnim="@anim/fade_in_up" />
+    </fragment>
 
-      <fragment
-          android:id="@+id/identGalleryFragment"
-          android:name="com.floraflow.app.ui.gallery.IdentGalleryFragment"
-          android:label="My Identifications" />
+    <fragment
+        android:id="@+id/identGalleryFragment"
+        android:name="com.floraflow.app.ui.gallery.IdentGalleryFragment"
+        android:label="My Identifications" />
 
-      <fragment
-          android:id="@+id/settingsFragment"
-          android:name="com.floraflow.app.ui.settings.SettingsFragment"
-          android:label="Settings" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.floraflow.app.ui.settings.SettingsFragment"
+        android:label="Settings" />
 
-      <fragment
-          android:id="@+id/quizFragment"
-          android:name="com.floraflow.app.ui.quiz.QuizFragment"
-          android:label="Daily Quiz" />
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.floraflow.app.ui.quiz.QuizFragment"
+        android:label="Daily Quiz" />
 
-      <fragment
-          android:id="@+id/seasonalFragment"
-          android:name="com.floraflow.app.ui.seasonal.SeasonalFragment"
-          android:label="Seasons" />
+    <fragment
+        android:id="@+id/seasonalFragment"
+        android:name="com.floraflow.app.ui.seasonal.SeasonalFragment"
+        android:label="Seasons" />
 
-  </navigation>
-  
+</navigation>
