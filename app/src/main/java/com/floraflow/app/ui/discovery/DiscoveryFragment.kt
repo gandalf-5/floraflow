@@ -166,7 +166,7 @@ class DiscoveryFragment : Fragment() {
         viewModel.streakCount.observe(viewLifecycleOwner) { streak ->
             if (streak > 0) {
                 binding.streakBadge.visibility = View.VISIBLE
-                binding.streakText.text = "$streak days"
+                binding.streakText.text = getString(R.string.streak_days_label, streak)
             } else {
                 binding.streakBadge.visibility = View.GONE
             }
@@ -209,7 +209,7 @@ class DiscoveryFragment : Fragment() {
 
         if (!plant.nativeRegion.isNullOrBlank()) {
             binding.nativeRegionGroup.visibility = View.VISIBLE
-            binding.nativeRegionText.text = "Native to ${plant.nativeRegion}"
+            binding.nativeRegionText.text = getString(R.string.native_to_label, plant.nativeRegion)
         } else {
             binding.nativeRegionGroup.visibility = View.GONE
         }
