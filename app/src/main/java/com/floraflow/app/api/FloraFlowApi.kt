@@ -45,7 +45,8 @@ interface FloraFlowApi {
 
 data class InsightRequest(
     @SerializedName("plantName") val plantName: String,
-    @SerializedName("nativeRegion") val nativeRegion: String? = null
+    @SerializedName("nativeRegion") val nativeRegion: String? = null,
+    @SerializedName("lang") val lang: String = "en"
 )
 
 data class InsightResponse(
@@ -55,7 +56,8 @@ data class InsightResponse(
 
 data class QuizRequest(
     @SerializedName("plantName") val plantName: String,
-    @SerializedName("scientificName") val scientificName: String?
+    @SerializedName("scientificName") val scientificName: String?,
+    @SerializedName("lang") val lang: String = "en"
 )
 
 data class QuizResponse(
@@ -91,7 +93,8 @@ data class IdentifyFamily(
 
 data class StoryRequest(
     @SerializedName("plantName") val plantName: String,
-    @SerializedName("scientificName") val scientificName: String? = null
+    @SerializedName("scientificName") val scientificName: String? = null,
+    @SerializedName("lang") val lang: String = "en"
 )
 
 data class StoryResponse(
@@ -103,7 +106,8 @@ data class StoryResponse(
 
 data class CareTipsRequest(
     @SerializedName("plantName") val plantName: String,
-    @SerializedName("scientificName") val scientificName: String? = null
+    @SerializedName("scientificName") val scientificName: String? = null,
+    @SerializedName("lang") val lang: String = "en"
 )
 
 data class CareTipsResponse(
