@@ -254,6 +254,108 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- Care Tips Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/care_tips_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/surface"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Header row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🌿 Care Guide"
+                        android:textColor="@color/primary"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:letterSpacing="0.15"
+                        android:textAllCaps="true" />
+
+                    <ProgressBar
+                        android:id="@+id/care_tips_progress"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <!-- 💧 Watering -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="💧" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Watering" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_watering" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ☀️ Light -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="☀️" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Light" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_light" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 🌱 Soil -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🌱" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Soil" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_soil" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 🌡️ Temperature -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🌡️" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Temperature" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_temperature" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 🐾 Toxicity -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🐾" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pet &amp; Human Safety" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_toxicity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 🌿 Seasonal tip -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
+                    <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="📅" android:textSize="18sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Seasonal Tip" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:id="@+id/care_seasonal_tip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Share Discovery Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/share_result_button"
