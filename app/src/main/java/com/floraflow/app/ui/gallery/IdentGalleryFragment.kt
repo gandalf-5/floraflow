@@ -351,13 +351,9 @@ class IdentGalleryFragment : Fragment() {
 
     // ── Upgrade dialog ───────────────────────────────────────────────────────
 
-    private fun showUpgradeDialog(message: String = getString(R.string.gallery_wallpaper_premium_msg)) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.story_premium_title))
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.story_unlock_button), null)
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+    private fun showUpgradeDialog(message: String = "") {
+        com.floraflow.app.ui.premium.PremiumBottomSheetFragment.newInstance()
+            .show(parentFragmentManager, com.floraflow.app.ui.premium.PremiumBottomSheetFragment.TAG)
     }
 
     override fun onDestroyView() {
