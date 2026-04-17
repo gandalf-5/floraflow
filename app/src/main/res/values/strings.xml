@@ -108,4 +108,18 @@
     <!-- Premium upgrade info -->
     <string name="premium_upgrade_title">FloraFlow Premium</string>
     <string name="premium_upgrade_message">FloraFlow Premium unlocks:\n\n🔬 Unlimited plant identifications\n📖 Full botanical stories (History, Folklore &amp; Ecology)\n📄 PDF field journal export\n🖼️ Set identifications as wallpaper\n📚 Unlimited identification gallery\n\nPremium is coming to Google Play very soon. Stay tuned!</string>
+    <!-- Premium card (Settings) -->
+    <string name="premium_badge_free">FREE PLAN</string>
+    <string name="premium_badge_active">✨ ACTIVE</string>
+    <string name="premium_unlock_intro">What you\'ll unlock:</string>
+    <string name="premium_feature_1">🔬 Unlimited plant identifications daily</string>
+    <string name="premium_feature_2">📖 Full botanical stories (History, Folklore, Ecology)</string>
+    <string name="premium_feature_3">🖼️ Auto-refresh wallpapers every 3 h, 6 h or 12 h</string>
+    <string name="premium_feature_4">📄 PDF field journal export</string>
+    <string name="premium_feature_5">❤️ Unlimited favorites &amp; identification gallery</string>
+    <string name="premium_feature_6">🌿 Identified plants set directly as wallpaper</string>
+    <string name="premium_price_note">Cancel anytime · Billed monthly</string>
+    <string name="premium_upgrade_cta">Upgrade · $3.99 / month</string>
+    <string name="premium_active_thanks">✨ Thank you for supporting FloraFlow!</string>
+    <string name="premium_active_all_unlocked">All features are fully unlocked. Enjoy!</string>
 </resources>
