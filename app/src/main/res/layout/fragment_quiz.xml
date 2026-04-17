@@ -219,6 +219,24 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- Next Question Button (shown after answer revealed) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/next_question_button"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/quiz_next_question"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:fontFamily="@font/inter_medium"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="26dp"
+                app:icon="@drawable/ic_quiz"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white"
+                app:iconPadding="8dp"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </ScrollView>
