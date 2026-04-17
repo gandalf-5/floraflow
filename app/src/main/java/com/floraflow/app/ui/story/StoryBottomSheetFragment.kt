@@ -1,6 +1,5 @@
 package com.floraflow.app.ui.story
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -67,11 +66,8 @@ class StoryBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.unlockPremiumButton.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.premium_upgrade_title))
-                .setMessage(getString(R.string.premium_upgrade_message))
-                .setPositiveButton(android.R.string.ok, null)
-                .show()
+            com.floraflow.app.ui.premium.PremiumBottomSheetFragment.newInstance()
+                .show(parentFragmentManager, com.floraflow.app.ui.premium.PremiumBottomSheetFragment.TAG)
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
