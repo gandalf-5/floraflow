@@ -147,4 +147,53 @@
     <string name="premium_trial_note">✨ Bientôt disponible sur Google Play</string>
     <string name="seasons_title">Saisons</string>
     <string name="splash_tagline">Une nouvelle plante, chaque jour</string>
+
+    <!-- Collections -->
+    <string name="collections_title">Mon Herbier</string>
+    <string name="collections_empty">Aucune collection pour l\'instant.\nCréez-en une pour organiser vos plantes.</string>
+    <string name="collection_detail_empty">Cette collection est vide.\nAjoutez des plantes depuis vos Favoris.</string>
+    <string name="new_collection">Nouvelle collection</string>
+    <string name="collection_name_hint">Nom de la collection…</string>
+    <string name="collection_emoji_hint">Emoji (optionnel)</string>
+    <string name="add_to_collection">Ajouter à une collection</string>
+    <string name="remove_from_collection">Retirer de la collection</string>
+    <string name="delete_collection">Supprimer la collection</string>
+    <string name="delete_collection_confirm">Supprimer cette collection ? Les plantes resteront dans vos Favoris.</string>
+    <string name="share_collection">Partager la collection</string>
+    <string name="collections_button">📚 Mon Herbier</string>
+    <string name="badges_button">🏆 Trophées</string>
+    <string name="collection_plant_count">%1$d plante(s)</string>
+    <string name="choose_collection">Choisir une collection</string>
+
+    <!-- Badges -->
+    <string name="badges_title">Mes Trophées</string>
+    <string name="badge_earned_label">✓ Débloqué</string>
+    <string name="badge_locked_label">🔒 Verrouillé</string>
+    <string name="badges_progress">%1$d / %2$d trophées débloqués</string>
+
+    <!-- Badge names + descriptions -->
+    <string name="badge_streak_3_name">Première Série</string>
+    <string name="badge_streak_3_desc">3 jours consécutifs de découverte</string>
+    <string name="badge_streak_7_name">Explorateur Hebdo</string>
+    <string name="badge_streak_7_desc">7 jours de découverte d\'affilée</string>
+    <string name="badge_streak_30_name">Botaniste du Mois</string>
+    <string name="badge_streak_30_desc">30 jours consécutifs</string>
+    <string name="badge_streak_100_name">Botaniste Centenaire</string>
+    <string name="badge_streak_100_desc">100 jours d\'affilée !</string>
+    <string name="badge_fav_5_name">Amateur de Plantes</string>
+    <string name="badge_fav_5_desc">5 plantes ajoutées aux favoris</string>
+    <string name="badge_fav_20_name">Collectionneur</string>
+    <string name="badge_fav_20_desc">20 plantes dans vos favoris</string>
+    <string name="badge_ident_1_name">Premier Scan</string>
+    <string name="badge_ident_1_desc">Votre première plante identifiée</string>
+    <string name="badge_ident_10_name">Botaniste Amateur</string>
+    <string name="badge_ident_10_desc">10 plantes identifiées</string>
+    <string name="badge_ident_25_name">Explorateur Terrain</string>
+    <string name="badge_ident_25_desc">25 plantes identifiées</string>
+    <string name="badge_ident_50_name">Botaniste Expert</string>
+    <string name="badge_ident_50_desc">50 plantes identifiées</string>
+    <string name="badge_coll_1_name">Archiviste</string>
+    <string name="badge_coll_1_desc">Première collection créée</string>
+    <string name="badge_coll_5_name">Conservateur</string>
+    <string name="badge_coll_5_desc">5 collections créées</string>
 </resources>
