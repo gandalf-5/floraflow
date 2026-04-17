@@ -20,6 +20,7 @@ class SettingsFragment : Fragment() {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var prefs: PreferencesManager
+    private var isPremium = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -33,10 +34,30 @@ class SettingsFragment : Fragment() {
         prefs = PreferencesManager(requireContext())
 
         viewLifecycleOwner.lifecycleScope.launch {
+            prefs.isPremium.collect { premium -> isPremium = premium }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
             prefs.autoSyncWallpaper.collect { enabled ->
                 binding.autoSyncToggle.isChecked = enabled
-                binding.wallpaperTimeRow.visibility = if (enabled) View.VISIBLE else View.GONE
-                binding.wallpaperTargetRow.visibility = if (enabled) View.VISIBLE else View.GONE
+                val v = if (enabled) View.VISIBLE else View.GONE
+                binding.wallpaperTimeRow.visibility = v
+                binding.wallpaperTargetRow.visibility = v
+                binding.wallpaperIntervalRow.visibility = v
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            prefs.wallpaperIntervalMinutes.collect { minutes ->
+                val label = intervalLabel(minutes)
+                if (isPremium) {
+                    binding.wallpaperIntervalValue.text = label
+                    binding.wallpaperIntervalValue.visibility = View.VISIBLE
+                    binding.wallpaperIntervalPremiumBadge.visibility = View.GONE
+                } else {
+                    binding.wallpaperIntervalPremiumBadge.visibility = View.VISIBLE
+                    binding.wallpaperIntervalValue.visibility = View.GONE
+                }
             }
         }
 
@@ -98,6 +119,9 @@ class SettingsFragment : Fragment() {
 
         binding.wallpaperTimeRow.setOnClickListener { showTimePicker() }
         binding.wallpaperTargetRow.setOnClickListener { showTargetPicker() }
+        binding.wallpaperIntervalRow.setOnClickListener {
+            if (isPremium) showIntervalPicker() else showIntervalUpgradeDialog()
+        }
         binding.categoriesRow.setOnClickListener { showCategoriesPicker() }
         binding.darkModeRow.setOnClickListener { showDarkModePicker() }
     }
@@ -182,6 +206,46 @@ class SettingsFragment : Fragment() {
                 }
             }
             .show()
+    }
+
+    private fun showIntervalPicker() {
+        val options = arrayOf(
+            getString(R.string.interval_3h),
+            getString(R.string.interval_6h),
+            getString(R.string.interval_12h),
+            getString(R.string.interval_24h)
+        )
+        val minutes = intArrayOf(
+            PreferencesManager.INTERVAL_3H,
+            PreferencesManager.INTERVAL_6H,
+            PreferencesManager.INTERVAL_12H,
+            PreferencesManager.INTERVAL_24H
+        )
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.wallpaper_interval))
+            .setItems(options) { _, which ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    prefs.setWallpaperIntervalMinutes(minutes[which])
+                    WallpaperScheduler.schedule(requireContext())
+                }
+            }
+            .show()
+    }
+
+    private fun showIntervalUpgradeDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.story_premium_title))
+            .setMessage(getString(R.string.wallpaper_interval_premium_msg))
+            .setPositiveButton(getString(R.string.story_unlock_button), null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun intervalLabel(minutes: Int): String = when (minutes) {
+        PreferencesManager.INTERVAL_3H  -> getString(R.string.interval_3h)
+        PreferencesManager.INTERVAL_6H  -> getString(R.string.interval_6h)
+        PreferencesManager.INTERVAL_12H -> getString(R.string.interval_12h)
+        else                            -> getString(R.string.interval_24h)
     }
 
     private fun formatHour(hour: Int): String {
