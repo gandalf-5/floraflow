@@ -42,6 +42,17 @@ class SettingsFragment : Fragment() {
 
         binding.upgradeButton.setOnClickListener { showUpgradeDialog() }
 
+        // DEV SHORTCUT — appui long sur le badge de statut pour basculer premium on/off
+        binding.premiumStatusBadge.setOnLongClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                val newState = !isPremium
+                prefs.setIsPremium(newState)
+                val msg = if (newState) "✨ Mode Premium activé" else "Mode gratuit restauré"
+                android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             prefs.autoSyncWallpaper.collect { enabled ->
                 binding.autoSyncToggle.isChecked = enabled
