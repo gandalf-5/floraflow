@@ -10,13 +10,13 @@
     <color name="background">#F8F5F2</color>
     <color name="surface">#FFFFFF</color>
 
-    <!-- Text -->
+    <!-- Text — contraste WCAG AA garanti sur fond #F8F5F2 -->
     <color name="text_primary">#1A1A1A</color>
-    <color name="text_secondary">#555555</color>
-    <color name="text_tertiary">#888888</color>
+    <color name="text_secondary">#3A3A3A</color>
+    <color name="text_tertiary">#666666</color>
 
     <!-- UI -->
-    <color name="divider">#EBEBEB</color>
+    <color name="divider">#E0DDD8</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
@@ -28,7 +28,7 @@
 
     <!-- Navigation -->
     <color name="nav_active">#2D6A4F</color>
-    <color name="nav_inactive">#999999</color>
+    <color name="nav_inactive">#888888</color>
 
     <!-- Quiz -->
     <color name="quiz_correct">#2D6A4F</color>
