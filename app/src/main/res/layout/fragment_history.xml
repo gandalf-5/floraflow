@@ -31,17 +31,34 @@
 
     </LinearLayout>
 
-    <TextView
+    <!-- Empty state -->
+    <LinearLayout
         android:id="@+id/empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/history_empty"
-        android:textColor="@color/text_tertiary"
-        android:textSize="15sp"
-        android:fontFamily="@font/inter_regular"
+        android:orientation="vertical"
         android:gravity="center"
-        android:padding="32dp"
-        android:visibility="gone" />
+        android:padding="40dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌿"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/history_empty"
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_medium"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.5" />
+
+    </LinearLayout>
 
 </FrameLayout>
