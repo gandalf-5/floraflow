@@ -200,6 +200,8 @@
     <string name="share_image_error">Could not prepare share image.</string>
     <string name="export_failed">Export failed. Please try again.</string>
     <string name="journal_pdf_title">FloraFlow — Field Journal</string>
+    <string name="identify_no_result">Plant not recognized. Try a clearer photo.</string>
+    <string name="identify_error_connection">Could not identify plant. Check your connection.</string>
 
     <!-- Badges -->
     <string name="badges_title">My Trophies</string>
