@@ -61,7 +61,7 @@ class IdentifyFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) doLaunchCamera()
-        else Toast.makeText(requireContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
+        else Toast.makeText(requireContext(), getString(R.string.camera_permission_required), Toast.LENGTH_SHORT).show()
     }
 
     private val locationPermissionLauncher = registerForActivityResult(
@@ -192,7 +192,7 @@ class IdentifyFragment : Fragment() {
                     binding.errorText.visibility = View.GONE
                     binding.resultCommonName.text = state.commonName
                     binding.resultScientificName.text = state.scientificName
-                    binding.resultConfidence.text = "${state.confidence}% match"
+                    binding.resultConfidence.text = getString(R.string.identify_confidence, state.confidence)
                     binding.resultFamily.text = state.family ?: ""
                     binding.resultFamily.visibility =
                         if (state.family != null) View.VISIBLE else View.GONE
