@@ -203,6 +203,10 @@
     <string name="identify_no_result">Plant not recognized. Try a clearer photo.</string>
     <string name="identify_error_connection">Could not identify plant. Check your connection.</string>
 
+    <string name="subscribe_for_price">Subscribe — %1$s / month</string>
+    <string name="premium_cta">Subscribe — 1.99 € / month</string>
+    <string name="manage_subscription">Manage subscription</string>
+
     <!-- Badges -->
     <string name="badges_title">My Trophies</string>
     <string name="badge_earned_label">✓ Earned</string>
