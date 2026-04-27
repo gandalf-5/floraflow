@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.floraflow.app.R
+import com.floraflow.app.data.BillingManager
 import com.floraflow.app.databinding.FragmentPremiumBottomSheetBinding
 import com.floraflow.app.databinding.ItemPremiumRowBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -63,7 +64,27 @@ class PremiumBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        binding.premiumCtaButton.setOnClickListener { dismiss() }
+        val billing = BillingManager.getInstance(requireContext())
+
+        billing.subDetails.observe(viewLifecycleOwner) { details ->
+            val price = details
+                ?.subscriptionOfferDetails
+                ?.firstOrNull()
+                ?.pricingPhases
+                ?.pricingPhaseList
+                ?.firstOrNull()
+                ?.formattedPrice
+            binding.premiumCtaButton.text = if (price != null) {
+                getString(R.string.subscribe_for_price, price)
+            } else {
+                getString(R.string.premium_cta)
+            }
+        }
+
+        binding.premiumCtaButton.setOnClickListener {
+            billing.launchBillingFlow(requireActivity())
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {
