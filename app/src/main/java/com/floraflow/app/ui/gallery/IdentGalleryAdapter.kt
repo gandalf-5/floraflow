@@ -59,7 +59,7 @@ class IdentGalleryAdapter(
 
         holder.name.text = record.commonName
         holder.scientific.text = record.scientificName
-        holder.confidence.text = "${record.confidence}% match"
+        holder.confidence.text = holder.confidence.context.getString(R.string.identify_confidence, record.confidence)
         holder.dateTime.text = DATE_FMT.format(Date(record.timestampMs))
 
         holder.location.text = if (!record.locationName.isNullOrBlank()) {
