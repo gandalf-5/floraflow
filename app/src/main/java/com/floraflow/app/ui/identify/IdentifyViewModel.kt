@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.floraflow.app.R
 import com.floraflow.app.api.CareTipsRequest
 import com.floraflow.app.api.CareTipsResponse
 import com.floraflow.app.api.IdentifyRequest
@@ -104,6 +105,7 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                 }
 
                 val best = response.results.firstOrNull()
+                val app = getApplication<android.app.Application>()
                 if (best != null) {
                     val confidence = (best.score * 100).toInt()
                     val common = best.species.commonNames.firstOrNull()
@@ -126,11 +128,11 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                     saveIdentification(imageFile, result, latitude, longitude)
                     fetchCareTips(result.commonName, result.scientificName)
                 } else {
-                    _state.value = IdentifyState.Error("Plant not recognized. Try a clearer photo.")
+                    _state.value = IdentifyState.Error(app.getString(R.string.identify_no_result))
                 }
             } catch (e: Exception) {
                 Log.e("IdentifyVM", "Identification failed", e)
-                _state.value = IdentifyState.Error("Could not identify plant. Check your connection.")
+                _state.value = IdentifyState.Error(app.getString(R.string.identify_error_connection))
             }
         }
     }
