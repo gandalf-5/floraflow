@@ -255,8 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/surface"
-                    android:alpha="0.6" />
+                    android:background="@color/divider" />
 
                 <!-- Quick action row inside result card -->
                 <LinearLayout
@@ -335,7 +334,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="🌿 Care Guide"
+                        android:text="@string/care_guide_label"
                         android:textColor="@color/primary"
                         android:textSize="11sp"
                         android:fontFamily="@font/inter_medium"
@@ -354,7 +353,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="💧" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Watering" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_watering_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_watering" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
@@ -363,7 +362,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="☀️" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Light" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_light_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_light" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
@@ -372,7 +371,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🌱" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Soil" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_soil_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_soil" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
@@ -381,7 +380,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🌡️" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Temperature" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_temperature_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_temperature" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
@@ -390,7 +389,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="🐾" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pet &amp; Human Safety" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_toxicity_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_toxicity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
@@ -399,7 +398,7 @@
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="top">
                     <TextView android:layout_width="28dp" android:layout_height="wrap_content" android:text="📅" android:textSize="18sp" />
                     <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Seasonal Tip" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/care_seasonal_tip_label" android:textColor="@color/text_primary" android:textSize="13sp" android:fontFamily="@font/inter_medium" />
                         <TextView android:id="@+id/care_seasonal_tip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/inter_regular" android:lineSpacingMultiplier="1.3" />
                     </LinearLayout>
                 </LinearLayout>
