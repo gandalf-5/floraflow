@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.data.AppDatabase
+import com.floraflow.app.data.BillingManager
 import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.worker.NotificationWorker
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +25,7 @@ class FloraFlowApp : Application() {
         instance = this
         NotificationWorker.createChannel(this)
         applyDarkModePref()
+        BillingManager.getInstance(this)
     }
 
     private fun applyDarkModePref() {
