@@ -203,6 +203,10 @@
     <string name="identify_no_result">Plante non reconnue. Essayez une photo plus nette.</string>
     <string name="identify_error_connection">Impossible d\'identifier la plante. Vérifiez votre connexion.</string>
 
+    <string name="subscribe_for_price">S\'abonner — %1$s / mois</string>
+    <string name="premium_cta">S\'abonner — 1,99 € / mois</string>
+    <string name="manage_subscription">Gérer l\'abonnement</string>
+
     <!-- Badges -->
     <string name="badges_title">Mes Trophées</string>
     <string name="badge_earned_label">✓ Débloqué</string>
