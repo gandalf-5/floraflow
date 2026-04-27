@@ -281,14 +281,7 @@ class SettingsFragment : Fragment() {
         else                            -> getString(R.string.interval_24h)
     }
 
-    private fun formatHour(hour: Int): String {
-        return when {
-            hour == 0 -> "12:00 AM"
-            hour < 12 -> "${hour}:00 AM"
-            hour == 12 -> "12:00 PM"
-            else -> "${hour - 12}:00 PM"
-        }
-    }
+    private fun formatHour(hour: Int): String = "%02d:00".format(hour)
 
     override fun onDestroyView() {
         super.onDestroyView()
