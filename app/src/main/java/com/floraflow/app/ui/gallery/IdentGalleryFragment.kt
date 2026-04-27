@@ -113,9 +113,10 @@ class IdentGalleryFragment : Fragment() {
                 val uri = FileProvider.getUriForFile(
                     requireContext(), "${requireContext().packageName}.fileprovider", file
                 )
+                val confStr = getString(R.string.identify_confidence, record.confidence)
                 val caption = buildString {
                     append("🌿 ${record.commonName} (${record.scientificName})\n")
-                    append("${record.confidence}% match")
+                    append(confStr)
                     if (!record.locationName.isNullOrBlank()) append(" · 📍 ${record.locationName}")
                     append("\n\nIdentified with FloraFlow 🌱")
                 }
@@ -128,7 +129,7 @@ class IdentGalleryFragment : Fragment() {
                 startActivity(Intent.createChooser(intent, getString(R.string.share_plant)))
             } catch (e: Exception) {
                 binding.wallpaperProgress.visibility = View.GONE
-                Toast.makeText(requireContext(), "Could not prepare share image.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.share_image_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -291,13 +292,13 @@ class IdentGalleryFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "application/pdf"
                     putExtra(Intent.EXTRA_STREAM, uri)
-                    putExtra(Intent.EXTRA_SUBJECT, "FloraFlow Field Journal")
+                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.journal_pdf_title))
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 startActivity(Intent.createChooser(intent, getString(R.string.gallery_export_share_title)))
             } catch (e: Exception) {
                 binding.wallpaperProgress.visibility = View.GONE
-                Toast.makeText(requireContext(), "Export failed: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.export_failed), Toast.LENGTH_LONG).show()
             }
         }
     }
