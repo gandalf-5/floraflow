@@ -1,3 +1,5 @@
+import java.util.Base64
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,6 +24,21 @@ android {
         )
     }
 
+    // Release signing — reads from GitHub Actions secrets via env vars.
+    // If KEYSTORE_BASE64 is not set (local dev), release uses debug signing.
+    val keystoreB64 = System.getenv("KEYSTORE_BASE64") ?: ""
+    val releaseSigningConfig = if (keystoreB64.isNotBlank()) {
+        val keystoreFile = file("${buildDir}/floraflow-release.jks")
+        keystoreFile.parentFile.mkdirs()
+        keystoreFile.writeBytes(Base64.getDecoder().decode(keystoreB64))
+        signingConfigs.create("release") {
+            storeFile = keystoreFile
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+        }
+    } else null
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -29,6 +46,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (releaseSigningConfig != null) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 
@@ -82,4 +102,5 @@ dependencies {
     implementation("androidx.palette:palette-ktx:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation(libs.play.review)
+    implementation("com.android.billingclient:billing-ktx:6.2.1")
 }
