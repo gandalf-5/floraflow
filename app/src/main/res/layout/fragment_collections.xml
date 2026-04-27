@@ -75,10 +75,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/collections_empty"
-            android:textColor="@color/text_tertiary"
-            android:textSize="15sp"
-            android:fontFamily="@font/inter_regular"
-            android:gravity="center" />
+            android:textColor="@color/text_secondary"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_medium"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.5" />
 
     </LinearLayout>
 
@@ -94,7 +95,7 @@
         android:textColor="@color/white"
         android:fontFamily="@font/inter_medium"
         app:backgroundTint="@color/primary"
-        app:icon="@drawable/ic_favorite"
+        app:icon="@drawable/ic_add"
         app:iconTint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
