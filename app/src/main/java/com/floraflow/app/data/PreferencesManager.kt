@@ -1,6 +1,7 @@
 package com.floraflow.app.data
 
 import android.content.Context
+import com.floraflow.app.BuildConfig
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -81,7 +82,7 @@ class PreferencesManager(private val context: Context) {
     val lastOpenDate: Flow<String> = context.dataStore.data.map { it[LAST_OPEN_DATE] ?: "" }
     val dailyQuizJson: Flow<String> = context.dataStore.data.map { it[DAILY_QUIZ_JSON] ?: "" }
     val onboardingComplete: Flow<Boolean> = context.dataStore.data.map { it[ONBOARDING_COMPLETE] ?: false }
-    val isPremium: Flow<Boolean> = context.dataStore.data.map { it[IS_PREMIUM] ?: false }
+    val isPremium: Flow<Boolean> = context.dataStore.data.map { BuildConfig.DEBUG || (it[IS_PREMIUM] ?: false) }
     val favoritesCount: Flow<Int> = context.dataStore.data.map { it[FAVORITES_COUNT] ?: 0 }
     val dailyIdCount: Flow<Int> = context.dataStore.data.map { it[DAILY_ID_COUNT] ?: 0 }
     val dailyIdDate: Flow<String> = context.dataStore.data.map { it[DAILY_ID_DATE] ?: "" }
