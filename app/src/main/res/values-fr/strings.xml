@@ -186,6 +186,21 @@
     <string name="collection_plant_count">%1$d plante(s)</string>
     <string name="choose_collection">Choisir une collection</string>
 
+    <!-- Guide d'entretien (écran Identifier) -->
+    <string name="care_guide_label">🌱 Guide d\'entretien</string>
+    <string name="care_watering_label">Arrosage</string>
+    <string name="care_light_label">Lumière</string>
+    <string name="care_soil_label">Substrat</string>
+    <string name="care_temperature_label">Température</string>
+    <string name="care_toxicity_label">Sécurité — animaux &amp; humains</string>
+    <string name="care_seasonal_tip_label">Conseil saisonnier</string>
+    <!-- Identification -->
+    <string name="identify_confidence">%1$d%% de concordance</string>
+    <string name="camera_permission_required">Permission caméra requise pour prendre des photos.</string>
+    <string name="share_image_error">Impossible de préparer l\'image de partage.</string>
+    <string name="export_failed">Échec de l\'export. Veuillez réessayer.</string>
+    <string name="journal_pdf_title">FloraFlow — Journal de terrain</string>
+
     <!-- Badges -->
     <string name="badges_title">Mes Trophées</string>
     <string name="badge_earned_label">✓ Débloqué</string>
