@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FloraFlow</string>
+    <string name="todays_discovery">Découverte du jour</string>
+    <string name="botanical_insight">Saviez-vous ?</string>
+    <string name="loading_plant">Découverte de la plante du jour…</string>
+    <string name="retry">Réessayer</string>
+    <string name="photo_credit">Photo de %1$s sur Unsplash</string>
+    <string name="settings">Paramètres</string>
+    <string name="wallpaper">Fond d\'écran</string>
+    <string name="auto_sync_wallpaper">Fond d\'écran automatique</string>
+    <string name="auto_sync_description">Définit automatiquement la plante du jour comme fond d\'écran chaque nuit.</string>
+    <string name="about">À propos</string>
+    <string name="about_description">Une app de découverte botanique quotidienne. Chaque jour, explorez une nouvelle plante du monde entier — son nom, son origine et une anecdote fascinante.</string>
+    <string name="powered_by_unsplash">Photos fournies par Unsplash</string>
+    <string name="nav_discover">Découvrir</string>
+    <string name="nav_history">Historique</string>
+    <string name="nav_favorites">Favoris</string>
+    <string name="nav_identify">Identifier</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="set_as_wallpaper">Définir comme fond d\'écran</string>
+    <string name="wallpaper_setting">Définition du fond d\'écran…</string>
+    <string name="wallpaper_success">Fond d\'écran défini avec succès !</string>
+    <string name="wallpaper_error">Impossible de définir le fond d\'écran. Veuillez réessayer.</string>
+    <string name="favorite">Favori</string>
+    <string name="share">Partager</string>
+    <string name="share_plant">Partager la plante</string>
+    <string name="share_as_story">Partager en story</string>
+    <string name="history">Historique</string>
+    <string name="history_empty">Aucune plante découverte pour l\'instant.\nOuvrez l\'onglet Découvrir pour commencer !</string>
+    <string name="favorites">Favoris</string>
+    <string name="favorites_empty">Aucun favori pour l\'instant.\nAppuyez sur le cœur d\'une plante pour la sauvegarder !</string>
+    <string name="identify">Identifier une plante</string>
+    <string name="identify_subtitle">Prenez une photo ou choisissez depuis votre galerie — FloraFlow identifie la plante pour vous.</string>
+    <string name="from_gallery">Galerie</string>
+    <string name="take_photo">Appareil photo</string>
+    <string name="select_photo_hint">Sélectionnez ou prenez une photo pour identifier</string>
+    <string name="identify_button">Identifier la plante</string>
+    <string name="identify_another">Identifier une autre</string>
+    <string name="identification_result">Résultat d\'identification</string>
+    <string name="wallpaper_time">Heure de synchronisation</string>
+    <string name="wallpaper_target">Appliquer sur</string>
+    <string name="wallpaper_interval">Intervalle de rafraîchissement</string>
+    <string name="interval_3h">Toutes les 3 heures</string>
+    <string name="interval_6h">Toutes les 6 heures</string>
+    <string name="interval_12h">Toutes les 12 heures</string>
+    <string name="interval_24h">Une fois par jour</string>
+    <string name="wallpaper_interval_premium_msg">Le rafraîchissement automatique est une fonctionnalité Premium.\n\nChangez votre fond d\'écran toutes les 3, 6 ou 12 heures — une découverte botanique différente à chaque fois, sans rien faire.\n\nPremium bientôt disponible sur Google Play !</string>
+    <string name="target_all">Écran d\'accueil &amp; verrouillage</string>
+    <string name="target_home">Écran d\'accueil seulement</string>
+    <string name="target_lock">Écran de verrouillage seulement</string>
+    <string name="preferred_categories">Catégories de plantes</string>
+    <string name="all_categories">Toutes les catégories</string>
+    <string name="categories_selected">catégories sélectionnées</string>
+    <string name="discovery">Découverte</string>
+    <string name="notifications">Notifications</string>
+    <string name="daily_notification">Alerte découverte quotidienne</string>
+    <string name="daily_notification_desc">Recevez une notification chaque matin pour la nouvelle plante du jour.</string>
+    <string name="appearance">Apparence</string>
+    <string name="dark_mode">Mode sombre</string>
+    <string name="dark_mode_system">Suivre le système</string>
+    <string name="dark_mode_light">Toujours clair</string>
+    <string name="dark_mode_dark">Toujours sombre</string>
+    <string name="filter_all">Tout</string>
+    <string name="explore_category">Explorer %1$s</string>
+    <string name="swipe_hint">← Glissez pour explorer →</string>
+    <string name="explore_more">Explorer plus</string>
+    <string name="quiz_title">Quiz du jour</string>
+    <string name="quiz_generating">Génération de la question du jour…</string>
+    <string name="quiz_unavailable">Quiz pas encore disponible.\nDécouvrez d\'abord la plante du jour !</string>
+    <string name="quiz_question_label">Question du jour</string>
+    <string name="quiz_explanation">Explication</string>
+    <string name="seasonal_title">Explorer par saison</string>
+    <string name="seasonal_empty">Découvrez plus de plantes pour enrichir vos collections saisonnières !</string>
+    <string name="notes_title">Notes personnelles</string>
+    <string name="notes_hint">Écrivez vos observations sur cette plante…</string>
+    <string name="notes_clear">Effacer</string>
+    <string name="streak_days">%1$d jour de suite</string>
+    <string name="notification_title">🌿 Plante du jour : %1$s</string>
+    <string name="notification_teaser">Le saviez-vous ? %1$s Appuyez pour en découvrir plus.</string>
+    <!-- Histoires botaniques -->
+    <string name="read_the_story">Lire l\'histoire</string>
+    <string name="story_section_label">Histoire botanique</string>
+    <string name="story_etymology_label">🌿 Étymologie</string>
+    <string name="story_history_label">📜 Histoire &amp; Culture</string>
+    <string name="story_folklore_label">🔮 Folklore</string>
+    <string name="story_ecology_label">🌍 Dans la nature</string>
+    <string name="story_premium_title">Débloquer l\'histoire complète</string>
+    <string name="story_premium_subtitle">Passez à Premium pour révéler les chapitres Histoire, Folklore et Écologie.</string>
+    <string name="story_unlock_button">Passer à Premium</string>
+    <!-- Galerie d\'identifications -->
+    <string name="my_identifications">Mes identifications</string>
+    <string name="gallery_title">Mes identifications</string>
+    <string name="gallery_empty">Aucune identification pour l\'instant.\nUtilisez l\'appareil photo ou la galerie pour identifier votre première plante !</string>
+    <string name="gallery_free_limit_banner">Plan gratuit · affichage de vos 30 identifications les plus récentes. Passez à Premium pour un historique illimité.</string>
+    <string name="gallery_delete_title">Supprimer l\'identification</string>
+    <string name="gallery_delete_message">Retirer %1$s de votre galerie ?</string>
+    <string name="gallery_wallpaper_premium_msg">Définir une plante identifiée comme fond d\'écran est une fonctionnalité Premium. Passez à Premium pour débloquer les identifications illimitées, les histoires botaniques complètes, et plus encore.</string>
+    <string name="gallery_export_pdf">Exporter en PDF</string>
+    <string name="gallery_export_premium_msg">L\'export PDF de votre journal de terrain est une fonctionnalité Premium. Passez à Premium pour sauvegarder et partager vos découvertes botaniques.</string>
+    <string name="gallery_export_share_title">Partager le journal de terrain</string>
+    <!-- Compteur d\'identifications journalier -->
+    <string name="identify_daily_counter">🔬 %1$d/%2$d identifications aujourd\'hui</string>
+    <string name="identify_limit_title">Limite journalière atteinte</string>
+    <string name="identify_limit_message">Les utilisateurs gratuits peuvent identifier %1$d plantes par jour. Passez à Premium pour des identifications illimitées.</string>
+    <!-- Quiz -->
+    <string name="quiz_next_question">Question suivante</string>
+    <!-- Upgrade Premium -->
+    <string name="premium_upgrade_title">FloraFlow Premium</string>
+    <string name="premium_upgrade_message">FloraFlow Premium débloque :\n\n🔬 Identifications illimitées\n📖 Histoires botaniques complètes (Histoire, Folklore &amp; Écologie)\n📄 Export PDF du journal de terrain\n🖼️ Définir les identifications comme fond d\'écran\n📚 Galerie d\'identifications illimitée\n\nPremium bientôt disponible sur Google Play !</string>
+    <!-- Carte Premium (Paramètres) -->
+    <string name="premium_badge_free">PLAN GRATUIT</string>
+    <string name="premium_badge_active">✨ ACTIF</string>
+    <string name="premium_unlock_intro">Rejoignez la communauté botanique :</string>
+    <string name="premium_feature_1">🔬 Identifications de plantes illimitées</string>
+    <string name="premium_feature_2">📖 Histoires botaniques complètes (Histoire, Folklore, Écologie)</string>
+    <string name="premium_feature_3">🖼️ Fond d\'écran auto toutes les 3 h, 6 h ou 12 h</string>
+    <string name="premium_feature_4">📄 Export PDF du journal de terrain</string>
+    <string name="premium_feature_5">❤️ Favoris &amp; galerie illimités</string>
+    <string name="premium_feature_6">🌿 Plantes identifiées directement en fond d\'écran</string>
+    <string name="premium_price_note">Résiliable à tout moment · Facturation mensuelle</string>
+    <string name="premium_upgrade_cta">Passer à Premium · 1,99 € / mois</string>
+    <string name="premium_active_thanks">✨ Merci de soutenir FloraFlow !</string>
+    <string name="premium_active_all_unlocked">Toutes les fonctionnalités sont débloquées. Profitez-en !</string>
+    <!-- Partage d\'identification -->
+    <string name="share_discovery">Partager ma découverte</string>
+    <string name="location_unknown">Lieu non enregistré</string>
+    <!-- Écran Premium -->
+    <string name="premium_price_header">1,99 € / mois</string>
+    <string name="premium_coming_soon_note">Prochainement sur Google Play · Résiliable à tout moment</string>
+    <string name="table_feature">Fonctionnalité</string>
+    <string name="table_free">Gratuit</string>
+    <string name="table_premium">Premium</string>
+    <string name="check">✓</string>
+    <string name="cross">✗</string>
+    <string name="unlimited">∞</string>
+    <string name="free_id_limit">3 / jour</string>
+    <string name="free_gallery_limit">30 max</string>
+    <string name="feat_daily_discovery">Découverte botanique du jour</string>
+    <string name="feat_identifications">Identifications de plantes</string>
+    <string name="feat_story_etymology">Histoire botanique (Étymologie)</string>
+    <string name="feat_story_full">Histoire complète (Folklore, Écologie…)</string>
+    <string name="feat_auto_wallpaper">Fond d\'écran auto (toutes les 3–12 h)</string>
+    <string name="feat_ident_wallpaper">Plante identifiée en fond d\'écran</string>
+    <string name="feat_gallery">Galerie d\'identifications</string>
+    <string name="feat_pdf_export">Export PDF du journal de terrain</string>
+    <string name="premium_trial_note">✨ Bientôt disponible sur Google Play</string>
+    <string name="seasons_title">Saisons</string>
+    <string name="splash_tagline">Une nouvelle plante, chaque jour</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_continue">Continuer</string>
+    <string name="onboarding_skip">Passer</string>
+    <string name="onboarding_start">Commencer</string>
+    <string name="onboarding_page1_emoji">🌿</string>
+    <string name="onboarding_page1_title">Une Plante Nouvelle Chaque Jour</string>
+    <string name="onboarding_page1_subtitle">Plus de 400 espèces des quatre coins du monde, photographiées avec passion. Une année entière de découvertes botaniques uniques vous attend.</string>
+    <string name="onboarding_page2_emoji">🧬</string>
+    <string name="onboarding_page2_title">Insights Botaniques IA</string>
+    <string name="onboarding_page2_subtitle">GPT-4o dévoile la science cachée derrière chaque plante — son origine, son histoire évolutive, sa signification culturelle et ses usages surprenants.</string>
+    <string name="onboarding_page3_emoji">📷</string>
+    <string name="onboarding_page3_title">Identifiez N\'importe Quelle Plante</string>
+    <string name="onboarding_page3_subtitle">Pointez votre appareil photo vers n\'importe quelle plante pour une identification instantanée par IA. Dans votre jardin, en randonnée, partout.</string>
+    <string name="onboarding_page4_emoji">📚</string>
+    <string name="onboarding_page4_title">Votre Herbier Personnel</string>
+    <string name="onboarding_page4_subtitle">Créez des collections, gagnez des trophées botaniques, suivez votre série et partagez vos découvertes. Votre voyage botanique, au même endroit.</string>
+
+    <!-- Discovery -->
+    <string name="streak_days_label">%1$d jours</string>
+    <string name="native_to_label">Originaire de %1$s</string>
+
+    <!-- Collections -->
+    <string name="collections_title">Mon Herbier</string>
+    <string name="collections_empty">Aucune collection pour l\'instant.\nCréez-en une pour organiser vos plantes.</string>
+    <string name="collection_detail_empty">Cette collection est vide.\nAjoutez des plantes depuis vos Favoris.</string>
+    <string name="new_collection">Nouvelle collection</string>
+    <string name="collection_name_hint">Nom de la collection…</string>
+    <string name="collection_emoji_hint">Emoji (optionnel)</string>
+    <string name="add_to_collection">Ajouter à une collection</string>
+    <string name="remove_from_collection">Retirer de la collection</string>
+    <string name="delete_collection">Supprimer la collection</string>
+    <string name="delete_collection_confirm">Supprimer cette collection ? Les plantes resteront dans vos Favoris.</string>
+    <string name="share_collection">Partager la collection</string>
+    <string name="collections_button">📚 Mon Herbier</string>
+    <string name="badges_button">🏆 Trophées</string>
+    <string name="collection_plant_count">%1$d plante(s)</string>
+    <string name="choose_collection">Choisir une collection</string>
+
+    <!-- Guide d'entretien (écran Identifier) -->
+    <string name="care_guide_label">🌱 Guide d\'entretien</string>
+    <string name="care_watering_label">Arrosage</string>
+    <string name="care_light_label">Lumière</string>
+    <string name="care_soil_label">Substrat</string>
+    <string name="care_temperature_label">Température</string>
+    <string name="care_toxicity_label">Sécurité — animaux &amp; humains</string>
+    <string name="care_seasonal_tip_label">Conseil saisonnier</string>
+    <!-- Identification -->
+    <string name="identify_confidence">%1$d%% de concordance</string>
+    <string name="camera_permission_required">Permission caméra requise pour prendre des photos.</string>
+    <string name="share_image_error">Impossible de préparer l\'image de partage.</string>
+    <string name="export_failed">Échec de l\'export. Veuillez réessayer.</string>
+    <string name="journal_pdf_title">FloraFlow — Journal de terrain</string>
+    <string name="identify_no_result">Plante non reconnue. Essayez une photo plus nette.</string>
+    <string name="identify_error_connection">Impossible d\'identifier la plante. Vérifiez votre connexion.</string>
+
+    <string name="subscribe_for_price">S\'abonner — %1$s / mois</string>
+    <string name="premium_cta">S\'abonner — 1,99 € / mois</string>
+    <string name="manage_subscription">Gérer l\'abonnement</string>
+
+    <!-- Bannières freemium Historique & Favoris -->
+    <string name="history_free_limit_banner">📅 Plan gratuit · 7 derniers jours — Passez à Premium pour l\'historique complet.</string>
+    <string name="favorites_free_limit_banner">❤️ %1$d/%2$d favoris · Passez à Premium pour illimité.</string>
+    <string name="seasonal_discovered_label">MES DÉCOUVERTES</string>
+    <string name="seasonal_in_season_label">EN SAISON</string>
+    <plurals name="seasonal_discovered_count">
+        <item quantity="one">%d plante dans ton historique</item>
+        <item quantity="other">%d plantes dans ton historique</item>
+    </plurals>
+    <string name="favorites_remove_title">Retirer des favoris ?</string>
+    <string name="favorites_remove_message">« %1$s » sera retiré de vos favoris.</string>
+    <string name="favorites_remove_confirm">Retirer</string>
+    <string name="favorites_create_collection">Créer une collection</string>
+
+    <!-- Badges -->
+    <string name="badges_title">Mes Trophées</string>
+    <string name="badge_earned_label">✓ Débloqué</string>
+    <string name="badge_locked_label">🔒 Verrouillé</string>
+    <string name="badges_progress">%1$d / %2$d trophées débloqués</string>
+
+    <!-- Badge names + descriptions -->
+    <string name="badge_streak_3_name">Première Série</string>
+    <string name="badge_streak_3_desc">3 jours consécutifs de découverte</string>
+    <string name="badge_streak_7_name">Explorateur Hebdo</string>
+    <string name="badge_streak_7_desc">7 jours de découverte d\'affilée</string>
+    <string name="badge_streak_30_name">Botaniste du Mois</string>
+    <string name="badge_streak_30_desc">30 jours consécutifs</string>
+    <string name="badge_streak_100_name">Botaniste Centenaire</string>
+    <string name="badge_streak_100_desc">100 jours d\'affilée !</string>
+    <string name="badge_fav_5_name">Amateur de Plantes</string>
+    <string name="badge_fav_5_desc">5 plantes ajoutées aux favoris</string>
+    <string name="badge_fav_20_name">Collectionneur</string>
+    <string name="badge_fav_20_desc">20 plantes dans vos favoris</string>
+    <string name="badge_ident_1_name">Premier Scan</string>
+    <string name="badge_ident_1_desc">Votre première plante identifiée</string>
+    <string name="badge_ident_10_name">Botaniste Amateur</string>
+    <string name="badge_ident_10_desc">10 plantes identifiées</string>
+    <string name="badge_ident_25_name">Explorateur Terrain</string>
+    <string name="badge_ident_25_desc">25 plantes identifiées</string>
+    <string name="badge_ident_50_name">Botaniste Expert</string>
+    <string name="badge_ident_50_desc">50 plantes identifiées</string>
+    <string name="badge_coll_1_name">Archiviste</string>
+    <string name="badge_coll_1_desc">Première collection créée</string>
+    <string name="badge_coll_5_name">Conservateur</string>
+    <string name="badge_coll_5_desc">5 collections créées</string>
+</resources>
