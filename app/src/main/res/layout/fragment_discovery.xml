@@ -525,7 +525,11 @@
                             android:letterSpacing="0.01"
                             app:cornerRadius="26dp"
                             app:strokeColor="@color/primary"
-                            android:textColor="@color/primary" />
+                            android:textColor="@color/primary"
+                            app:icon="@drawable/ic_notes"
+                            app:iconGravity="textStart"
+                            app:iconPadding="6dp"
+                            app:iconTint="@color/primary" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/story_share_button"

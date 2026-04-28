@@ -33,7 +33,7 @@
     <string name="identify">Identifier une plante</string>
     <string name="identify_subtitle">Prenez une photo ou choisissez depuis votre galerie — FloraFlow identifie la plante pour vous.</string>
     <string name="from_gallery">Galerie</string>
-    <string name="take_photo">Appareil photo</string>
+    <string name="take_photo">Caméra</string>
     <string name="select_photo_hint">Sélectionnez ou prenez une photo pour identifier</string>
     <string name="identify_button">Identifier la plante</string>
     <string name="identify_another">Identifier une autre</string>
@@ -70,7 +70,7 @@
     <string name="quiz_unavailable">Quiz pas encore disponible.\nDécouvrez d\'abord la plante du jour !</string>
     <string name="quiz_question_label">Question du jour</string>
     <string name="quiz_explanation">Explication</string>
-    <string name="seasonal_title">Explorer par saison</string>
+    <string name="seasonal_title">Voyages botaniques</string>
     <string name="seasonal_empty">Découvrez plus de plantes pour enrichir vos collections saisonnières !</string>
     <string name="notes_title">Notes personnelles</string>
     <string name="notes_hint">Écrivez vos observations sur cette plante…</string>
@@ -253,4 +253,6 @@
     <string name="badge_coll_1_desc">Première collection créée</string>
     <string name="badge_coll_5_name">Conservateur</string>
     <string name="badge_coll_5_desc">5 collections créées</string>
+    <string name="explore_subtitle">Explorez les plantes des grands écosystèmes du monde.</string>
+    <string name="explore_region_count">%d espèces à découvrir</string>
 </resources>

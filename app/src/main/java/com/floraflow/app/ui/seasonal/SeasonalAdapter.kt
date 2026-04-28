@@ -2,7 +2,6 @@ package com.floraflow.app.ui.seasonal
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,29 +35,33 @@ class SeasonalAdapter(
             seasonName.text = section.season
             monthRange.text = section.monthRange
 
-            try { seasonCard.setCardBackgroundColor(Color.parseColor(section.color)) } catch (e: Exception) { }
+            try {
+                seasonCard.setCardBackgroundColor(Color.parseColor(section.color))
+            } catch (e: Exception) { }
 
-            if (section.isCurrentSeason) {
-                inSeasonBadge.visibility = View.VISIBLE
-            } else {
-                inSeasonBadge.visibility = View.GONE
-            }
+            // Hide season badge — not relevant for ecosystem view
+            inSeasonBadge.visibility = android.view.View.GONE
 
             if (section.plants.isNotEmpty()) {
-                plantCount.text = "${section.plants.size} plant${if (section.plants.size > 1) "s" else ""} discovered"
-                plantCount.visibility = View.VISIBLE
-                plantsRecycler.visibility = View.VISIBLE
-                curatedChipGroup.visibility = View.GONE
-
-                val plantAdapter = SeasonPlantAdapter(section.plants, onPlantClick)
-                plantsRecycler.layoutManager = LinearLayoutManager(
-                    root.context, LinearLayoutManager.HORIZONTAL, false
+                val ctx = root.context
+                plantCount.text = ctx.resources.getQuantityString(
+                    R.plurals.seasonal_discovered_count, section.plants.size, section.plants.size
                 )
-                plantsRecycler.adapter = plantAdapter
+                plantCount.visibility = android.view.View.VISIBLE
+                plantsRecycler.visibility = android.view.View.VISIBLE
+                curatedChipGroup.visibility = android.view.View.GONE
+
+                plantsRecycler.layoutManager = LinearLayoutManager(
+                    ctx, LinearLayoutManager.HORIZONTAL, false
+                )
+                plantsRecycler.adapter = SeasonPlantAdapter(section.plants, onPlantClick)
             } else {
-                plantCount.text = "Discover plants in bloom"
-                plantCount.visibility = View.VISIBLE
-                plantsRecycler.visibility = View.GONE
+                // Show curated plant names as chips
+                plantCount.text = root.context.getString(
+                    R.string.explore_region_count, section.curatedNames.size
+                )
+                plantCount.visibility = android.view.View.VISIBLE
+                plantsRecycler.visibility = android.view.View.GONE
 
                 curatedChipGroup.removeAllViews()
                 section.curatedNames.forEach { name ->
@@ -69,12 +72,12 @@ class SeasonalAdapter(
                         setChipBackgroundColorResource(android.R.color.transparent)
                         setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
                         chipStrokeWidth = 1f
-                        setChipStrokeColorResource(R.color.primary)
-                        setTextColor(Color.parseColor("#2D6A4F"))
+                        chipStrokeColor = android.content.res.ColorStateList.valueOf(Color.WHITE)
+                        setTextColor(Color.WHITE)
                     }
                     curatedChipGroup.addView(chip)
                 }
-                curatedChipGroup.visibility = View.VISIBLE
+                curatedChipGroup.visibility = android.view.View.VISIBLE
             }
         }
     }
@@ -103,13 +106,13 @@ class SeasonPlantAdapter(
             plantName.text = plant.plantName
             if (!plant.scientificName.isNullOrBlank()) {
                 scientificName.text = plant.scientificName
-                scientificName.visibility = View.VISIBLE
+                scientificName.visibility = android.view.View.VISIBLE
             } else {
-                scientificName.visibility = View.GONE
+                scientificName.visibility = android.view.View.GONE
             }
-            favoriteIcon.visibility = if (plant.isFavorite) View.VISIBLE else View.GONE
-            Glide.with(plantImage.context)
+            Glide.with(root)
                 .load(plant.imageUrlRegular)
+                .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .placeholder(R.drawable.placeholder_plant)
                 .into(plantImage)

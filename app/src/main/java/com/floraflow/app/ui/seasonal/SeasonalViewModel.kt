@@ -3,11 +3,9 @@ package com.floraflow.app.ui.seasonal
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.ViewModelProvider
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
-import kotlinx.coroutines.launch
-import java.util.Calendar
 
 data class SeasonalSection(
     val season: String,
@@ -24,71 +22,113 @@ class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
     private val _sections = MutableLiveData<List<SeasonalSection>>()
     val sections: LiveData<List<SeasonalSection>> = _sections
 
-    private val _loading = MutableLiveData(true)
+    private val _loading = MutableLiveData(false)
     val loading: LiveData<Boolean> = _loading
 
     companion object {
-        val SEASONAL_PLANTS = mapOf(
-            "Spring" to listOf("Cherry Blossom", "Tulip", "Daffodil", "Magnolia", "Wisteria", "Lilac", "Peony", "Iris"),
-            "Summer" to listOf("Sunflower", "Lavender", "Hibiscus", "Rose", "Lotus", "Bougainvillea", "Daisy", "Zinnia"),
-            "Autumn" to listOf("Chrysanthemum", "Maple", "Aster", "Hydrangea", "Dahlia", "Goldenrod", "Sedum", "Helenium"),
-            "Winter" to listOf("Poinsettia", "Holly", "Snowdrop", "Winter Jasmine", "Hellebore", "Camellia", "Cyclamen", "Witch Hazel")
+        private data class EcosystemSpec(
+            val name: String,
+            val emoji: String,
+            val color: String,
+            val description: String,
+            val plants: List<String>
         )
-        val SEASON_MONTHS = mapOf(
-            "Spring" to "March – May",
-            "Summer" to "June – August",
-            "Autumn" to "September – November",
-            "Winter" to "December – February"
-        )
-    }
 
-    init { loadSeasonal() }
-
-    private fun loadSeasonal() {
-        viewModelScope.launch {
-            _loading.value = true
-            val all = repository.getAllForSeasonal()
-            val bySeasonMap = mutableMapOf<String, MutableList<DailyPlant>>()
-            for (plant in all) {
-                val season = getSeason(plant.fetchedAt)
-                bySeasonMap.getOrPut(season) { mutableListOf() }.add(plant)
-            }
-
-            val currentSeason = getSeason(System.currentTimeMillis())
-
-            val orderedSeasons = listOf(
-                Triple("Spring", "🌸", "#D8F3DC"),
-                Triple("Summer", "☀️", "#FFF3B0"),
-                Triple("Autumn", "🍂", "#FFD6A5"),
-                Triple("Winter", "❄️", "#D0E8FF")
-            )
-
-            val sorted = orderedSeasons.sortedByDescending { (name, _, _) -> name == currentSeason }
-
-            val sections = sorted.map { (name, emoji, color) ->
-                SeasonalSection(
-                    season = name,
-                    emoji = emoji,
-                    color = color,
-                    monthRange = SEASON_MONTHS[name] ?: "",
-                    isCurrentSeason = name == currentSeason,
-                    plants = bySeasonMap[name] ?: emptyList(),
-                    curatedNames = SEASONAL_PLANTS[name] ?: emptyList()
+        private val ECOSYSTEMS = listOf(
+            EcosystemSpec(
+                name = "Forêts tropicales",
+                emoji = "🌿",
+                color = "#2D6A4F",
+                description = "Amériques · Asie · Afrique",
+                plants = listOf(
+                    "Bird of Paradise", "Frangipani", "Swiss Cheese Plant",
+                    "Flamingo Lily", "Jade Vine", "Black Bat Plant",
+                    "Traveller's Palm", "Indian Shot", "Lobster Claw Heliconia"
                 )
-            }
-
-            _sections.value = sections
-            _loading.value = false
-        }
+            ),
+            EcosystemSpec(
+                name = "Prairies sauvages",
+                emoji = "🌸",
+                color = "#52B788",
+                description = "Europe · Amérique du Nord",
+                plants = listOf(
+                    "Common Poppy", "Cornflower", "Wild Pansy",
+                    "Meadowsweet", "Harebell", "Meadow Cranesbill",
+                    "Red Campion", "Ragged Robin", "Field Scabious"
+                )
+            ),
+            EcosystemSpec(
+                name = "Déserts & Steppes",
+                emoji = "🌵",
+                color = "#B5834A",
+                description = "Mexique · Sahara · Asie centrale",
+                plants = listOf(
+                    "Saguaro Cactus", "Prickly Pear", "Organ Pipe Cactus",
+                    "Desert Rose", "Joshua Tree Yucca", "Desert Marigold",
+                    "Barrel Cactus", "Globe Thistle"
+                )
+            ),
+            EcosystemSpec(
+                name = "Jardins d'Asie",
+                emoji = "🌺",
+                color = "#C0547A",
+                description = "Japon · Chine · Corée · Inde",
+                plants = listOf(
+                    "Cherry Blossom", "Sacred Lotus", "Chinese Peony",
+                    "Star Magnolia", "Japanese Camellia", "Chinese Wisteria",
+                    "Bearded Iris", "Grape Hyacinth", "Chrysanthemum"
+                )
+            ),
+            EcosystemSpec(
+                name = "Méditerranée",
+                emoji = "🌊",
+                color = "#2A7EA8",
+                description = "Provence · Grèce · Maroc",
+                plants = listOf(
+                    "Lavender", "Common Poppy", "Rock Rose",
+                    "Judas Tree", "Poppy Anemone", "Common Rosemary",
+                    "Bougainvillea", "Spanish Lavender", "Oleander"
+                )
+            ),
+            EcosystemSpec(
+                name = "Montagnes alpines",
+                emoji = "🏔️",
+                color = "#5B7FA6",
+                description = "Alpes · Himalaya · Andes",
+                plants = listOf(
+                    "Edelweiss", "Alpine Gentian", "Glacier Crowfoot",
+                    "Alpine Aster", "Mountain Avens", "Star Magnolia",
+                    "Crown Imperial", "Spring Crocus", "Hepatica"
+                )
+            )
+        )
     }
 
-    private fun getSeason(timestamp: Long): String {
-        val cal = Calendar.getInstance().apply { timeInMillis = timestamp }
-        return when (cal.get(Calendar.MONTH) + 1) {
-            3, 4, 5 -> "Spring"
-            6, 7, 8 -> "Summer"
-            9, 10, 11 -> "Autumn"
-            else -> "Winter"
-        }
+    init {
+        buildSections()
     }
+
+    private fun buildSections() {
+        _loading.value = false
+        val result = ECOSYSTEMS.map { eco ->
+            SeasonalSection(
+                season = eco.name,
+                emoji = eco.emoji,
+                color = eco.color,
+                monthRange = eco.description,
+                isCurrentSeason = false,
+                plants = emptyList(),
+                curatedNames = eco.plants
+            )
+        }
+        _sections.value = result
+    }
+}
+
+class SeasonalViewModelFactory(
+    private val repository: PlantRepository
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        SeasonalViewModel(repository) as T
 }

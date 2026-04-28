@@ -70,7 +70,7 @@
     <string name="quiz_unavailable">Quiz not available yet.\nDiscover today\'s plant first!</string>
     <string name="quiz_question_label">Question of the Day</string>
     <string name="quiz_explanation">Explanation</string>
-    <string name="seasonal_title">Browse by Season</string>
+    <string name="seasonal_title">Botanic Journeys</string>
     <string name="seasonal_empty">Discover more plants to populate your seasonal collections!</string>
     <string name="notes_title">Personal Notes</string>
     <string name="notes_hint">Write your observations about this plant…</string>
@@ -253,4 +253,6 @@
     <string name="badge_coll_1_desc">Created your first collection</string>
     <string name="badge_coll_5_name">Curator</string>
     <string name="badge_coll_5_desc">5 collections created</string>
+    <string name="explore_subtitle">Explore plants from the world's great ecosystems.</string>
+    <string name="explore_region_count">%d species to discover</string>
 </resources>
