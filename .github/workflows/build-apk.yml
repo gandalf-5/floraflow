@@ -1,8 +1,10 @@
-name: Build FloraFlow APK
+name: Build FloraFlow
+
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,13 +15,31 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-      - run: chmod +x gradlew
-      - run: mkdir -p gradle/wrapper && curl -Lo gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.6.0/gradle/wrapper/gradle-wrapper.jar
-      - run: ./gradlew assembleDebug --no-daemon
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+      - name: Download Gradle wrapper jar
+        run: mkdir -p gradle/wrapper && curl -Lo gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.6.0/gradle/wrapper/gradle-wrapper.jar
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      - uses: actions/upload-artifact@v4
+      - name: Build release AAB (Play Store)
+        run: ./gradlew bundleRelease --no-daemon
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
         with:
           name: FloraFlow-debug
           path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 14
+          retention-days: 30
+      - name: Upload release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: FloraFlow-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
