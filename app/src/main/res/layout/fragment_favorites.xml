@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="16dp"
-            android:paddingBottom="12dp">
+            android:paddingBottom="8dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/collections_button"
@@ -60,6 +60,30 @@
                 android:textColor="@color/streak_amber" />
 
         </LinearLayout>
+
+        <!-- Free plan limit banner — tappable to open premium sheet -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/favorites_free_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="@color/primary">
+
+            <TextView
+                android:id="@+id/favorites_free_banner_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="@string/favorites_free_limit_banner"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:fontFamily="@font/inter_medium"
+                android:gravity="center" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favorites_recycler"
