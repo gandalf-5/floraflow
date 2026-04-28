@@ -12,51 +12,76 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import androidx.core.content.FileProvider
 import androidx.core.graphics.ColorUtils
-import androidx.palette.graphics.Palette
 import com.floraflow.app.data.DailyPlant
 import java.io.File
+import kotlin.math.max
+import kotlin.math.min
 
 object StoryShareUtil {
+
+    /**
+     * Samples a 16×16 thumbnail of the bitmap to extract the most saturated / vivid
+     * dominant color — no external Palette library required.
+     */
+    private fun extractAccentColor(bitmap: Bitmap): Int {
+        val thumb = Bitmap.createScaledBitmap(bitmap, 16, 16, true)
+        val pixels = IntArray(16 * 16)
+        thumb.getPixels(pixels, 0, 16, 0, 0, 16, 16)
+        thumb.recycle()
+
+        var bestScore = -1f
+        var bestColor = Color.parseColor("#2D6A4F")
+
+        for (pixel in pixels) {
+            val r = Color.red(pixel) / 255f
+            val g = Color.green(pixel) / 255f
+            val b = Color.blue(pixel) / 255f
+            val maxC = max(r, max(g, b))
+            val minC = min(r, min(g, b))
+            val saturation = if (maxC > 0) (maxC - minC) / maxC else 0f
+            val brightness = maxC
+            val score = saturation * brightness
+            if (score > bestScore) {
+                bestScore = score
+                bestColor = pixel
+            }
+        }
+        return bestColor
+    }
 
     fun share(context: Context, plant: DailyPlant, plantBitmap: Bitmap) {
         try {
             val w = 1080
             val h = 1920
 
-            // Extract vibrant color from the image for dynamic theming
-            val palette = Palette.from(plantBitmap).generate()
-            val vibrant = palette.getVibrantColor(
-                palette.getDominantColor(Color.parseColor("#2D6A4F"))
-            )
-            val accentColor = vibrant
-            val deepColor = ColorUtils.blendARGB(vibrant, Color.BLACK, 0.72f)
-            val midColor  = ColorUtils.blendARGB(vibrant, Color.BLACK, 0.55f)
+            val accentColor = extractAccentColor(plantBitmap)
+            val deepColor = ColorUtils.blendARGB(accentColor, Color.BLACK, 0.72f)
 
             val story = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(story)
 
-            // ── 1. Background: plant photo cropped to center ──────────────────
+            // ── 1. Background: center-cropped plant photo ─────────────────────
             val srcRatio = plantBitmap.width.toFloat() / plantBitmap.height.toFloat()
             val dstRatio = w.toFloat() / h.toFloat()
             val (srcLeft, srcTop, srcW, srcH) = if (srcRatio > dstRatio) {
-                val newW = (plantBitmap.height * dstRatio).toInt()
-                val offset = (plantBitmap.width - newW) / 2
-                listOf(offset, 0, newW, plantBitmap.height)
+                val nW = (plantBitmap.height * dstRatio).toInt()
+                listOf((plantBitmap.width - nW) / 2, 0, nW, plantBitmap.height)
             } else {
-                val newH = (plantBitmap.width / dstRatio).toInt()
-                val offset = (plantBitmap.height - newH) / 2
-                listOf(0, offset, plantBitmap.width, newH)
+                val nH = (plantBitmap.width / dstRatio).toInt()
+                listOf(0, (plantBitmap.height - nH) / 2, plantBitmap.width, nH)
             }
-            val src = android.graphics.Rect(srcLeft, srcTop, srcLeft + srcW, srcTop + srcH)
-            val dst = android.graphics.Rect(0, 0, w, h)
-            canvas.drawBitmap(plantBitmap, src, dst, null)
+            canvas.drawBitmap(plantBitmap,
+                android.graphics.Rect(srcLeft, srcTop, srcLeft + srcW, srcTop + srcH),
+                android.graphics.Rect(0, 0, w, h), null)
 
-            // ── 2. Gradient overlay: transparent → deep color ─────────────────
+            // ── 2. Gradient overlay ───────────────────────────────────────────
             val gradPaint = Paint()
             gradPaint.shader = LinearGradient(
                 0f, h * 0.28f, 0f, h.toFloat(),
-                intArrayOf(Color.TRANSPARENT, ColorUtils.setAlphaComponent(deepColor, 180),
-                    ColorUtils.setAlphaComponent(deepColor, 235), deepColor),
+                intArrayOf(Color.TRANSPARENT,
+                    ColorUtils.setAlphaComponent(deepColor, 170),
+                    ColorUtils.setAlphaComponent(deepColor, 230),
+                    deepColor),
                 floatArrayOf(0f, 0.35f, 0.65f, 1f),
                 Shader.TileMode.CLAMP
             )
@@ -64,150 +89,124 @@ object StoryShareUtil {
 
             // ── 3. Decorative rings (top-right corner) ────────────────────────
             val ringPaint = Paint().apply {
-                color = ColorUtils.setAlphaComponent(accentColor, 55)
+                color = ColorUtils.setAlphaComponent(accentColor, 50)
                 style = Paint.Style.STROKE
                 strokeWidth = 3f
                 isAntiAlias = true
             }
             val cx = w + 80f; val cy = -80f
             canvas.drawCircle(cx, cy, 340f, ringPaint)
-            canvas.drawCircle(cx, cy, 260f, ringPaint)
-            canvas.drawCircle(cx, cy, 180f, ringPaint)
-            // Filled inner accent dot
+            canvas.drawCircle(cx, cy, 255f, ringPaint)
+            canvas.drawCircle(cx, cy, 170f, ringPaint)
             val dotPaint = Paint().apply {
-                color = ColorUtils.setAlphaComponent(accentColor, 90)
-                style = Paint.Style.FILL
+                color = ColorUtils.setAlphaComponent(accentColor, 80)
                 isAntiAlias = true
             }
-            canvas.drawCircle(cx, cy, 100f, dotPaint)
+            canvas.drawCircle(cx, cy, 90f, dotPaint)
 
             // ── 4. Top branding pill ──────────────────────────────────────────
-            val pillPaint = Paint().apply {
-                color = ColorUtils.setAlphaComponent(deepColor, 200)
+            val pillBg = Paint().apply {
+                color = ColorUtils.setAlphaComponent(deepColor, 195)
                 isAntiAlias = true
             }
-            canvas.drawRoundRect(RectF(48f, 60f, 380f, 136f), 40f, 40f, pillPaint)
-
+            canvas.drawRoundRect(RectF(48f, 58f, 370f, 134f), 40f, 40f, pillBg)
             val brandPaint = Paint().apply {
                 color = Color.WHITE
-                textSize = 46f
+                textSize = 44f
                 isAntiAlias = true
                 typeface = Typeface.DEFAULT_BOLD
                 letterSpacing = 0.06f
-                setShadowLayer(8f, 0f, 2f, ColorUtils.setAlphaComponent(deepColor, 180))
+                setShadowLayer(6f, 0f, 2f, ColorUtils.setAlphaComponent(deepColor, 160))
             }
-            canvas.drawText("🌿 FloraFlow", 80f, 112f, brandPaint)
+            canvas.drawText("🌿 FloraFlow", 78f, 110f, brandPaint)
 
             // ── 5. Location badge ─────────────────────────────────────────────
-            var textBaseY = h * 0.685f
+            var textY = h * 0.685f
             val location = plant.locationName?.takeIf { it.isNotBlank() }
             if (location != null) {
-                val locPaint = Paint().apply {
-                    color = ColorUtils.setAlphaComponent(Color.WHITE, 220)
-                    isAntiAlias = true
+                val locBg = Paint().apply { color = ColorUtils.setAlphaComponent(Color.WHITE, 215); isAntiAlias = true }
+                val locText = Paint().apply {
+                    color = deepColor; textSize = 35f; isAntiAlias = true
+                    typeface = Typeface.DEFAULT_BOLD; letterSpacing = 0.08f
                 }
-                val locTextPaint = Paint().apply {
-                    color = deepColor
-                    textSize = 36f
-                    isAntiAlias = true
-                    typeface = Typeface.DEFAULT_BOLD
-                    letterSpacing = 0.08f
-                }
-                val locText = "📍 ${location.uppercase()}"
-                val locWidth = locTextPaint.measureText(locText)
-                val pillLeft = 60f; val pillRight = pillLeft + locWidth + 40f
-                val pillTop = textBaseY - 52f; val pillBottom = textBaseY + 8f
-                canvas.drawRoundRect(RectF(pillLeft, pillTop, pillRight, pillBottom), 28f, 28f, locPaint)
-                canvas.drawText(locText, pillLeft + 20f, textBaseY - 10f, locTextPaint)
-                textBaseY += 76f
+                val label = "📍 ${location.uppercase()}"
+                val lw = locText.measureText(label)
+                canvas.drawRoundRect(RectF(60f, textY - 50f, 60f + lw + 40f, textY + 8f), 28f, 28f, locBg)
+                canvas.drawText(label, 80f, textY - 12f, locText)
+                textY += 74f
             }
 
             // ── 6. Plant name ─────────────────────────────────────────────────
             val namePaint = Paint().apply {
                 color = Color.WHITE
-                textSize = if (plant.plantName.length > 14) 88f else 104f
+                textSize = if (plant.plantName.length > 14) 86f else 102f
                 isAntiAlias = true
                 typeface = Typeface.SERIF
-                setShadowLayer(18f, 0f, 4f, ColorUtils.setAlphaComponent(deepColor, 200))
+                setShadowLayer(16f, 0f, 4f, ColorUtils.setAlphaComponent(deepColor, 195))
             }
             val nameLines = breakText(plant.plantName, namePaint, w - 120)
             nameLines.forEachIndexed { i, line ->
-                canvas.drawText(line, 60f, textBaseY + i * namePaint.textSize * 1.25f, namePaint)
+                canvas.drawText(line, 60f, textY + i * namePaint.textSize * 1.25f, namePaint)
             }
-            textBaseY += nameLines.size * namePaint.textSize * 1.25f + 20f
+            textY += nameLines.size * namePaint.textSize * 1.25f + 20f
 
             // ── 7. Scientific name ────────────────────────────────────────────
             if (!plant.scientificName.isNullOrBlank()) {
                 val sciPaint = Paint().apply {
-                    color = ColorUtils.blendARGB(accentColor, Color.WHITE, 0.55f)
-                    textSize = 50f
-                    isAntiAlias = true
+                    color = ColorUtils.blendARGB(accentColor, Color.WHITE, 0.6f)
+                    textSize = 48f; isAntiAlias = true
                     typeface = Typeface.create(Typeface.SERIF, Typeface.ITALIC)
-                    setShadowLayer(12f, 0f, 3f, ColorUtils.setAlphaComponent(deepColor, 160))
+                    setShadowLayer(10f, 0f, 3f, ColorUtils.setAlphaComponent(deepColor, 150))
                 }
-                canvas.drawText(plant.scientificName!!, 60f, textBaseY, sciPaint)
-                textBaseY += 72f
+                canvas.drawText(plant.scientificName!!, 60f, textY, sciPaint)
+                textY += 70f
             }
 
             // ── 8. Accent divider ─────────────────────────────────────────────
             val divPaint = Paint().apply {
-                color = ColorUtils.setAlphaComponent(accentColor, 180)
-                strokeWidth = 3f
-                strokeCap = Paint.Cap.ROUND
-                isAntiAlias = true
+                color = ColorUtils.setAlphaComponent(accentColor, 175)
+                strokeWidth = 3f; strokeCap = Paint.Cap.ROUND; isAntiAlias = true
             }
-            canvas.drawLine(60f, textBaseY + 16f, 200f, textBaseY + 16f, divPaint)
-            textBaseY += 56f
+            canvas.drawLine(60f, textY + 14f, 195f, textY + 14f, divPaint)
+            textY += 52f
 
-            // ── 9. Insight quote ──────────────────────────────────────────────
+            // ── 9. Botanical insight (2–3 lines) ──────────────────────────────
             val insightPaint = Paint().apply {
-                color = ColorUtils.blendARGB(Color.WHITE, Color.TRANSPARENT, 0.18f)
-                textSize = 40f
-                isAntiAlias = true
-                setShadowLayer(10f, 0f, 2f, ColorUtils.setAlphaComponent(deepColor, 150))
+                color = ColorUtils.setAlphaComponent(Color.WHITE, 218)
+                textSize = 40f; isAntiAlias = true
+                setShadowLayer(8f, 0f, 2f, ColorUtils.setAlphaComponent(deepColor, 140))
             }
-            // Limit insight to 2 lines / ~100 chars for elegance
-            val rawInsight = plant.botanicalInsight.let {
-                if (it.length > 110) it.take(107) + "…" else it
+            val raw = plant.botanicalInsight.let { if (it.length > 115) it.take(112) + "…" else it }
+            val insightLines = breakText(raw, insightPaint, w - 140).take(3)
+            insightLines.forEachIndexed { i, line ->
+                canvas.drawText(line, 60f, textY + i * insightPaint.textSize * 1.5f, insightPaint)
             }
-            val insightLines = breakText(rawInsight, insightPaint, w - 140)
-            val displayLines = insightLines.take(3)
-            displayLines.forEachIndexed { i, line ->
-                canvas.drawText(line, 60f, textBaseY + i * insightPaint.textSize * 1.5f, insightPaint)
-            }
-            textBaseY += displayLines.size * insightPaint.textSize * 1.5f + 32f
+            textY += insightLines.size * insightPaint.textSize * 1.5f + 28f
 
-            // ── 10. Native region ─────────────────────────────────────────────
+            // ── 10. Native region tag ─────────────────────────────────────────
             val region = plant.nativeRegion?.takeIf { it.isNotBlank() }
-            if (region != null && textBaseY < h - 260f) {
+            if (region != null && textY < h - 280f) {
                 val regionPaint = Paint().apply {
-                    color = ColorUtils.setAlphaComponent(accentColor, 200)
-                    textSize = 36f
-                    isAntiAlias = true
-                    typeface = Typeface.DEFAULT_BOLD
-                    letterSpacing = 0.04f
+                    color = ColorUtils.blendARGB(accentColor, Color.WHITE, 0.45f)
+                    textSize = 35f; isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD
                 }
-                canvas.drawText("🌍 $region", 60f, textBaseY, regionPaint)
+                canvas.drawText("🌍 $region", 60f, textY, regionPaint)
             }
 
-            // ── 11. Bottom credit + CTA ────────────────────────────────────────
+            // ── 11. Credits + CTA ─────────────────────────────────────────────
             val creditPaint = Paint().apply {
-                color = ColorUtils.setAlphaComponent(Color.WHITE, 140)
-                textSize = 34f
-                isAntiAlias = true
+                color = ColorUtils.setAlphaComponent(Color.WHITE, 135)
+                textSize = 33f; isAntiAlias = true
             }
             canvas.drawText("📷 ${plant.photographerName} · Unsplash", 60f, h - 110f, creditPaint)
-
             val ctaPaint = Paint().apply {
                 color = ColorUtils.setAlphaComponent(Color.WHITE, 200)
-                textSize = 34f
-                isAntiAlias = true
-                typeface = Typeface.DEFAULT_BOLD
+                textSize = 33f; isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD
                 letterSpacing = 0.04f
             }
-            canvas.drawText("🌿 Découvrez FloraFlow", 60f, h - 64f, ctaPaint)
+            canvas.drawText("🌿 Découvrez FloraFlow", 60f, h - 62f, ctaPaint)
 
-            // ── 12. Save and share ────────────────────────────────────────────
+            // ── 12. Save & share ──────────────────────────────────────────────
             val dir = File(context.cacheDir, "story").also { it.mkdirs() }
             val file = File(dir, "floraflow_story.jpg")
             file.outputStream().use { story.compress(Bitmap.CompressFormat.JPEG, 94, it) }
@@ -220,10 +219,9 @@ object StoryShareUtil {
                 putExtra(Intent.EXTRA_TEXT, "#FloraFlow #Botanique #${plant.plantName.replace(" ", "")}")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            val chooser = Intent.createChooser(intent, "Partager en story").apply {
+            context.startActivity(Intent.createChooser(intent, "Partager en story").apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(chooser)
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -232,17 +230,14 @@ object StoryShareUtil {
     private fun breakText(text: String, paint: Paint, maxWidth: Int): List<String> {
         val words = text.split(" ")
         val lines = mutableListOf<String>()
-        var currentLine = ""
+        var cur = ""
         for (word in words) {
-            val test = if (currentLine.isEmpty()) word else "$currentLine $word"
-            if (paint.measureText(test) > maxWidth && currentLine.isNotEmpty()) {
-                lines.add(currentLine)
-                currentLine = word
-            } else {
-                currentLine = test
-            }
+            val test = if (cur.isEmpty()) word else "$cur $word"
+            if (paint.measureText(test) > maxWidth && cur.isNotEmpty()) {
+                lines.add(cur); cur = word
+            } else { cur = test }
         }
-        if (currentLine.isNotEmpty()) lines.add(currentLine)
+        if (cur.isNotEmpty()) lines.add(cur)
         return lines
     }
 }
