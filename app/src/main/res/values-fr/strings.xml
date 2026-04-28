@@ -255,4 +255,9 @@
     <string name="badge_coll_5_desc">5 collections créées</string>
     <string name="explore_subtitle">Explorez les plantes des grands écosystèmes du monde.</string>
     <string name="explore_region_count">%d espèces à découvrir</string>
+    <string name="add_plant_to_collection">Ajouter une plante</string>
+    <string name="collection_detail_empty_hint">Appuyez sur + pour ajouter vos plantes découvertes</string>
+    <string name="all_plants_in_collection">Toutes vos plantes découvertes sont déjà dans cette collection</string>
+    <string name="no_plants_discovered_yet">Découvrez des plantes d'abord — elles apparaîtront ici !</string>
+    <string name="plant_added_to_collection">%s ajoutée à la collection</string>
 </resources>

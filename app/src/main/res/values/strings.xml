@@ -255,4 +255,9 @@
     <string name="badge_coll_5_desc">5 collections created</string>
     <string name="explore_subtitle">Explore plants from the world's great ecosystems.</string>
     <string name="explore_region_count">%d species to discover</string>
+    <string name="add_plant_to_collection">Add plant</string>
+    <string name="collection_detail_empty_hint">Tap + to add your discovered plants</string>
+    <string name="all_plants_in_collection">All your discovered plants are already in this collection</string>
+    <string name="no_plants_discovered_yet">Discover plants first — they'll appear here!</string>
+    <string name="plant_added_to_collection">%s added to collection</string>
 </resources>
