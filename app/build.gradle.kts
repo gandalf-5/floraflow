@@ -22,6 +22,13 @@ android {
             "FLORA_FLOW_API_URL",
             "\"https://flora-explorer.replit.app/api/\""
         )
+        // PlantNet API key — injected from PLANTNET_API_KEY env var / GitHub secret.
+        // Falls back to the public demo key so local builds and CI always compile.
+        buildConfigField(
+            "String",
+            "PLANTNET_API_KEY",
+            "\"${System.getenv("PLANTNET_API_KEY") ?: "2b10oiLgd0yalCBVTL5Rrq1Ee"}\""
+        )
     }
 
     // Release signing — reads from GitHub Actions secrets via env vars.
