@@ -70,7 +70,7 @@ class SeasonalAdapter(
                         isClickable = false
                         isCheckable = false
                         setChipBackgroundColorResource(android.R.color.transparent)
-                        setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall)
+                        textSize = 11f
                         chipStrokeWidth = 1f
                         chipStrokeColor = android.content.res.ColorStateList.valueOf(Color.WHITE)
                         setTextColor(Color.WHITE)
