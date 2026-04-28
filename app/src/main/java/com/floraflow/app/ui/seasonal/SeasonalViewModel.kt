@@ -124,11 +124,3 @@ class SeasonalViewModel(private val repository: PlantRepository) : ViewModel() {
         _sections.value = result
     }
 }
-
-class SeasonalViewModelFactory(
-    private val repository: PlantRepository
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        SeasonalViewModel(repository) as T
-}
