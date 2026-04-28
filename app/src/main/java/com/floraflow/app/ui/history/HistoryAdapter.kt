@@ -16,7 +16,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class HistoryAdapter(
-    private val onFavoriteClick: (DailyPlant) -> Unit
+    private val onFavoriteClick: (DailyPlant) -> Unit,
+    private val onItemClick: (DailyPlant) -> Unit = {}
 ) : ListAdapter<DailyPlant, HistoryAdapter.ViewHolder>(DIFF) {
 
     companion object {
@@ -38,6 +39,7 @@ class HistoryAdapter(
         val date: TextView = view.findViewById(R.id.item_date)
         val scientific: TextView = view.findViewById(R.id.item_scientific_name)
         val favoriteBtn: ImageButton = view.findViewById(R.id.item_favorite_btn)
+        val notesIndicator: TextView = view.findViewById(R.id.item_notes_indicator)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -56,10 +58,12 @@ class HistoryAdapter(
         } else {
             holder.scientific.visibility = View.GONE
         }
+        holder.notesIndicator.visibility = if (!plant.notes.isNullOrBlank()) View.VISIBLE else View.GONE
         holder.favoriteBtn.setImageResource(
             if (plant.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite
         )
         holder.favoriteBtn.setOnClickListener { onFavoriteClick(plant) }
+        holder.itemView.setOnClickListener { onItemClick(plant) }
         Glide.with(holder.image.context)
             .load(plant.imageUrlRegular)
             .centerCrop()

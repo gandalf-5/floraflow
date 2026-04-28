@@ -39,6 +39,7 @@ class FavoritesAdapter(
         val date: TextView = view.findViewById(R.id.item_date)
         val scientific: TextView = view.findViewById(R.id.item_scientific_name)
         val favoriteBtn: ImageButton = view.findViewById(R.id.item_favorite_btn)
+        val notesIndicator: TextView = view.findViewById(R.id.item_notes_indicator)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,6 +58,7 @@ class FavoritesAdapter(
         } else {
             holder.scientific.visibility = View.GONE
         }
+        holder.notesIndicator.visibility = if (!plant.notes.isNullOrBlank()) View.VISIBLE else View.GONE
         holder.favoriteBtn.setImageResource(R.drawable.ic_favorite_filled)
         holder.favoriteBtn.setOnClickListener { onRemoveClick(plant) }
         holder.itemView.setOnLongClickListener { onLongClick(plant); true }

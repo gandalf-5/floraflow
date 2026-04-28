@@ -39,7 +39,10 @@ class HistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = HistoryAdapter { plant -> viewModel.toggleFavorite(plant) }
+        adapter = HistoryAdapter(
+            onFavoriteClick = { plant -> viewModel.toggleFavorite(plant) },
+            onItemClick     = { plant -> showInsightDialog(plant) }
+        )
         binding.historyRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.historyRecycler.adapter = adapter
 
@@ -63,7 +66,20 @@ class HistoryFragment : Fragment() {
         viewModel.load()
     }
 
-    override fun onDestroyView() {
+
+    private fun showInsightDialog(plant: com.floraflow.app.data.DailyPlant) {
+        val sb = StringBuilder()
+        sb.append(plant.scientificName?.let { "\u2022 $it\n\n" } ?: "")
+        sb.append(plant.botanicalInsight)
+        if (!plant.notes.isNullOrBlank()) sb.append("\n\n✏️ ${plant.notes}")
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(plant.plantName)
+            .setMessage(sb.toString())
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+        override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
