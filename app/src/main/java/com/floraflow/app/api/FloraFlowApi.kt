@@ -3,7 +3,9 @@ package com.floraflow.app.api
 import com.floraflow.app.BuildConfig
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * Retrofit interface for the FloraFlow backend API server.
@@ -36,6 +38,16 @@ interface FloraFlowApi {
     suspend fun getPlantCare(
         @Body request: CareTipsRequest
     ): CareTipsResponse
+
+    @GET("plant/curated")
+    suspend fun getCuratedPlant(
+        @Query("q") name: String
+    ): CuratedPlantResponse
+
+    @POST("botanical-curiosities")
+    suspend fun getBotanicalCuriosities(
+        @Body request: CuriositiesRequest
+    ): CuriositiesResponse
 
     companion object {
         /** Resolved at build time from FLORA_FLOW_API_URL env / GitHub Actions secret. */
@@ -117,4 +129,20 @@ data class CareTipsResponse(
     @SerializedName("temperature") val temperature: String = "",
     @SerializedName("toxicity")    val toxicity: String = "",
     @SerializedName("seasonalTip") val seasonalTip: String = ""
+)
+
+data class CuratedPlantResponse(
+    @SerializedName("plantName")   val plantName: String = "",
+    @SerializedName("imageUrl")    val imageUrl: String = "",
+    @SerializedName("photographer") val photographer: String? = null
+)
+
+data class CuriositiesRequest(
+    @SerializedName("plantName")     val plantName: String,
+    @SerializedName("scientificName") val scientificName: String? = null,
+    @SerializedName("lang")          val lang: String = "en"
+)
+
+data class CuriositiesResponse(
+    @SerializedName("facts") val facts: List<String> = emptyList()
 )
