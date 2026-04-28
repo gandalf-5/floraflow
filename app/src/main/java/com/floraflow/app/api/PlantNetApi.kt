@@ -1,5 +1,6 @@
 package com.floraflow.app.api
 
+import com.floraflow.app.BuildConfig
 import com.google.gson.annotations.SerializedName
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
@@ -19,7 +20,7 @@ interface PlantNetApi {
 
     companion object {
         const val BASE_URL = "https://my-api.plantnet.org/v2/"
-        const val API_KEY = "2b10oiLgd0yalCBVTL5Rrq1Ee"
+        val API_KEY: String get() = BuildConfig.PLANTNET_API_KEY
     }
 }
 
