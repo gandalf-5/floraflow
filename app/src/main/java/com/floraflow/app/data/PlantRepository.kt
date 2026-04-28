@@ -633,6 +633,11 @@ class PlantRepository(
 
     suspend fun getHistory(): List<DailyPlant> = dao.getHistory()
 
+    suspend fun getHistoryLast7Days(): List<DailyPlant> {
+        val cutoff = System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000L
+        return dao.getHistorySince(cutoff)
+    }
+
     suspend fun getFavorites(): List<DailyPlant> = dao.getFavorites()
 
     suspend fun getAllForSeasonal(): List<DailyPlant> = dao.getAllForSeasonal()
