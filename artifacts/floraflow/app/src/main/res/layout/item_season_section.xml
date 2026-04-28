@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="24dp">
+
+    <!-- Season Header Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/season_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Row: emoji + name/months + badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/season_emoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="36sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/season_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#1B2E1F"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/playfair_display_bold" />
+
+                    <TextView
+                        android:id="@+id/month_range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#557A60"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/inter_regular" />
+
+                    <TextView
+                        android:id="@+id/plant_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#2D6A4F"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/inter_medium"
+                        android:layout_marginTop="2dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/in_season_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✦ NOW"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:background="@drawable/badge_in_season"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Season botanical fact -->
+            <TextView
+                android:id="@+id/season_fact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#4A7A55"
+                android:textSize="13sp"
+                android:fontFamily="@font/inter_regular"
+                android:lineSpacingMultiplier="1.45"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Discovered plants label (only when user has history for this season) -->
+    <TextView
+        android:id="@+id/discovered_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/seasonal_discovered_label"
+        android:textColor="#2D6A4F"
+        android:textSize="12sp"
+        android:fontFamily="@font/inter_medium"
+        android:letterSpacing="0.06"
+        android:visibility="gone" />
+
+    <!-- Horizontal scroll: user's discovered plants for this season -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/plants_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:clipToPadding="false"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone" />
+
+    <!-- Curated in-season label (always shown) -->
+    <TextView
+        android:id="@+id/curated_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/seasonal_in_season_label"
+        android:textColor="#2D6A4F"
+        android:textSize="12sp"
+        android:fontFamily="@font/inter_medium"
+        android:letterSpacing="0.06"
+        android:visibility="gone" />
+
+    <!-- Horizontal scroll: curated plants with live Unsplash photos -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/curated_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:clipToPadding="false"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+</LinearLayout>
