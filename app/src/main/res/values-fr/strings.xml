@@ -207,6 +207,14 @@
     <string name="premium_cta">S\'abonner — 1,99 € / mois</string>
     <string name="manage_subscription">Gérer l\'abonnement</string>
 
+    <!-- Bannières freemium Historique & Favoris -->
+    <string name="history_free_limit_banner">📅 Plan gratuit · 7 derniers jours — Passez à Premium pour l\'historique complet.</string>
+    <string name="favorites_free_limit_banner">❤️ %1$d/%2$d favoris · Passez à Premium pour illimité.</string>
+    <string name="favorites_remove_title">Retirer des favoris ?</string>
+    <string name="favorites_remove_message">« %1$s » sera retiré de vos favoris.</string>
+    <string name="favorites_remove_confirm">Retirer</string>
+    <string name="favorites_create_collection">Créer une collection</string>
+
     <!-- Badges -->
     <string name="badges_title">Mes Trophées</string>
     <string name="badge_earned_label">✓ Débloqué</string>
