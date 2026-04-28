@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
+import com.floraflow.app.api.CuriositiesRequest
+import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
 import com.floraflow.app.data.PreferencesManager
@@ -46,6 +48,10 @@ class DiscoveryViewModel(
     private val _streakCount = MutableLiveData(0)
     val streakCount: LiveData<Int> = _streakCount
 
+    // null = loading/not started, emptyList = error/unavailable, non-empty = ready to show
+    private val _curiosities = MutableLiveData<List<String>?>(null)
+    val curiosities: LiveData<List<String>?> = _curiosities
+
     init {
         loadTodayPlant()
         updateStreak()
@@ -53,14 +59,21 @@ class DiscoveryViewModel(
 
     fun loadTodayPlant() {
         _uiState.value = DiscoveryUiState.Loading
+        _curiosities.value = null
         viewModelScope.launch {
             try {
                 val plant = repository.fetchAndSaveTodayPlant()
                 _uiState.value = DiscoveryUiState.Success(plant)
+                fetchCuriosities(plant)
             } catch (e: Exception) {
                 val cached = repository.getTodayPlant()
-                if (cached != null) _uiState.value = DiscoveryUiState.Success(cached)
-                else _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load today's plant")
+                if (cached != null) {
+                    _uiState.value = DiscoveryUiState.Success(cached)
+                    fetchCuriosities(cached)
+                } else {
+                    _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load today's plant")
+                    _curiosities.value = emptyList()
+                }
             }
         }
     }
@@ -69,12 +82,15 @@ class DiscoveryViewModel(
 
     fun refreshWithCategory(query: String) {
         _uiState.value = DiscoveryUiState.Loading
+        _curiosities.value = null
         viewModelScope.launch {
             try {
                 val plant = repository.fetchForCategory(query)
                 _uiState.value = DiscoveryUiState.Success(plant)
+                fetchCuriosities(plant)
             } catch (e: Exception) {
                 _uiState.value = DiscoveryUiState.Error(e.message ?: "Unable to load plant")
+                _curiosities.value = emptyList()
             }
         }
     }
@@ -116,6 +132,26 @@ class DiscoveryViewModel(
     }
 
     fun resetWallpaperState() { _wallpaperState.value = WallpaperState.Idle }
+
+    private fun fetchCuriosities(plant: DailyPlant) {
+        viewModelScope.launch {
+            try {
+                val lang = Locale.getDefault().language.let { if (it == "fr") "fr" else "en" }
+                val response = RetrofitClient.floraFlowApi.getBotanicalCuriosities(
+                    CuriositiesRequest(
+                        plantName = plant.plantName,
+                        scientificName = plant.scientificName,
+                        lang = lang
+                    )
+                )
+                val facts = response.facts.filter { it.isNotBlank() }
+                _curiosities.value = facts
+            } catch (e: Exception) {
+                Log.w("DiscoveryVM", "Curiosities fetch failed: ${e.message}")
+                _curiosities.value = emptyList()
+            }
+        }
+    }
 
     private fun updateStreak() {
         viewModelScope.launch {
