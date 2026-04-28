@@ -168,6 +168,7 @@
     <!-- Discovery -->
     <string name="streak_days_label">%1$d jours</string>
     <string name="native_to_label">Originaire de %1$s</string>
+    <string name="discovery_curiosities_title">Le saviez-vous ?</string>
 
     <!-- Collections -->
     <string name="collections_title">Mon Herbier</string>
@@ -210,6 +211,12 @@
     <!-- Bannières freemium Historique & Favoris -->
     <string name="history_free_limit_banner">📅 Plan gratuit · 7 derniers jours — Passez à Premium pour l\'historique complet.</string>
     <string name="favorites_free_limit_banner">❤️ %1$d/%2$d favoris · Passez à Premium pour illimité.</string>
+    <string name="seasonal_discovered_label">MES DÉCOUVERTES</string>
+    <string name="seasonal_in_season_label">EN SAISON</string>
+    <plurals name="seasonal_discovered_count">
+        <item quantity="one">%d plante dans ton historique</item>
+        <item quantity="other">%d plantes dans ton historique</item>
+    </plurals>
     <string name="favorites_remove_title">Retirer des favoris ?</string>
     <string name="favorites_remove_message">« %1$s » sera retiré de vos favoris.</string>
     <string name="favorites_remove_confirm">Retirer</string>
