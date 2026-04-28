@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.floraflow.app.FloraFlowApp
 import com.floraflow.app.R
 import com.floraflow.app.data.PlantRepository
+import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentHistoryBinding
+import com.floraflow.app.ui.premium.PremiumBottomSheetFragment
 
 class HistoryFragment : Fragment() {
 
@@ -20,7 +22,8 @@ class HistoryFragment : Fragment() {
     private val viewModel: HistoryViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         HistoryViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi)
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi),
+            PreferencesManager(requireContext())
         )
     }
 
@@ -40,10 +43,24 @@ class HistoryFragment : Fragment() {
         binding.historyRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.historyRecycler.adapter = adapter
 
+        viewModel.isPremium.observe(viewLifecycleOwner) { premium ->
+            binding.historyFreeBanner.visibility = if (premium) View.GONE else View.VISIBLE
+        }
+
         viewModel.plants.observe(viewLifecycleOwner) { plants ->
             adapter.submitList(plants)
             binding.emptyText.visibility = if (plants.isEmpty()) View.VISIBLE else View.GONE
         }
+
+        binding.historyFreeBanner.setOnClickListener {
+            PremiumBottomSheetFragment.newInstance()
+                .show(parentFragmentManager, PremiumBottomSheetFragment.TAG)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
     }
 
     override fun onDestroyView() {
