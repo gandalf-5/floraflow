@@ -207,6 +207,14 @@
     <string name="premium_cta">Subscribe — 1.99 € / month</string>
     <string name="manage_subscription">Manage subscription</string>
 
+    <!-- History & Favorites freemium banners -->
+    <string name="history_free_limit_banner">📅 Free plan · last 7 days — Upgrade to Premium for full history.</string>
+    <string name="favorites_free_limit_banner">❤️ %1$d/%2$d favorites · Upgrade to Premium for unlimited.</string>
+    <string name="favorites_remove_title">Remove from favorites?</string>
+    <string name="favorites_remove_message">"%1$s" will be removed from your favorites.</string>
+    <string name="favorites_remove_confirm">Remove</string>
+    <string name="favorites_create_collection">Create a collection</string>
+
     <!-- Badges -->
     <string name="badges_title">My Trophies</string>
     <string name="badge_earned_label">✓ Earned</string>
