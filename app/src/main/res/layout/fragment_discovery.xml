@@ -414,6 +414,79 @@
                         android:fontFamily="@font/inter_regular"
                         android:fontStyle="italic" />
 
+                    <!-- Curiosités / Fun Facts Section -->
+                    <LinearLayout
+                        android:id="@+id/curiosities_section"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/discovery_curiosities_title"
+                            android:textColor="@color/accent"
+                            android:textSize="11sp"
+                            android:fontFamily="@font/inter_medium"
+                            android:letterSpacing="0.18"
+                            android:textAllCaps="true"
+                            android:layout_marginBottom="12dp" />
+
+                        <ProgressBar
+                            android:id="@+id/curiosities_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:indeterminate="true"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/curiosity_fact_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/inter_regular"
+                            android:lineSpacingMultiplier="1.55"
+                            android:background="@drawable/rounded_surface"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/curiosity_fact_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/inter_regular"
+                            android:lineSpacingMultiplier="1.55"
+                            android:background="@drawable/rounded_surface"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/curiosity_fact_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/inter_regular"
+                            android:lineSpacingMultiplier="1.55"
+                            android:background="@drawable/rounded_surface"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
                     <!-- Action Buttons -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/set_wallpaper_button"
