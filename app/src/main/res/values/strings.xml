@@ -168,6 +168,7 @@
     <!-- Discovery -->
     <string name="streak_days_label">%1$d days</string>
     <string name="native_to_label">Native to %1$s</string>
+    <string name="discovery_curiosities_title">Did you know?</string>
 
     <!-- Collections -->
     <string name="collections_title">My Herbarium</string>
@@ -210,6 +211,12 @@
     <!-- History & Favorites freemium banners -->
     <string name="history_free_limit_banner">📅 Free plan · last 7 days — Upgrade to Premium for full history.</string>
     <string name="favorites_free_limit_banner">❤️ %1$d/%2$d favorites · Upgrade to Premium for unlimited.</string>
+    <string name="seasonal_discovered_label">MY DISCOVERIES</string>
+    <string name="seasonal_in_season_label">IN SEASON</string>
+    <plurals name="seasonal_discovered_count">
+        <item quantity="one">%d plant in your history</item>
+        <item quantity="other">%d plants in your history</item>
+    </plurals>
     <string name="favorites_remove_title">Remove from favorites?</string>
     <string name="favorites_remove_message">"%1$s" will be removed from your favorites.</string>
     <string name="favorites_remove_confirm">Remove</string>
