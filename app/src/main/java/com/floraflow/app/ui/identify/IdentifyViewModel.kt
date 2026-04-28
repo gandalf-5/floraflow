@@ -13,6 +13,7 @@ import com.floraflow.app.R
 import com.floraflow.app.api.CareTipsRequest
 import com.floraflow.app.api.CareTipsResponse
 import com.floraflow.app.api.IdentifyRequest
+import com.floraflow.app.api.PlantNetApi
 import com.floraflow.app.api.RetrofitClient
 import com.floraflow.app.util.LocaleUtil
 import com.floraflow.app.data.AppDatabase
@@ -22,6 +23,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.time.LocalDate
@@ -98,40 +102,78 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
             }
 
             try {
-                val imageBase64 = withContext(Dispatchers.IO) { compressAndEncode(imageFile) }
+                val lang = if (Locale.getDefault().language == "fr") "fr" else "en"
 
-                val response = withContext(Dispatchers.IO) {
-                    RetrofitClient.floraFlowApi.identify(IdentifyRequest(imageBase64 = imageBase64))
+                // Phase 1 — PlantNet direct (fast, on-device call, no backend required)
+                val plantNetBest = withContext(Dispatchers.IO) {
+                    try {
+                        val requestBody = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
+                        val part = MultipartBody.Part.createFormData("images", imageFile.name, requestBody)
+                        RetrofitClient.plantNetApi.identify(
+                            apiKey = PlantNetApi.API_KEY,
+                            lang = lang,
+                            image = part
+                        ).results.firstOrNull()
+                    } catch (e: Exception) {
+                        Log.w("IdentifyVM", "PlantNet direct call failed: ${e.message}")
+                        null
+                    }
                 }
 
-                val best = response.results.firstOrNull()
-                if (best != null) {
+                val result: IdentifyState.Result
+
+                if (plantNetBest != null && plantNetBest.score >= 0.05) {
+                    // PlantNet returned a confident result
+                    val confidence = (plantNetBest.score * 100).toInt()
+                    val common = plantNetBest.species.commonNames.firstOrNull()
+                        ?: plantNetBest.species.scientificName
+                    result = IdentifyState.Result(
+                        commonName = common,
+                        scientificName = plantNetBest.species.scientificName,
+                        confidence = confidence,
+                        family = plantNetBest.species.family?.name
+                    )
+                } else {
+                    // Phase 2 — FloraFlow backend fallback (GPT Vision)
+                    Log.d("IdentifyVM", "Low PlantNet score — falling back to FloraFlow backend")
+                    val imageBase64 = withContext(Dispatchers.IO) { compressAndEncode(imageFile) }
+                    val response = withContext(Dispatchers.IO) {
+                        RetrofitClient.floraFlowApi.identify(IdentifyRequest(imageBase64 = imageBase64))
+                    }
+                    val best = response.results.firstOrNull()
+                    if (best == null) {
+                        _state.value = IdentifyState.Error(
+                            getApplication<Application>().getString(R.string.identify_no_result)
+                        )
+                        return@launch
+                    }
                     val confidence = (best.score * 100).toInt()
-                    val common = best.species.commonNames.firstOrNull()
-                        ?: best.species.scientificName
-                    val result = IdentifyState.Result(
+                    val common = best.species.commonNames.firstOrNull() ?: best.species.scientificName
+                    result = IdentifyState.Result(
                         commonName = common,
                         scientificName = best.species.scientificName,
                         confidence = confidence,
                         family = best.species.family?.name
                     )
-                    _state.value = result
-
-                    if (!isPremium) {
-                        val newCount = (prefs.dailyIdCount.first()) + 1
-                        prefs.setDailyIdCount(newCount)
-                        prefs.setDailyIdDate(LocalDate.now().toString())
-                        _dailyUsed.value = newCount
-                    }
-
-                    saveIdentification(imageFile, result, latitude, longitude)
-                    fetchCareTips(result.commonName, result.scientificName)
-                } else {
-                    _state.value = IdentifyState.Error(getApplication<android.app.Application>().getString(R.string.identify_no_result))
                 }
+
+                _state.value = result
+
+                if (!isPremium) {
+                    val newCount = (prefs.dailyIdCount.first()) + 1
+                    prefs.setDailyIdCount(newCount)
+                    prefs.setDailyIdDate(LocalDate.now().toString())
+                    _dailyUsed.value = newCount
+                }
+
+                saveIdentification(imageFile, result, latitude, longitude)
+                fetchCareTips(result.commonName, result.scientificName)
+
             } catch (e: Exception) {
                 Log.e("IdentifyVM", "Identification failed", e)
-                _state.value = IdentifyState.Error(getApplication<android.app.Application>().getString(R.string.identify_error_connection))
+                _state.value = IdentifyState.Error(
+                    getApplication<Application>().getString(R.string.identify_error_connection)
+                )
             }
         }
     }
@@ -194,18 +236,21 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
                     longitude = lng,
                     locationName = locName
                 )
-                AppDatabase.getInstance(getApplication()).identificationRecordDao().insert(record)
+                val db = AppDatabase.getInstance(getApplication())
+                db.identificationRecordDao().insert(record)
+                db.identificationRecordDao()
+                    .keepOnlyRecent(PreferencesManager.FREE_GALLERY_RECORD_LIMIT * 2)
             } catch (e: Exception) {
                 Log.e("IdentifyVM", "Failed to save identification record", e)
             }
         }
     }
 
-    private fun savePermanently(file: File): String {
-        val dir = File(getApplication<Application>().filesDir, "identifications")
-        dir.mkdirs()
-        val dest = File(dir, "ident_${System.currentTimeMillis()}.jpg")
-        file.copyTo(dest, overwrite = true)
+    private fun savePermanently(tempFile: File): String {
+        val app = getApplication<Application>()
+        val dir = File(app.filesDir, "identifications").also { it.mkdirs() }
+        val dest = File(dir, "${System.currentTimeMillis()}.jpg")
+        tempFile.copyTo(dest, overwrite = true)
         return dest.absolutePath
     }
 
@@ -215,10 +260,12 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val geocoder = Geocoder(getApplication(), Locale.getDefault())
                 val addresses = geocoder.getFromLocation(lat, lng, 1)
-                val addr = addresses?.firstOrNull() ?: return@withContext null
-                listOfNotNull(addr.locality, addr.countryName)
-                    .joinToString(", ")
-                    .takeIf { it.isNotBlank() }
+                addresses?.firstOrNull()?.let { addr ->
+                    listOfNotNull(addr.locality, addr.adminArea, addr.countryName)
+                        .take(2)
+                        .joinToString(", ")
+                        .takeIf { it.isNotBlank() }
+                }
             } catch (e: Exception) {
                 null
             }
@@ -243,5 +290,4 @@ class IdentifyViewModel(app: Application) : AndroidViewModel(app) {
         original.recycle()
         return Base64.encodeToString(out.toByteArray(), Base64.NO_WRAP)
     }
-
 }

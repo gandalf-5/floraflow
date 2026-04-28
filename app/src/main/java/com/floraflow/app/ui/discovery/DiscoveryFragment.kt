@@ -47,9 +47,11 @@ class DiscoveryFragment : Fragment() {
 
     private val viewModel: DiscoveryViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
+        val prefs = PreferencesManager(requireContext())
+        val categories = kotlinx.coroutines.runBlocking { prefs.preferredCategories.first() }
         DiscoveryViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi),
-            PreferencesManager(requireContext())
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi, categories),
+            prefs
         )
     }
 
