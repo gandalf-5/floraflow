@@ -171,6 +171,40 @@ class DiscoveryFragment : Fragment() {
                 binding.streakBadge.visibility = View.GONE
             }
         }
+
+        viewModel.curiosities.observe(viewLifecycleOwner) { facts ->
+            when {
+                facts == null -> {
+                    // Loading curiosities — show shimmer section
+                    binding.curiositiesSection.visibility = View.VISIBLE
+                    binding.curiositiesProgress.visibility = View.VISIBLE
+                    listOf(binding.curiosityFact1, binding.curiosityFact2, binding.curiosityFact3)
+                        .forEach { it.visibility = View.GONE }
+                }
+                facts.isEmpty() -> {
+                    binding.curiositiesSection.visibility = View.GONE
+                }
+                else -> {
+                    binding.curiositiesSection.visibility = View.VISIBLE
+                    binding.curiositiesProgress.visibility = View.GONE
+                    val emojis = listOf("🌱", "💡", "🔬")
+                    val factViews = listOf(
+                        binding.curiosityFact1,
+                        binding.curiosityFact2,
+                        binding.curiosityFact3
+                    )
+                    factViews.forEachIndexed { i, view ->
+                        val fact = facts.getOrNull(i)
+                        if (fact != null) {
+                            view.text = "${emojis[i]}  $fact"
+                            view.visibility = View.VISIBLE
+                        } else {
+                            view.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun showLoading() {
