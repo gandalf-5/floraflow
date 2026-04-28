@@ -97,6 +97,57 @@ router.get("/plant/today", async (_req, res) => {
   });
 });
 
+// ─── GET /plant/curated ───────────────────────────────────────────────────────
+// Returns a single Unsplash photo for any named plant (used by Seasonal screen).
+router.get("/plant/curated", async (req, res) => {
+  const query = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (!query) {
+    res.status(400).json({ error: "q parameter is required" });
+    return;
+  }
+
+  try {
+    const unsplashRes = await fetch(
+      `https://api.unsplash.com/photos/random?query=${encodeURIComponent(query + " plant flower botanical")}&orientation=portrait`,
+      { headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
+    );
+
+    if (unsplashRes.ok) {
+      const data = await unsplashRes.json() as any;
+      const loc = data.location;
+      const location = [loc?.name, loc?.city, loc?.country].filter(Boolean)[0] ?? null;
+      res.json({
+        plantName: query,
+        imageUrl: data.urls.regular,
+        imageUrlFull: data.urls.full,
+        location,
+        photographer: data.user.name,
+        photographerUrl: data.user.links.html,
+        downloadLocationUrl: data.links.download_location,
+        insight: null,
+        source: "unsplash",
+      });
+      return;
+    }
+  } catch {
+    // fall through to picsum fallback
+  }
+
+  const hash = query.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const fallback = PICSUM_BOTANICAL[hash % PICSUM_BOTANICAL.length];
+  res.json({
+    plantName: query,
+    imageUrl: `https://picsum.photos/seed/${fallback.id}/600/900`,
+    imageUrlFull: `https://picsum.photos/seed/${fallback.id}/1080/1920`,
+    location: fallback.location,
+    photographer: fallback.photographer,
+    photographerUrl: fallback.photographerUrl,
+    downloadLocationUrl: null,
+    insight: null,
+    source: "picsum-fallback",
+  });
+});
+
 // ─── POST /botanical-insight ──────────────────────────────────────────────────
 // Proxies GPT-4o-mini call server-side so the OpenAI key never leaves the server.
 function langInstruction(lang?: string): string {
