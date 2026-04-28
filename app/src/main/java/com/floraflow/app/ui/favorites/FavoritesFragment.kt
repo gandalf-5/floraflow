@@ -14,9 +14,11 @@ import com.floraflow.app.FloraFlowApp
 import com.floraflow.app.R
 import com.floraflow.app.data.DailyPlant
 import com.floraflow.app.data.PlantRepository
+import com.floraflow.app.data.PreferencesManager
 import com.floraflow.app.databinding.FragmentFavoritesBinding
 import com.floraflow.app.ui.collections.CollectionsViewModel
 import com.floraflow.app.ui.collections.CollectionsViewModelFactory
+import com.floraflow.app.ui.premium.PremiumBottomSheetFragment
 import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {
@@ -27,7 +29,8 @@ class FavoritesFragment : Fragment() {
     private val viewModel: FavoritesViewModel by viewModels {
         val app = requireActivity().application as FloraFlowApp
         FavoritesViewModelFactory(
-            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi)
+            PlantRepository(app.database.dailyPlantDao(), app.unsplashApi, app.floraFlowApi),
+            PreferencesManager(requireContext())
         )
     }
 
@@ -54,12 +57,27 @@ class FavoritesFragment : Fragment() {
         binding.favoritesRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.favoritesRecycler.adapter = adapter
 
+        viewModel.isPremium.observe(viewLifecycleOwner) { premium ->
+            binding.favoritesFreeBanner.visibility = if (premium) View.GONE else View.VISIBLE
+        }
+
+        viewModel.totalFavCount.observe(viewLifecycleOwner) { total ->
+            val isPrem = viewModel.isPremium.value ?: false
+            if (!isPrem) {
+                val limit = PreferencesManager.FREE_FAVORITES_LIMIT
+                binding.favoritesFreeBannerText.text = getString(
+                    R.string.favorites_free_limit_banner,
+                    minOf(total, limit),
+                    limit
+                )
+            }
+        }
+
         viewModel.plants.observe(viewLifecycleOwner) { plants ->
             adapter.submitList(plants)
             binding.emptyText.visibility = if (plants.isEmpty()) View.VISIBLE else View.GONE
         }
 
-        // Keep collections LiveData active so .value is populated for dialogs
         collectionsViewModel.collections.observe(viewLifecycleOwner) { /* kept active */ }
 
         binding.collectionsButton.setOnClickListener {
@@ -69,14 +87,21 @@ class FavoritesFragment : Fragment() {
         binding.badgesButton.setOnClickListener {
             findNavController().navigate(R.id.action_favorites_to_badges)
         }
+
+        binding.favoritesFreeBanner.setOnClickListener {
+            PremiumBottomSheetFragment.newInstance()
+                .show(parentFragmentManager, PremiumBottomSheetFragment.TAG)
+        }
     }
 
     private fun confirmRemoveFavorite(plant: DailyPlant) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Retirer des favoris ?")
-            .setMessage("« ${plant.plantName} » sera retiré de vos favoris.")
-            .setPositiveButton("Retirer") { _, _ -> viewModel.removeFavorite(plant) }
-            .setNegativeButton("Annuler", null)
+            .setTitle(getString(R.string.favorites_remove_title))
+            .setMessage(getString(R.string.favorites_remove_message, plant.plantName))
+            .setPositiveButton(getString(R.string.favorites_remove_confirm)) { _, _ ->
+                viewModel.removeFavorite(plant)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
@@ -85,10 +110,10 @@ class FavoritesFragment : Fragment() {
         if (collections.isEmpty()) {
             AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.collections_empty))
-                .setPositiveButton("Créer une collection") { _, _ ->
+                .setPositiveButton(getString(R.string.favorites_create_collection)) { _, _ ->
                     findNavController().navigate(R.id.action_favorites_to_collections)
                 }
-                .setNegativeButton("Annuler", null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .show()
             return
         }
@@ -102,7 +127,7 @@ class FavoritesFragment : Fragment() {
                     collectionsViewModel.addPlantToCollection(plant.dateKey, col.id)
                 }
             }
-            .setNegativeButton("Annuler", null)
+            .setNegativeButton(android.R.string.cancel, null)
             .show()
     }
 
