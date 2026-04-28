@@ -17,6 +17,9 @@ interface DailyPlantDao {
     @Query("SELECT * FROM daily_plants ORDER BY fetchedAt DESC LIMIT 90")
     suspend fun getHistory(): List<DailyPlant>
 
+    @Query("SELECT * FROM daily_plants WHERE fetchedAt >= :cutoffMs ORDER BY fetchedAt DESC")
+    suspend fun getHistorySince(cutoffMs: Long): List<DailyPlant>
+
     @Query("SELECT * FROM daily_plants WHERE isFavorite = 1 ORDER BY fetchedAt DESC")
     suspend fun getFavorites(): List<DailyPlant>
 
