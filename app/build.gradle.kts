@@ -11,7 +11,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.floraflow.app"
+        applicationId = "ca.floraflow.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
