@@ -1,0 +1,32 @@
+name: Export Upload Key Certificate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export-cert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decode keystore and export PEM
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > floraflow-release.jks
+          keytool -export -rfc \
+            -keystore floraflow-release.jks \
+            -alias "$KEY_ALIAS" \
+            -storepass "$KEYSTORE_PASSWORD" \
+            -storetype JKS \
+            -file upload_key.pem
+          echo "--- Fingerprints ---"
+          keytool -printcert -file upload_key.pem | grep -E 'SHA1|SHA256|Owner'
+          mkdir -p cert-output
+          cp upload_key.pem cert-output/
+      - name: Upload PEM certificate
+        uses: actions/upload-artifact@v4
+        with:
+          name: upload-key-cert
+          path: cert-output/upload_key.pem
+          retention-days: 1
