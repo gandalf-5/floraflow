@@ -35,7 +35,7 @@ android {
     // If KEYSTORE_BASE64 is not set (local dev), release uses debug signing.
     val keystoreB64 = System.getenv("KEYSTORE_BASE64") ?: ""
     val releaseSigningConfig = if (keystoreB64.isNotBlank()) {
-        val keystoreFile = file("${buildDir}/floraflow-release.p12")
+        val keystoreFile = file("${buildDir}/floraflow-release.jks")
         keystoreFile.parentFile.mkdirs()
         keystoreFile.writeBytes(Base64.getDecoder().decode(keystoreB64))
         signingConfigs.create("release") {
@@ -43,7 +43,7 @@ android {
             storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
             keyAlias = System.getenv("KEY_ALIAS") ?: ""
             keyPassword = System.getenv("KEY_PASSWORD") ?: ""
-            storeType = "PKCS12"
+            storeType = "JKS"
         }
     } else null
 
