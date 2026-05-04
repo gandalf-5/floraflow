@@ -14,7 +14,7 @@ android {
         applicationId = "ca.floraflow.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
         // Production backend URL — not a secret (OpenAI key stays on the server).
         buildConfigField(
