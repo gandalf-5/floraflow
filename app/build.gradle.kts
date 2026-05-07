@@ -8,13 +8,13 @@ plugins {
 
 android {
     namespace = "com.floraflow.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "ca.floraflow.app"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 2
+        targetSdk = 35
+        versionCode = 3
         versionName = "1.0"
         // Production backend URL — not a secret (OpenAI key stays on the server).
         buildConfigField(
